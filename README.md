@@ -1,4 +1,3 @@
-# cs310_project
 
 # PetPocket 🐾
 
@@ -35,3 +34,4 @@ PetPocket is a record-keeping and reminder tool; it does not provide medical adv
 - Flutter (Dart)
 - Firebase Authentication
 - Cloud Firestore
+- Cloud Storage
