@@ -1,0 +1,44 @@
+import 'package:flutter/foundation.dart';
+
+import '../models/pet.dart';
+import '../models/reminder.dart';
+import '../models/health_record.dart';
+import '../models/weight_entry.dart';
+import '../models/supply_item.dart';
+import '../models/pet_photo.dart';
+import 'sample_data.dart';
+
+/// The pet currently selected in the app
+///
+/// Every screen shows data for this pet. When it changes (for example from
+/// the pet switcher or the pet chips on Home), screens that listen to it
+/// rebuild automatically.
+final ValueNotifier<Pet> activePet = ValueNotifier<Pet>(samplePets.first);
+
+/// Makes pet the active pet.
+void selectPet(Pet pet) {
+  activePet.value = pet;
+}
+
+// Helpers that return only the active pet's records.
+
+List<Reminder> remindersFor(String petId) =>
+    sampleReminders.where((r) => r.petId == petId).toList();
+
+List<HealthRecord> healthRecordsFor(String petId) =>
+    sampleHealthRecords.where((r) => r.petId == petId).toList()
+      ..sort((a, b) => b.date.compareTo(a.date)); // newest first
+
+List<WeightEntry> weightEntriesFor(String petId) =>
+    sampleWeightEntries.where((w) => w.petId == petId).toList()
+      ..sort((a, b) => a.date.compareTo(b.date)); // oldest first, for the chart
+
+List<SupplyItem> suppliesFor(String petId) =>
+    sampleSupplies.where((s) => s.petId == petId).toList();
+
+List<PetPhoto> photosFor(String petId) =>
+    samplePhotos.where((p) => p.petId == petId).toList();
+
+/// Number of supply items not yet bought, shown on Home as "3 pending".
+int pendingSupplyCount(String petId) =>
+    suppliesFor(petId).where((s) => !s.bought).length;
