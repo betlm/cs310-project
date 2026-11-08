@@ -1,8 +1,3 @@
-/// Names (addresses) of all screens that can be opened with Navigator.
-///
-/// Home, Health history, My pets and Preferences are tabs inside the
-/// main shell, so they do not have their own route names.
-
 import 'package:flutter/material.dart';
 
 import '../screens/auth/sign_in_screen.dart';
@@ -19,6 +14,12 @@ import '../screens/reminders/reminder_form_screen.dart';
 import '../screens/reminders/reminders_screen.dart';
 import '../screens/supplies/supply_form_screen.dart';
 import '../screens/supplies/supply_list_screen.dart';
+
+/// Names (addresses) of all screens that can be opened with Navigator.
+///
+/// Home, Health history, My pets and Preferences are tabs inside the
+/// main shell, so they do not have their own route names.
+
 
 class AppRoutes {
   AppRoutes._();
