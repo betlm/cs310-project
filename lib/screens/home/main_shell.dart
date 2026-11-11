@@ -4,6 +4,7 @@ import '../health/health_history_screen.dart';
 import '../pets/my_pets_screen.dart';
 import '../settings/preferences_screen.dart';
 import 'home_screen.dart';
+import '../../theme/app_colors.dart';
 
 /// The main app layout after sign-in, with the bottom navigation bar.
 ///
@@ -36,34 +37,72 @@ class _MainShellState extends State<MainShell> {
     setState(() => _currentIndex = index);
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: IndexedStack(index: _currentIndex, children: _tabs),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _currentIndex,
-        onDestinationSelected: _selectTab,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.home_outlined),
-            selectedIcon: Icon(Icons.home),
-            label: 'Home',
+      // Thin line above the bar, as in the Figma design.
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: AppColors.navBorder)),
+        ),
+        child: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            backgroundColor:
+                isDark ? AppColors.navBackgroundDark : AppColors.white,
+            // No pill behind the selected tab.
+            indicatorColor: Colors.transparent,
+            // Removes the Material 3 color tint, so white stays white.
+            surfaceTintColor: Colors.transparent,
+            elevation: 0,
+            height: 64,
+            // Selected tab: green; others: grey.
+            iconTheme: WidgetStateProperty.resolveWith(
+              (states) => IconThemeData(
+                size: 24,
+                color: states.contains(WidgetState.selected)
+                    ? AppColors.primary
+                    : AppColors.navInactive,
+              ),
+            ),
+            labelTextStyle: WidgetStateProperty.resolveWith(
+              (states) => TextStyle(
+                fontFamily: 'DM Sans',
+                fontSize: 11,
+                fontWeight: states.contains(WidgetState.selected)
+                    ? FontWeight.w800
+                    : FontWeight.w500,
+                color: states.contains(WidgetState.selected)
+                    ? AppColors.primary
+                    : AppColors.navInactive,
+              ),
+            ),
           ),
-          NavigationDestination(
-            icon: Icon(Icons.favorite_border),
-            selectedIcon: Icon(Icons.favorite),
-            label: 'Health',
+          child: NavigationBar(
+            selectedIndex: _currentIndex,
+            onDestinationSelected: _selectTab,
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                label: 'Home',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.favorite_border),
+                label: 'Health',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.pets),
+                label: 'Pets',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.person_outline),
+                label: 'Profile',
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: Icon(Icons.pets),
-            label: 'Pets',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.person_outline),
-            selectedIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
+        ),
       ),
     );
   }
