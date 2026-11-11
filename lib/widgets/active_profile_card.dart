@@ -19,8 +19,12 @@ class ActiveProfileCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.lightMint,
-        borderRadius: BorderRadius.circular(20),
+       color: AppColors.lightMint,
+       borderRadius: BorderRadius.circular(20),
+       border: Border.all(
+        color: const Color(0xFFB8E3D9),
+        width: 1.5,
+       ),
       ),
       child: Row(
         children: [
@@ -39,13 +43,13 @@ class ActiveProfileCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  petName,
-                  style: Theme.of(context).textTheme.titleLarge,
+                 'Active profile',
+                 style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  petType,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                 '$petName · $petType',
+                 style: Theme.of(context).textTheme.titleLarge,
                 ),
               ],
             ),
