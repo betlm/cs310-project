@@ -15,6 +15,17 @@ import 'sample_data.dart';
 /// rebuild automatically.
 final ValueNotifier<Pet> activePet = ValueNotifier<Pet>(samplePets.first);
 
+/// Notifies listeners whenever any sample list changes
+/// (a record, reminder, supply or photo is added, edited or removed).
+///
+/// Screens that show counts or lists listen to this together with
+/// [activePet] so they always show the latest data.
+final ValueNotifier<int> dataChanged = ValueNotifier<int>(0);
+
+/// Call this after changing any of the sample data lists.
+void notifyDataChanged() {
+  dataChanged.value++;
+}
 /// Makes pet the active pet.
 void selectPet(Pet pet) {
   activePet.value = pet;
@@ -42,3 +53,31 @@ List<PetPhoto> photosFor(String petId) =>
 /// Number of supply items not yet bought, shown on Home as "3 pending".
 int pendingSupplyCount(String petId) =>
     suppliesFor(petId).where((s) => !s.bought).length;
+
+
+/// The next time reminder is due.
+///
+/// One-time reminders use their own date. Daily reminders use today at
+/// their time, or tomorrow if that time has already passed.
+DateTime nextOccurrence(Reminder reminder) {
+  if (reminder.repeat == RepeatType.oneTime && reminder.date != null) {
+    final d = reminder.date!;
+    return DateTime(d.year, d.month, d.day, reminder.hour, reminder.minute);
+  }
+
+  final now = DateTime.now();
+  var next = DateTime(
+      now.year, now.month, now.day, reminder.hour, reminder.minute);
+  if (next.isBefore(now)) {
+    next = next.add(const Duration(days: 1));
+  }
+  return next;
+}
+
+/// The not-yet-completed reminder of petId that is due first,
+/// or null if the pet has no active reminders.
+Reminder? nextReminderFor(String petId) {
+  final active = remindersFor(petId).where((r) => !r.isCompleted).toList()
+    ..sort((a, b) => nextOccurrence(a).compareTo(nextOccurrence(b)));
+  return active.isEmpty ? null : active.first;
+}

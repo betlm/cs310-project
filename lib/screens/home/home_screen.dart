@@ -5,6 +5,10 @@ import '../../models/pet.dart';
 import '../../theme/app_spacing.dart';
 import 'widgets/home_header.dart';
 import 'widgets/pet_chips_row.dart';
+import 'widgets/active_pet_card.dart';
+import 'widgets/upcoming_reminder_section.dart';
+import 'widgets/summary_grid.dart';
+import 'widgets/latest_weight_card.dart';
 
 /// Bottom navigation tab: Home.
 /// Shown inside MainShell, so it has no back arrow.
@@ -18,21 +22,29 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        // Rebuilds the whole screen whenever the active pet changes.
-        child: ValueListenableBuilder<Pet>(
-          valueListenable: activePet,
-          builder: (context, pet, _) {
+        // Rebuilds when the active pet changes or any data is added/removed.
+        child: ListenableBuilder(
+          listenable: Listenable.merge([activePet, dataChanged]),
+          builder: (context, _) {
+            final pet = activePet.value;
             return ListView(
-              padding: AppSpacing.screenPadding,
-                                          children: [
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md + AppSpacing.xs, // 20
+                vertical: AppSpacing.md,
+              ),
+                  children: [
                 const HomeHeader(),
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.md),
                 PetChipsRow(selectedPet: pet),
+                const SizedBox(height: AppSpacing.md),
+                ActivePetCard(pet: pet),
                 const SizedBox(height: AppSpacing.lg),
-
-                // Temporary: shows that switching pets works.
-                // Replaced by the active pet card in the next step.
-                Text('Active pet: ${pet.name}'),
+                UpcomingReminderSection(reminder: nextReminderFor(pet.id)),
+                const SizedBox(height: AppSpacing.md),
+                SummaryGrid(petId: pet.id),
+                const SizedBox(height: AppSpacing.md),
+                LatestWeightCard(entries: weightEntriesFor(pet.id)),
+                const SizedBox(height: AppSpacing.md),
               ],
             );
           },
