@@ -38,4 +38,18 @@ class AppColors {
   static const Color speciesFish = Color(0xFFF4C4B2);
   static const Color speciesRabbit = Color(0xFFB8D5D8);
   static const Color speciesHamster = Color(0xFFD3C1E2);
+
+
+  // Semi-transparent colors from the Figma design.
+  // Format 0xAARRGGBB: the first two digits are the opacity
+  // (00 = invisible, FF = fully opaque).
+  static const Color reminderCardBackground = Color(0x29F3AD91); // peach 16%
+  static const Color healthCardBackground = Color(0x47F3AD91); // peach 28%
+  static const Color healthCardBorder = Color(0x7AF3AD91); // peach 48%
+  static const Color photosCardBackground = Color(0x2E65BDAE); // primary 18%
+  static const Color photosCardBorder = Color(0x4D65BDAE); // primary 30%
+  static const Color activePetLabel = Color(0xB8263D39); // darkGreen 72%
+  static const Color viewProfileBackground = Color(0xB3FFF9F1); // cream 70%
+  static const Color avatarBorder = Color(0xD1FFF9F1); // cream 82%
+  static const Color cardShadow = Color(0x1A263D39); // darkGreen 10%
 }
