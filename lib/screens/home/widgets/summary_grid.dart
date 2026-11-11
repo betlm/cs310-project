@@ -4,24 +4,33 @@ import '../../../data/app_state.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
-import '../main_shell.dart';
 
 /// The 2x2 grid of summary cards on Home:
 /// Health, Supplies, Photos and Reminders for the active pet.
 class SummaryGrid extends StatelessWidget {
   final String petId;
 
-  const SummaryGrid({super.key, required this.petId});
+  /// Switches to the Health tab.
+  final VoidCallback onOpenHealth;
+
+  /// Opens a screen by its route name.
+  final void Function(String routeName) onOpenScreen;
+
+  const SummaryGrid({
+    super.key,
+    required this.petId,
+    required this.onOpenHealth,
+    required this.onOpenScreen,
+  });
 
   @override
   Widget build(BuildContext context) {
     final healthCount = healthRecordsFor(petId).length;
     final pendingSupplies = pendingSupplyCount(petId);
     final photoCount = photosFor(petId).length;
-    final activeReminders =
-        remindersFor(petId).where((r) => !r.isCompleted).length;
+    final activeReminders = remindersFor(petId).where(isUpcoming).length;
 
-    const gap = AppSpacing.sm + 2; // 10
+    const gap = 10.0;
 
     return Column(
       children: [
@@ -33,10 +42,9 @@ class SummaryGrid extends StatelessWidget {
                 title: 'Health',
                 subtitle: _plural(healthCount, 'record', 'records'),
                 iconColor: AppColors.peach,
-                backgroundColor: AppColors.peach.withValues(alpha: 0.28),
-                borderColor: AppColors.peach.withValues(alpha: 0.48),
-                // Health is a bottom navigation tab, so switch to it.
-                onTap: () => MainShell.switchTab(context, 1),
+                backgroundColor: AppColors.healthCardBackground,
+                borderColor: AppColors.healthCardBorder,
+                onTap: onOpenHealth,
               ),
             ),
             const SizedBox(width: gap),
@@ -48,7 +56,7 @@ class SummaryGrid extends StatelessWidget {
                 iconColor: AppColors.primary,
                 backgroundColor: AppColors.lightMint,
                 borderColor: AppColors.mintBorder,
-                onTap: () => Navigator.pushNamed(context, AppRoutes.supplies),
+                onTap: () => onOpenScreen(AppRoutes.supplies),
               ),
             ),
           ],
@@ -62,9 +70,9 @@ class SummaryGrid extends StatelessWidget {
                 title: 'Photos',
                 subtitle: _plural(photoCount, 'photo', 'photos'),
                 iconColor: AppColors.primary,
-                backgroundColor: AppColors.primary.withValues(alpha: 0.18),
-                borderColor: AppColors.primary.withValues(alpha: 0.3),
-                onTap: () => Navigator.pushNamed(context, AppRoutes.photos),
+                backgroundColor: AppColors.photosCardBackground,
+                borderColor: AppColors.photosCardBorder,
+                onTap: () => onOpenScreen(AppRoutes.photos),
               ),
             ),
             const SizedBox(width: gap),
@@ -74,10 +82,10 @@ class SummaryGrid extends StatelessWidget {
                 title: 'Reminders',
                 subtitle: '$activeReminders active',
                 iconColor: AppColors.primary,
-                // Cream, same tone as the page background.
+                // Cream, the same tone as the page background.
                 backgroundColor: AppColors.background,
                 borderColor: AppColors.creamBorder,
-                onTap: () => Navigator.pushNamed(context, AppRoutes.reminders),
+                onTap: () => onOpenScreen(AppRoutes.reminders),
               ),
             ),
           ],
@@ -87,8 +95,12 @@ class SummaryGrid extends StatelessWidget {
   }
 
   /// "1 record" / "4 records".
-  static String _plural(int count, String one, String many) =>
-      '$count ${count == 1 ? one : many}';
+  static String _plural(int count, String one, String many) {
+    if (count == 1) {
+      return '$count $one';
+    }
+    return '$count $many';
+  }
 }
 
 /// A single tappable summary card with an icon, a title and a count.
@@ -114,49 +126,43 @@ class SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final radius = BorderRadius.circular(15);
-
-    return Material(
-      color: backgroundColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: radius,
-        side: BorderSide(color: borderColor),
-      ),
-      child: InkWell(
-        borderRadius: radius,
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            vertical: AppSpacing.md - 2, // 14
-            horizontal: AppSpacing.sm,
-          ),
-          child: Column(
-            children: [
-              Icon(icon, color: iconColor, size: 28),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: textTheme.titleMedium?.copyWith(
-                  fontFamily: 'Manrope',
-                  fontSize: 15,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -0.3,
-                  color: AppColors.darkGreen,
-                ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          vertical: 14,
+          horizontal: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: iconColor, size: 28),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Manrope',
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+                letterSpacing: -0.3,
+                color: AppColors.darkGreen,
               ),
-              Text(
-                subtitle,
-                textAlign: TextAlign.center,
-                style: textTheme.bodySmall?.copyWith(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: AppColors.secondaryText,
-                ),
+            ),
+            Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                color: AppColors.secondaryText,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

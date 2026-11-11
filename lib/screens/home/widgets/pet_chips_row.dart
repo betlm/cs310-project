@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../data/app_state.dart';
 import '../../../data/sample_data.dart';
 import '../../../models/pet.dart';
-import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../theme/species_colors.dart';
 import 'dart:math' as math;
+
 
 /// Horizontal row of pet avatars at the top of Home.
 ///
@@ -16,27 +15,35 @@ import 'dart:math' as math;
 class PetChipsRow extends StatelessWidget {
   /// The pet that is currently active, shown with a highlighted ring.
   final Pet selectedPet;
+  final void Function(Pet pet) onPetSelected;
+  final VoidCallback onAddPet;
 
-  const PetChipsRow({super.key, required this.selectedPet});
-
+  const PetChipsRow({
+    super.key,
+    required this.selectedPet,
+    required this.onPetSelected,
+    required this.onAddPet,
+  });
   @override
   Widget build(BuildContext context) {
     // Fixed height so the horizontal list can sit inside the vertical ListView.
     return SizedBox(
       height: 92,
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        children: [
-          for (final pet in samplePets)
-            _PetChip(
-              pet: pet,
-              isSelected: pet.id == selectedPet.id,
-              onTap: () => selectPet(pet),
-            ),
-          _AddPetChip(
-            onTap: () => Navigator.pushNamed(context, AppRoutes.petForm),
-          ),
-        ],
+        // One chip per pet, plus the "Add pet" chip at the end.
+        itemCount: samplePets.length + 1,
+        itemBuilder: (context, index) {
+          if (index == samplePets.length) {
+            return _AddPetChip(onTap: onAddPet);
+          }
+          final pet = samplePets[index];
+          return _PetChip(
+            pet: pet,
+            isSelected: pet.id == selectedPet.id,
+            onTap: () => onPetSelected(pet),
+          );
+        },
       ),
     );
   }
@@ -98,23 +105,23 @@ class _PetChip extends StatelessWidget {
 }
 
 /// The "Add pet" circle at the end of the row, with a dashed border.
+/// The "Add pet" circle at the end of the row, with a dashed border.
 class _AddPetChip extends StatelessWidget {
   final VoidCallback onTap;
 
   const _AddPetChip({required this.onTap});
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
         children: [
-          // Same outer size as a pet chip (avatar 52 + ring padding/border 12).
+          // Same outer size as a pet chip (avatar 52 + ring 12).
           SizedBox(
             width: 64,
             height: 64,
-            // foregroundPainter draws the dashes ON TOP of the filled circle,
-            // so the fill does not hide them.
+            // foregroundPainter draws the dashes ON TOP of the filled circle.
             child: CustomPaint(
               foregroundPainter: _DashedCirclePainter(color: AppColors.primary),
               child: Container(
@@ -131,7 +138,6 @@ class _AddPetChip extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          // Same style as the names of the unselected pets.
           Text('Add pet', style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
@@ -175,3 +181,5 @@ class _DashedCirclePainter extends CustomPainter {
   bool shouldRepaint(_DashedCirclePainter oldDelegate) =>
       oldDelegate.color != color;
 }
+
+///The last part from AI because here is not covered on the lecture yet (dashed circle)

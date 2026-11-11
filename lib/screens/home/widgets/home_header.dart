@@ -89,18 +89,17 @@ class _ThemeToggleState extends State<_ThemeToggle> {
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+      child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: selected ? AppColors.background : Colors.transparent,
           borderRadius: BorderRadius.circular(9),
           boxShadow: selected
-              ? [
+              ? const [
                   BoxShadow(
-                    color: AppColors.darkGreen.withValues(alpha: 0.12),
+                    color: AppColors.cardShadow,
                     blurRadius: 7,
-                    offset: const Offset(0, 2),
+                    offset: Offset(0, 2),
                   ),
                 ]
               : null,
