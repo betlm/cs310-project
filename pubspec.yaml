@@ -50,6 +50,9 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+
+
+
 flutter:
   fonts:
     - family: Manrope
@@ -59,7 +62,8 @@ flutter:
     - family: DM Sans
       fonts:
         - asset: assets/fonts/DMSans-VariableFont_opsz,wght.ttf
-
+  assets:
+    - assets/images/
  
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

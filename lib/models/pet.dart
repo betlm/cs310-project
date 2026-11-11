@@ -49,4 +49,11 @@ class Pet {
     }
     return approximateAgeYears;
   }
+
+    /// Local image to show for this pet.
+  ///
+  /// Uses [avatarAsset] if one was chosen, otherwise the default image for
+  /// the species (e.g. 'assets/images/default-cat.png').
+  String get avatarPath =>
+      avatarAsset ?? 'assets/images/default-${species.name}.png';
 }
