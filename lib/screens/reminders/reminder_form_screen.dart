@@ -5,8 +5,8 @@ import '../../data/app_state.dart';
 import '../../data/sample_data.dart';
 import '../../models/reminder.dart';
 import '../../theme/app_colors.dart';
-import '../../theme/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
+import '../../widgets/form_field_decoration.dart' as shared_form;
 
 class ReminderFormScreen extends StatefulWidget {
   const ReminderFormScreen({super.key});
@@ -27,8 +27,6 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
   Reminder? editingReminder;
   bool formInitialized = false;
-
-  static const Color fieldBorder = Color(0xFFD0D9D5);
 
   @override
   void didChangeDependencies() {
@@ -94,46 +92,15 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
       );
 
   InputDecoration fieldDecoration({
-    String? hint,
-    Widget? prefixIcon,
-  }) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: AppTextStyles.bodyLarge.copyWith(
-        color: const Color(0xFF9AA8A3),
-      ),
-      prefixIcon: prefixIcon,
-      filled: true,
-      fillColor: AppColors.white,
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 18,
-        vertical: 18,
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusMedium,
-        ),
-        borderSide: const BorderSide(
-          color: fieldBorder,
-          width: 1.4,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusMedium,
-        ),
-        borderSide: const BorderSide(
-          color: AppColors.primary,
-          width: 1.8,
-        ),
-      ),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusMedium,
-        ),
-      ),
-    );
-  }
+  String? hint,
+  Widget? prefixIcon,
+}) {
+  return shared_form.fieldDecoration(
+    hint: hint,
+    prefixIcon: prefixIcon,
+  );
+}
+    
 
   Widget sectionLabel(String title, {bool required = false}) {
     return Row(
@@ -146,7 +113,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               fontFamily: 'DM Sans',
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFB85B52),
+              color: AppColors.danger,
             ),
           ),
       ],
