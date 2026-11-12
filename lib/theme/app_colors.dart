@@ -12,6 +12,11 @@ class AppColors {
   static const Color secondaryText = Color(0xFF647A74);
   static const Color peach = Color(0xFFF3AD91);
   static const Color white = Color(0xFFFFFFFF);
+  
+    // Shared form field colors
+  static const Color hint = Color(0xFF9AA8A3);
+  static const Color fieldBorder = Color(0xFFD0D9D5);
+  static const Color danger = Color(0xFFB85B52);
 
   // Compatibility aliases for existing theme code.
   static const Color mint = primary;
