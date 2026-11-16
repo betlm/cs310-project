@@ -17,6 +17,7 @@ class AppColors {
   static const Color hint = Color(0xFF9AA8A3);
   static const Color fieldBorder = Color(0xFFD0D9D5);
   static const Color danger = Color(0xFFB85B52);
+  static const Color dangerLight = Color(0xFFFFF0E8);
 
   // Compatibility aliases for existing theme code.
   static const Color mint = primary;
