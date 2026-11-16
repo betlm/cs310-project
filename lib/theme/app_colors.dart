@@ -28,6 +28,8 @@ class AppColors {
   static const Color creamBorder = Color(0xFFEADFD3);
   static const Color mintBorder = Color(0xFFCDE9E1);
   static const Color weightCardBorder = Color(0xFFBFE1D9);
+    static const Color cardBorder = Color(0xFFE3E6E4);
+  static const Color dashedBorder = Color(0xFFC4CBC8);
 
   // Reminder card
   static const Color reminderIcon = Color(0xFFF08E70);
