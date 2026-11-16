@@ -20,3 +20,22 @@ Color speciesColor(PetSpecies species) {
       return AppColors.speciesHamster;
   }
 }
+
+
+/// Display name of each species like "Cat"
+String speciesLabel(PetSpecies species) {
+  switch (species) {
+    case PetSpecies.cat:
+      return 'Cat';
+    case PetSpecies.dog:
+      return 'Dog';
+    case PetSpecies.bird:
+      return 'Bird';
+    case PetSpecies.fish:
+      return 'Fish';
+    case PetSpecies.rabbit:
+      return 'Rabbit';
+    case PetSpecies.hamster:
+      return 'Hamster';
+  }
+}
