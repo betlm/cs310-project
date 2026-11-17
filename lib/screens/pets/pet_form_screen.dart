@@ -10,6 +10,7 @@ import '../../theme/app_spacing.dart';
 import '../../theme/species_colors.dart';
 import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
+import '../../utils/date_format.dart';
 
 /// Create edit pet form
 /// Opened empty to add a new pet, or with a pet as the route argument to edit that pet
@@ -32,9 +33,26 @@ class _PetFormScreenState extends State<PetFormScreen> {
   final _nameController = TextEditingController();
   PetSpecies _selectedSpecies = PetSpecies.cat;
 
+  // Breed and age
+  final _breedController = TextEditingController();
+  final _birthDateController = TextEditingController();
+  final _ageController = TextEditingController();
+  bool _useBirthDate = true; // true: Date of Birth tab, false: Approximate Age
+  DateTime? _birthDate;
+  PetSex _selectedSex = PetSex.unknown;
+  final _weightController = TextEditingController();
+  final _microchipController = TextEditingController();
+  final _tagController = TextEditingController();
+
   @override
   void dispose() {
     _nameController.dispose();
+    _breedController.dispose();
+    _birthDateController.dispose();
+    _ageController.dispose();
+    _weightController.dispose();
+    _microchipController.dispose();
+    _tagController.dispose();
     super.dispose();
   }
 
@@ -95,7 +113,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
       Text(
         text,
         style: const TextStyle(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w700,
           color: AppColors.darkGreen,
         ),
@@ -107,7 +125,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
         const Text(
           ' *',
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: FontWeight.w700,
             color: AppColors.danger,
           ),
@@ -133,8 +151,8 @@ class _PetFormScreenState extends State<PetFormScreen> {
           color: AppColors.dashedBorder,
         ),
         child: Container(
-          width: 132,
-          height: 132,
+          width: 96,
+          height: 96,
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.cardBorder,
@@ -144,14 +162,14 @@ class _PetFormScreenState extends State<PetFormScreen> {
             children: [
               const Icon(
                 Icons.photo_camera_outlined,
-                size: 30,
+                size: 22,
                 color: AppColors.secondaryText,
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
                 _isPickingPhoto ? 'Opening...' : 'Add photo',
                 style: const TextStyle(
-                  fontSize: 13,
+                  fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: AppColors.secondaryText,
                 ),
@@ -164,14 +182,14 @@ class _PetFormScreenState extends State<PetFormScreen> {
       circle = Stack(
         children: [
           CircleAvatar(
-            radius: 66,
+            radius: 48,
             backgroundColor: AppColors.cardBorder,
             backgroundImage: FileImage(File(_selectedPhoto!.path)),
           ),
-          // Small red X to remove the photo.
+          // red X button
           Positioned(
-            top: 4,
-            right: 4,
+            top: 2,
+            right: 2,
             child: GestureDetector(
               onTap: () {
                 setState(() {
@@ -179,9 +197,9 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 });
               },
               child: const CircleAvatar(
-                radius: 15,
+                radius: 12,
                 backgroundColor: AppColors.white,
-                child: Icon(Icons.close, size: 18, color: AppColors.danger),
+                child: Icon(Icons.close, size: 14, color: AppColors.danger),
               ),
             ),
           ),
@@ -200,7 +218,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
           const Text(
             'Optional',
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.secondaryText,
             ),
@@ -211,8 +229,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
   }
 
 
-  /// One species card: avatar and name. The selected card is mint
-  /// with a green border.
+  /// One species card: avatar and name- border:green
   Widget _speciesCard(PetSpecies species) {
     final isSelected = species == _selectedSpecies;
 
@@ -223,8 +240,8 @@ class _PetFormScreenState extends State<PetFormScreen> {
         });
       },
       child: Container(
-        height: 72,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        height: 56,
+        padding: const EdgeInsets.symmetric(horizontal: 6),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.lightMint : AppColors.white,
           borderRadius: BorderRadius.circular(12),
@@ -236,7 +253,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
         child: Row(
           children: [
             CircleAvatar(
-              radius: 22,
+              radius: 19,
               backgroundColor: speciesColor(species),
               backgroundImage:
                   AssetImage('assets/images/default-${species.name}.png'),
@@ -274,7 +291,172 @@ class _PetFormScreenState extends State<PetFormScreen> {
       ],
     );
   }
+  /// icon is shown on the left suffix like kg on the right
+  InputDecoration _inputDecoration(
+    String hint, {
+    IconData? icon,
+    String? suffix,
+  }) {
+    return fieldDecoration(hint: hint, icon: icon).copyWith(
+      hintStyle: const TextStyle(fontSize: 15, color: AppColors.hint),
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 14,
+      ),
+      suffixText: suffix,
+      suffixStyle: const TextStyle(
+        fontSize: 13,
+        fontWeight: FontWeight.w700,
+        color: AppColors.secondaryText,
+      ),
+    );
+  }
 
+  /// One side of the "Date of Birth / Approximate Age" switch
+  Widget _ageTab(String text, {required bool selected, required VoidCallback onTap}) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 40,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? AppColors.white : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: selected
+                ? const [
+                    BoxShadow(
+                      color: AppColors.cardShadow,
+                      blurRadius: 6,
+                      offset: Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: selected ? AppColors.darkGreen : AppColors.secondaryText,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Opens the date picker and shows the chosen date 
+  Future<void> _pickBirthDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _birthDate ?? DateTime.now(),
+      firstDate: DateTime(1990),
+      lastDate: DateTime.now(), // a pet cannot be born in the future
+    );
+
+    if (picked == null || !mounted) return;
+
+    setState(() {
+      _birthDate = picked;
+      _birthDateController.text = formatDate(picked);
+    });
+  }
+  /// male female unknown buttons
+  Widget _sexButton(String text, PetSex sex) {
+    final isSelected = sex == _selectedSex;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedSex = sex;
+          });
+        },
+        child: Container(
+          height: 44,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.lightMint : AppColors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isSelected ? AppColors.primary : AppColors.cardBorder,
+              width: isSelected ? 2 : 1.5,
+            ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: isSelected ? AppColors.darkGreen : AppColors.secondaryText,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _changeWeight(double change) {
+    
+    final text = _weightController.text.trim().replaceAll(',', '.');
+    final current = double.tryParse(text) ?? 0;
+
+    var newWeight = current + change;
+    if (newWeight < 0) {
+      newWeight = 0;
+    }
+
+    _weightController.text = newWeight.toStringAsFixed(1);
+  }
+
+  /// küçük arttır azalt butonu sağ kenar
+  Widget _weightStepper() {
+    return Padding(
+      padding: const EdgeInsets.only(right: 14),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.cardBorder,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => _changeWeight(0.1),
+                  child: const Icon(
+                    Icons.keyboard_arrow_up,
+                    size: 16,
+                    color: AppColors.darkGreen,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => _changeWeight(-0.1),
+                  child: const Icon(
+                    Icons.keyboard_arrow_down,
+                    size: 16,
+                    color: AppColors.darkGreen,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 10),
+          const Text(
+            'kg',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: AppColors.secondaryText,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -310,26 +492,135 @@ class _PetFormScreenState extends State<PetFormScreen> {
           children: [
             _photoPicker(),
             const SizedBox(height: AppSpacing.lg),
+
+            // Name
             _label('Name', required: true),
             TextFormField(
               controller: _nameController,
               textCapitalization: TextCapitalization.words,
               style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
-              decoration: fieldDecoration(hint: 'e.g. Misket').copyWith(
-                hintStyle: const TextStyle(fontSize: 15, color: AppColors.hint),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
+              decoration: _inputDecoration('e.g. Misket'),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+
+            // Species
+            _label('Species', required: true),
+            _speciesRow(PetSpecies.cat, PetSpecies.dog, PetSpecies.bird),
+            const SizedBox(height: 8),
+            _speciesRow(PetSpecies.fish, PetSpecies.rabbit, PetSpecies.hamster),
+            const SizedBox(height: AppSpacing.lg),
+
+            // Breed
+            _label('Breed (Optional)'),
+            TextFormField(
+              controller: _breedController,
+              textCapitalization: TextCapitalization.words,
+              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              decoration: _inputDecoration('e.g. Tabby'),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+
+            // Age: birth date or approximate age
+            _label('Age information · Optional'),
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: AppColors.lightMint,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  _ageTab(
+                    'Date of Birth',
+                    selected: _useBirthDate,
+                    onTap: () {
+                      setState(() {
+                        _useBirthDate = true;
+                      });
+                    },
+                  ),
+                  _ageTab(
+                    'Approximate Age',
+                    selected: !_useBirthDate,
+                    onTap: () {
+                      setState(() {
+                        _useBirthDate = false;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+
+            // Only the field of the selected tab is shown.
+            if (_useBirthDate) ...[
+              _label('Date of Birth (Optional)'),
+              TextFormField(
+                controller: _birthDateController,
+                readOnly: true,
+                onTap: _pickBirthDate,
+                style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+                decoration: _inputDecoration(
+                  'DD/MM/YYYY',
+                  icon: Icons.calendar_today_outlined,
                 ),
+              ),
+            ] else ...[
+              _label('Approximate Age (Optional)'),
+              TextFormField(
+                controller: _ageController,
+                keyboardType: TextInputType.number,
+                style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+                decoration: _inputDecoration('e.g. 3', suffix: 'years'),
+              ),
+            ],
+            const SizedBox(height: AppSpacing.lg),
+
+            // Sex
+            _label('Sex · Optional'),
+            Row(
+              children: [
+                _sexButton('Male', PetSex.male),
+                const SizedBox(width: 8),
+                _sexButton('Female', PetSex.female),
+                const SizedBox(width: 8),
+                _sexButton('Unknown', PetSex.unknown),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.lg),
+
+            // Weight
+            _label('Weight (Optional)'),
+            TextFormField(
+              controller: _weightController,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              decoration: _inputDecoration('4.8').copyWith(
+                suffixIcon: _weightStepper(),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
 
-            _label('Species', required: true),
-            _speciesRow(PetSpecies.cat, PetSpecies.dog, PetSpecies.bird),
-            const SizedBox(height: 10),
-            _speciesRow(PetSpecies.fish, PetSpecies.rabbit, PetSpecies.hamster),
+            // Microchip
+            _label('Microchip Number (Optional)'),
+            TextFormField(
+              controller: _microchipController,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              decoration: _inputDecoration('Number'),
+            ),
             const SizedBox(height: AppSpacing.lg),
+
+            // Tag
+            _label('Tag Information (Optional)'),
+            TextFormField(
+              controller: _tagController,
+              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              decoration: _inputDecoration('Tag ID or identifying details'),
+            ),
           ],
         ),
       ),
