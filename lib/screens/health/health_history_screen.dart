@@ -9,6 +9,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/species_colors.dart';
 import '../../widgets/active_profile_card.dart';
+import 'health_record_form_screen.dart';
 
 class HealthHistoryScreen extends StatefulWidget {
   const HealthHistoryScreen({super.key});
@@ -434,9 +435,21 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                       icon: Icons.edit_outlined,
                                       color: AppColors.darkGreen,
                                       tooltip: 'Edit record',
-                                      onPressed: () {
-                                        // Edit form will be connected later.
+                                      onPressed: () async {
+                                        final updated = await Navigator.push<bool>(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => HealthRecordFormScreen(
+                                              record: record,
+                                            ),
+                                          ),
+                                        );
+
+                                        if (updated == true && mounted) {
+                                          setState(() {});
+                                        }
                                       },
+                                     
                                     ),
                                     const SizedBox(width: 5),
                                     _recordActionButton(

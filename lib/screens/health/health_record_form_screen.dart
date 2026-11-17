@@ -16,7 +16,12 @@ import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
 
 class HealthRecordFormScreen extends StatefulWidget {
-  const HealthRecordFormScreen({super.key});
+  final HealthRecord? record;
+
+  const HealthRecordFormScreen({
+    super.key,
+    this.record,
+  });
 
   @override
   State<HealthRecordFormScreen> createState() =>
@@ -36,6 +41,20 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
   bool _isTypeMenuOpen = false;
   bool _isPickingPhoto = false;
   XFile? _selectedPhoto;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final record = widget.record;
+
+    if (record != null) {
+      _selectedType = record.type;
+      _selectedDate = record.date;
+      _titleController.text = record.title;
+      _notesController.text = record.notes ?? '';
+    }
+  }
 
   @override
   void dispose() {
@@ -407,17 +426,33 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final notes = _notesController.text.trim();
+    final existingRecord = widget.record;
 
-    final record = HealthRecord(
-      id: DateTime.now().microsecondsSinceEpoch.toString(),
-      petId: activePet.id,
+    final updatedRecord = HealthRecord(
+      id: existingRecord?.id ??
+          DateTime.now().microsecondsSinceEpoch.toString(),
+      petId: existingRecord?.petId ?? activePet.id,
       type: _selectedType,
       title: _titleController.text.trim(),
       date: _selectedDate,
       notes: notes.isEmpty ? null : notes,
+      attachmentUrl: existingRecord?.attachmentUrl,
     );
 
-    sampleHealthRecords.add(record);
+    if (existingRecord == null) {
+      sampleHealthRecords.add(updatedRecord);
+    } else {
+      final index = sampleHealthRecords.indexWhere(
+        (record) => record.id == existingRecord.id,
+      );
+
+      if (index == -1) {
+        _showMessage('Record not found.');
+        return;
+      }
+
+      sampleHealthRecords[index] = updatedRecord;
+    }
 
     Navigator.pop(context, true);
   }
@@ -493,7 +528,9 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
         child: SafeArea(
           top: false,
           child: PrimaryButton(
-            text: 'Create record',
+            text: widget.record == null
+                ? 'Create record'
+                : 'Save changes',
             onPressed: _saveRecord,
           ),
         ),
