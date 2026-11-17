@@ -1,26 +1,82 @@
-
 import 'package:flutter/material.dart';
 
 import '../../data/app_state.dart';
 import '../../data/sample_data.dart';
 import '../../models/health_record.dart';
+import '../../models/pet.dart';
 import '../../routes/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../theme/species_colors.dart';
 import '../../widgets/active_profile_card.dart';
+import '../home/widgets/pet_chips_row.dart';
 import 'health_record_form_screen.dart';
 
 class HealthHistoryScreen extends StatefulWidget {
   const HealthHistoryScreen({super.key});
 
   @override
-  State<HealthHistoryScreen> createState() =>
-      _HealthHistoryScreenState();
+  State<HealthHistoryScreen> createState() => _HealthHistoryScreenState();
 }
 
 class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   HealthRecordType? selectedFilter;
+
+  Future<void> _selectPet() async {
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (sheetContext) {
+        return SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Select a pet',
+                  style: AppTextStyles.headingMedium.copyWith(fontSize: 20),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Choose whose health records to view',
+                  style: AppTextStyles.bodyMedium.copyWith(fontSize: 12),
+                ),
+                const SizedBox(height: 20),
+                PetChipsRow(
+                  selectedPet: activePet,
+                  onPetSelected: (Pet pet) {
+                    setState(() {
+                      activePet = pet;
+                      selectedFilter = null;
+                    });
+
+                    Navigator.pop(sheetContext);
+                  },
+                  onAddPet: () {
+                    Navigator.pop(sheetContext);
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'You can add a new pet from the Pets tab.',
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   String _typeLabel(HealthRecordType type) {
     return switch (type) {
@@ -65,10 +121,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   }
 
   Future<void> _openAddRecord() async {
-    await Navigator.pushNamed(
-      context,
-      AppRoutes.healthRecordForm,
-    );
+    await Navigator.pushNamed(context, AppRoutes.healthRecordForm);
 
     if (mounted) {
       setState(() {});
@@ -81,9 +134,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
       builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Delete health record?'),
-          content: Text(
-            'Are you sure you want to delete "${record.title}"?',
-          ),
+          content: Text('Are you sure you want to delete "${record.title}"?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -109,9 +160,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
 
     if (shouldDelete == true && mounted) {
       setState(() {
-        sampleHealthRecords.removeWhere(
-          (item) => item.id == record.id,
-        );
+        sampleHealthRecords.removeWhere((item) => item.id == record.id);
       });
     }
   }
@@ -129,21 +178,12 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
         borderRadius: BorderRadius.circular(18),
         child: Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(
-            horizontal: 14,
-            vertical: 13,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: AppColors.mintBorder,
-              width: 1.3,
-            ),
+            border: Border.all(color: AppColors.mintBorder, width: 1.3),
             gradient: const LinearGradient(
-              colors: [
-                AppColors.lightMint,
-                AppColors.background,
-              ],
+              colors: [AppColors.lightMint, AppColors.background],
             ),
           ),
           child: Row(
@@ -155,11 +195,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(13),
                 ),
-                child: Icon(
-                  icon,
-                  color: AppColors.darkGreen,
-                  size: 27,
-                ),
+                child: Icon(icon, color: AppColors.darkGreen, size: 27),
               ),
               const SizedBox(width: 13),
               Expanded(
@@ -216,16 +252,11 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
           onTap: onTap,
           borderRadius: BorderRadius.circular(30),
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 10,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               border: Border.all(
-                color: selected
-                    ? AppColors.primary
-                    : AppColors.fieldBorder,
+                color: selected ? AppColors.primary : AppColors.fieldBorder,
                 width: 1.2,
               ),
             ),
@@ -299,17 +330,10 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
             width: 33,
             height: 33,
             decoration: BoxDecoration(
-              border: Border.all(
-                color: AppColors.fieldBorder,
-                width: 1.2,
-              ),
+              border: Border.all(color: AppColors.fieldBorder, width: 1.2),
               borderRadius: BorderRadius.circular(9),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 19,
-            ),
+            child: Icon(icon, color: color, size: 19),
           ),
         ),
       ),
@@ -351,8 +375,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                         child: Icon(
                           icon,
                           size: 23,
-                          color: record.type ==
-                                  HealthRecordType.medication
+                          color: record.type == HealthRecordType.medication
                               ? AppColors.white
                               : AppColors.darkGreen,
                         ),
@@ -408,25 +431,22 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
                                       child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 6),
+                                        padding: const EdgeInsets.only(top: 6),
                                         child: Text(
                                           record.title,
-                                          style:
-                                              AppTextStyles.bodyLarge.copyWith(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w700,
-                                            color: AppColors.darkGreen,
-                                          ),
+                                          style: AppTextStyles.bodyLarge
+                                              .copyWith(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w700,
+                                                color: AppColors.darkGreen,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -436,20 +456,21 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                       color: AppColors.darkGreen,
                                       tooltip: 'Edit record',
                                       onPressed: () async {
-                                        final updated = await Navigator.push<bool>(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => HealthRecordFormScreen(
-                                              record: record,
-                                            ),
-                                          ),
-                                        );
+                                        final updated =
+                                            await Navigator.push<bool>(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    HealthRecordFormScreen(
+                                                      record: record,
+                                                    ),
+                                              ),
+                                            );
 
                                         if (updated == true && mounted) {
                                           setState(() {});
                                         }
                                       },
-                                     
                                     ),
                                     const SizedBox(width: 5),
                                     _recordActionButton(
@@ -467,8 +488,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                   const SizedBox(height: 7),
                                   Text(
                                     record.notes!,
-                                    style:
-                                        AppTextStyles.bodyMedium.copyWith(
+                                    style: AppTextStyles.bodyMedium.copyWith(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
                                       height: 1.3,
@@ -498,9 +518,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
 
     final records = selectedFilter == null
         ? allRecords
-        : allRecords
-            .where((record) => record.type == selectedFilter)
-            .toList();
+        : allRecords.where((record) => record.type == selectedFilter).toList();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -523,37 +541,31 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
             petName: activePet.name,
             petType: speciesLabel(activePet.species),
             imageUrl: activePet.avatarPath,
+            onTap: _selectPet,
           ),
-
           const SizedBox(height: 30),
-
           _actionCard(
             title: 'Add health record',
             subtitle: 'Record a vaccination, treatment, or visit',
             icon: Icons.add,
             onTap: _openAddRecord,
           ),
-
           const SizedBox(height: 14),
-
           _actionCard(
             title: 'Weight Tracking',
             subtitle: '4.8 kg · View chart and recent entries',
             icon: Icons.monitor_weight_outlined,
-            onTap: () {
-              Navigator.pushNamed(
-                context,
-                AppRoutes.weightTracking,
-              );
+            onTap: () async {
+              await Navigator.pushNamed(context, AppRoutes.weightTracking);
+
+              if (mounted) {
+                setState(() {});
+              }
             },
           ),
-
           const SizedBox(height: 20),
-
           _filterRow(),
-
           const SizedBox(height: 24),
-
           if (records.isEmpty)
             Center(
               child: Padding(
