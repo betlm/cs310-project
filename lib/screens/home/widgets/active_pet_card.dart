@@ -4,6 +4,7 @@ import '../../../models/pet.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../theme/species_colors.dart';
+import '../../../utils/pet_format.dart';
 
 /// Large card on Home showing the active pet's avatar, name,
 /// species, age and weight. Its color depends on the pet's species.
@@ -77,7 +78,7 @@ class ActivePetCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _subtitle(pet),
+                    petSubtitle(pet),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
@@ -112,44 +113,5 @@ class ActivePetCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  /// Builds a line like "Cat · 3 years · 4.8 kg".
-  /// Age and weight are skipped if they are unknown.
-  static String _subtitle(Pet pet) {
-    var text = _speciesLabel(pet.species);
-
-    final age = pet.ageInYears;
-    if (age != null) {
-      if (age == 1) {
-        text = '$text · 1 year';
-      } else {
-        text = '$text · $age years';
-      }
-    }
-
-    if (pet.weightKg != null) {
-      text = '$text · ${pet.weightKg} kg';
-    }
-
-    return text;
-  }
-
-  /// Display name of each species.
-  static String _speciesLabel(PetSpecies species) {
-    switch (species) {
-      case PetSpecies.cat:
-        return 'Cat';
-      case PetSpecies.dog:
-        return 'Dog';
-      case PetSpecies.bird:
-        return 'Bird';
-      case PetSpecies.fish:
-        return 'Fish';
-      case PetSpecies.rabbit:
-        return 'Rabbit';
-      case PetSpecies.hamster:
-        return 'Hamster';
-    }
   }
 }

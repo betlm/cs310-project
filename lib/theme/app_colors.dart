@@ -17,6 +17,7 @@ class AppColors {
   static const Color hint = Color(0xFF9AA8A3);
   static const Color fieldBorder = Color(0xFFD0D9D5);
   static const Color danger = Color(0xFFB85B52);
+  static const Color dangerLight = Color(0xFFFFF0E8);
 
   // Compatibility aliases for existing theme code.
   static const Color mint = primary;
@@ -27,6 +28,8 @@ class AppColors {
   static const Color creamBorder = Color(0xFFEADFD3);
   static const Color mintBorder = Color(0xFFCDE9E1);
   static const Color weightCardBorder = Color(0xFFBFE1D9);
+    static const Color cardBorder = Color(0xFFE3E6E4);
+  static const Color dashedBorder = Color(0xFFC4CBC8);
 
   // Reminder card
   static const Color reminderIcon = Color(0xFFF08E70);

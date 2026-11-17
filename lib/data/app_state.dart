@@ -79,3 +79,23 @@ Reminder? nextReminderFor(String petId) {
   upcoming.sort((a, b) => nextOccurrence(a).compareTo(nextOccurrence(b)));
   return upcoming.first;
 }
+
+
+/// Deletes a pet and all of its records like reminders, health records,
+/// weights, supplies and photos
+///
+/// If the deleted pet was the active pet, the first pet in the list
+/// becomes active
+void deletePet(Pet pet) {
+  samplePets.removeWhere((p) => p.id == pet.id);
+
+  sampleReminders.removeWhere((r) => r.petId == pet.id);
+  sampleHealthRecords.removeWhere((r) => r.petId == pet.id);
+  sampleWeightEntries.removeWhere((w) => w.petId == pet.id);
+  sampleSupplies.removeWhere((s) => s.petId == pet.id);
+  samplePhotos.removeWhere((p) => p.petId == pet.id);
+
+  if (activePet.id == pet.id) {
+    activePet = samplePets.first;
+  }
+}
