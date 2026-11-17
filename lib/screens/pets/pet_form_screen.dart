@@ -3,14 +3,16 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
+import '../../data/app_state.dart';
 import '../../models/pet.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/species_colors.dart';
 import '../../widgets/form_field_decoration.dart';
+import '../../widgets/confirm_dialog.dart';
 import '../../widgets/primary_button.dart';
 import '../../utils/date_format.dart';
+import '../../data/sample_data.dart';
 
 /// Create edit pet form
 /// Opened empty to add a new pet, or with a pet as the route argument to edit that pet
@@ -23,6 +25,10 @@ class PetFormScreen extends StatefulWidget {
 
 class _PetFormScreenState extends State<PetFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  /// The pet being edited or not
+  Pet? _editingPet;
+  ///the fields are filled only once
+  bool _formInitialized = false;
   // Photo
   final _imagePicker = ImagePicker(); //galeriyi acar
   static const int _maxImageBytes = 10 * 1024 * 1024; // 10 MB
@@ -55,8 +61,43 @@ class _PetFormScreenState extends State<PetFormScreen> {
     _tagController.dispose();
     super.dispose();
   }
+  /// Reads the pet sent with the route from edit buton
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-    /// Shows a short message at the bottom of the screen.
+    if (_formInitialized) return;
+    _formInitialized = true;
+
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+    if (arguments is! Pet) return; // no pet: creating a new one
+
+    final pet = arguments;
+    _editingPet = pet;
+
+    _nameController.text = pet.name;
+    _selectedSpecies = pet.species;
+    _breedController.text = pet.breed ?? '';
+    _selectedSex = pet.sex;
+    _microchipController.text = pet.microchipNumber ?? '';
+    _tagController.text = pet.tagInfo ?? '';
+
+    if (pet.weightKg != null) {
+      _weightController.text = pet.weightKg.toString();
+    }
+
+    // Open the tab that matches the saved age info
+    if (pet.birthDate != null) {
+      _useBirthDate = true;
+      _birthDate = pet.birthDate;
+      _birthDateController.text = formatDate(pet.birthDate!);
+    } else if (pet.approximateAgeYears != null) {
+      _useBirthDate = false;
+      _ageController.text = pet.approximateAgeYears.toString();
+    }
+  }
+
+    /// Shows a short message at the bottom of the screen
   void _showMessage(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
@@ -106,8 +147,81 @@ class _PetFormScreenState extends State<PetFormScreen> {
     }
   }
 
-  /// Saves the pet filled  later in the save step
-  void _saveProfile() {}
+  /// Check form - adds the new pet to the list shows "Pet Saved" and closes the form
+  Future<void> _saveProfile() async {
+    // Runs every validator shows the red messages if something is wrong
+    if (!_formKey.currentState!.validate()) {
+      _showMessage('Please fix the highlighted fields.');
+      return;
+    }
+
+    // optional one - if empty = null
+    final breed = _breedController.text.trim();
+    final microchip = _microchipController.text.trim();
+    final tag = _tagController.text.trim();
+    final weightText = _weightController.text.trim().replaceAll(',', '.');
+    final ageText = _ageController.text.trim();
+
+    double? weight;
+    if (weightText.isNotEmpty) {
+      weight = double.parse(weightText);
+    }
+
+    // age selected
+    DateTime? birthDate;
+    int? approximateAge;
+    if (_useBirthDate) {
+      birthDate = _birthDate;
+    } else if (ageText.isNotEmpty) {
+      approximateAge = int.parse(ageText);
+    }
+
+    final pet = Pet(
+      id: _editingPet?.id ?? 'pet-${DateTime.now().microsecondsSinceEpoch}',
+      avatarAsset: _editingPet?.avatarAsset, ///Keep the same id when editing; create a new  for a new pet
+      name: _nameController.text.trim(),
+      species: _selectedSpecies,
+      breed: breed.isEmpty ? null : breed,
+      birthDate: birthDate,
+      approximateAgeYears: approximateAge,
+      sex: _selectedSex,
+      weightKg: weight,
+      microchipNumber: microchip.isEmpty ? null : microchip,
+      tagInfo: tag.isEmpty ? null : tag,
+    );
+
+      if (_editingPet == null) {
+      // New pet- add it to the list
+      samplePets.add(pet);
+    } else {
+      // Edited pet- replace the old one in the list
+      final index = samplePets.indexWhere((p) => p.id == pet.id);
+      if (index == -1) {
+        _showMessage('This pet could not be found.');
+        return;
+      }
+      samplePets[index] = pet;
+
+      // Home shows activePet, so update it 
+      if (activePet.id == pet.id) {
+        activePet = pet;
+      }
+    }
+
+    // Green "Pet Saved" dialog with one OK button
+    await showConfirmDialog(
+      context: context,
+      title: 'Pet Saved',
+      message: '${pet.name} was saved successfully.',
+      confirmText: 'OK',
+      cancelText: null,
+      isDanger: false,
+      icon: Icons.check_circle_outline,
+    );
+
+    if (!mounted) return;
+    Navigator.pop(context, true);
+  }
   Widget _label(String text, {bool required = false}) {
     final children = <Widget>[
       Text(
@@ -457,6 +571,60 @@ class _PetFormScreenState extends State<PetFormScreen> {
       ),
     );
   }
+
+  // validators part
+
+  String? _validateName(String? value) {
+    final name = value?.trim() ?? '';
+    if (name.isEmpty) {
+      return 'Please enter a name';
+    }
+    if (name.length > 30) {
+      return 'Name must be at most 30 characters';
+    }
+    return null;
+  }
+
+  String? _validateWeight(String? value) {
+    final text = value?.trim().replaceAll(',', '.') ?? '';
+    if (text.isEmpty) return null; // optional
+
+    final weight = double.tryParse(text);
+    if (weight == null) {
+      return 'Enter a number like 4.8';
+    }
+    if (weight <= 0) {
+      return 'Weight must be greater than 0';
+    }
+    if (weight > 200) {
+      return 'Please enter a realistic weight';
+    }
+    return null;
+  }
+
+  String? _validateAge(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return null; // optional
+
+    final age = int.tryParse(text);
+    if (age == null || age < 0) {
+      return 'Enter a whole number like 3';
+    }
+    if (age > 40) {
+      return 'Please enter a realistic age';
+    }
+    return null;
+  }
+
+  String? _validateMicrochip(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return null; // optional
+
+    if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
+      return 'Use digits only';
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -499,6 +667,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               controller: _nameController,
               textCapitalization: TextCapitalization.words,
               style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              validator: _validateName,
               decoration: _inputDecoration('e.g. Misket'),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -572,6 +741,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 controller: _ageController,
                 keyboardType: TextInputType.number,
                 style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+                validator: _validateAge,
                 decoration: _inputDecoration('e.g. 3', suffix: 'years'),
               ),
             ],
@@ -598,6 +768,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 decimal: true,
               ),
               style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              validator: _validateWeight,
               decoration: _inputDecoration('4.8').copyWith(
                 suffixIcon: _weightStepper(),
               ),
@@ -610,6 +781,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               controller: _microchipController,
               keyboardType: TextInputType.number,
               style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              validator: _validateMicrochip,
               decoration: _inputDecoration('Number'),
             ),
             const SizedBox(height: AppSpacing.lg),
