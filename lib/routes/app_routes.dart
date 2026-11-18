@@ -8,7 +8,6 @@ import '../screens/health/weight_tracking_screen.dart';
 import '../screens/home/main_shell.dart';
 import '../screens/pets/pet_details_screen.dart';
 import '../screens/pets/pet_form_screen.dart';
-import '../screens/photos/photo_detail_screen.dart';
 import '../screens/photos/photos_screen.dart';
 import '../screens/reminders/reminder_form_screen.dart';
 import '../screens/reminders/reminders_screen.dart';
@@ -19,7 +18,6 @@ import '../screens/supplies/supply_list_screen.dart';
 ///
 /// Home, Health history, My pets and Preferences are tabs inside the
 /// main shell, so they do not have their own route names.
-
 
 class AppRoutes {
   AppRoutes._();
@@ -50,25 +48,21 @@ class AppRoutes {
 
   // Photos
   static const String photos = '/photos';
-  static const String photoDetail = '/photos/detail';
-
 
   /// Which screen each route name opens.
   static Map<String, WidgetBuilder> get routes => {
-        welcome: (_) => const WelcomeScreen(),
-        signIn: (_) => const SignInScreen(),
-        signUp: (_) => const SignUpScreen(),
-        shell: (_) => const MainShell(),
-        petForm: (_) => const PetFormScreen(),
-        petDetails: (_) => const PetDetailsScreen(),
-        reminders: (_) => const RemindersScreen(),
-        reminderForm: (_) => const ReminderFormScreen(),
-        healthRecordForm: (_) => const HealthRecordFormScreen(),
-        weightTracking: (_) => const WeightTrackingScreen(),
-        supplies: (_) => const SupplyListScreen(),
-        supplyForm: (_) => const SupplyFormScreen(),
-        photos: (_) => const PhotosScreen(),
-        photoDetail: (_) => const PhotoDetailScreen(),
-      };
-
+    welcome: (_) => const WelcomeScreen(),
+    signIn: (_) => const SignInScreen(),
+    signUp: (_) => const SignUpScreen(),
+    shell: (_) => const MainShell(),
+    petForm: (_) => const PetFormScreen(),
+    petDetails: (_) => const PetDetailsScreen(),
+    reminders: (_) => const RemindersScreen(),
+    reminderForm: (_) => const ReminderFormScreen(),
+    healthRecordForm: (_) => const HealthRecordFormScreen(),
+    weightTracking: (_) => const WeightTrackingScreen(),
+    supplies: (_) => const SupplyListScreen(),
+    supplyForm: (_) => const SupplyFormScreen(),
+    photos: (_) => const PhotosScreen(),
+  };
 }

@@ -12,6 +12,7 @@ import '../../theme/app_text_styles.dart';
 import '../../theme/species_colors.dart';
 import '../../widgets/active_profile_card.dart';
 import '../home/widgets/pet_chips_row.dart';
+import 'photo_detail_screen.dart';
 
 class PhotosScreen extends StatefulWidget {
   const PhotosScreen({super.key});
@@ -131,7 +132,6 @@ class _PhotosScreenState extends State<PhotosScreen> {
     final path = photo.imageUrl;
     debugPrint('PHOTO PATH: $path');
 
-
     // Sample photos stored in the Flutter assets folder.
     if (path.startsWith('assets/')) {
       return Image.asset(
@@ -225,89 +225,13 @@ class _PhotosScreenState extends State<PhotosScreen> {
     await showDialog<void>(
       context: context,
       builder: (dialogContext) {
-        return Dialog(
-          backgroundColor: AppColors.background,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 24,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: AspectRatio(
-                    aspectRatio: 1.2,
-                    child: _photoImage(photo),
-                  ),
-                ),
-                const SizedBox(height: 18),
-                Text(
-                  'Photo $photoNumber',
-                  style: AppTextStyles.headingSmall.copyWith(
-                    color: AppColors.darkGreen,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Added to $petName's album",
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.secondaryText,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(dialogContext);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.darkGreen,
-                          backgroundColor: AppColors.white,
-                          side: const BorderSide(color: AppColors.fieldBorder),
-                          minimumSize: const Size(0, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: const Text('Close'),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {
-                          _deletePhoto(photo, dialogContext);
-                        },
-                        icon: const Icon(Icons.delete_outline, size: 20),
-                        label: const Text('Delete photo'),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.danger,
-                          backgroundColor: AppColors.white,
-                          side: BorderSide(
-                            color: AppColors.danger.withValues(alpha: 0.45),
-                          ),
-                          minimumSize: const Size(0, 52),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+        return PhotoDetailScreen(
+          photo: photo,
+          photoNumber: photoNumber,
+          petName: petName,
+          onDelete: () {
+            _deletePhoto(photo, dialogContext);
+          },
         );
       },
     );
