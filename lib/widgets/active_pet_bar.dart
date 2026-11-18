@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../../models/pet.dart';
-import '../../../theme/app_colors.dart';
-import '../../../theme/species_colors.dart';
+import '../models/pet.dart';
+import '../theme/app_colors.dart';
+import '../theme/species_colors.dart';
 
+/// Small "Active profile" card at the top of a screen, e.g. Supply list,
+/// Reminders and Health. Shows the active pet; tapping it should open
+/// the pet switcher:
+///   ActivePetBar(pet: activePet, onTap: _changePet)
 
 class ActivePetBar extends StatelessWidget {
   final Pet pet;

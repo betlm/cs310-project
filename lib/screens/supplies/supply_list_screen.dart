@@ -6,11 +6,12 @@ import '../../models/supply_item.dart';
 import '../../routes/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
+import '../../widgets/active_pet_bar.dart';
 import '../../widgets/confirm_dialog.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
-import 'widgets/active_pet_bar.dart';
+
 
 /// Shopping list of the active pet: pending items first then the purchased ones
 class SupplyListScreen extends StatefulWidget {
