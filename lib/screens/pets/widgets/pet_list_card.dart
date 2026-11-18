@@ -5,6 +5,7 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../theme/species_colors.dart';
 import '../../../utils/pet_format.dart';
+import '../../../widgets/square_icon_button.dart';
 
 /// One pet in the My pets list: avatar, name, breed and age,
 /// an "Active profile" line for the active pet, and edit / delete buttons
@@ -119,13 +120,13 @@ class PetListCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              _SquareIconButton(
+              SquareIconButton(
                 icon: Icons.edit_outlined,
                 color: AppColors.darkGreen,
                 onTap: onEdit,
               ),
               const SizedBox(width: AppSpacing.sm),
-              _SquareIconButton(
+              SquareIconButton(
                 icon: Icons.delete_outline,
                 color: AppColors.danger,
                 onTap: onDelete,
@@ -138,32 +139,3 @@ class PetListCard extends StatelessWidget {
   }
 }
 
-/// Small white square button with a thin border, used for edit and delete
-class _SquareIconButton extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final VoidCallback onTap;
-
-  const _SquareIconButton({
-    required this.icon,
-    required this.color,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.cardBorder, width: 1.5),
-        ),
-        child: Icon(icon, color: color, size: 20),
-      ),
-    );
-  }
-}
