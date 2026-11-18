@@ -173,11 +173,36 @@ final List<HealthRecord> sampleHealthRecords = [
 // ---------------------------------------------------------------------------
 
 final List<WeightEntry> sampleWeightEntries = [
-  WeightEntry(id: 'w-1', petId: 'pet-1', weightKg: 4.5, date: DateTime(2026, 7, 12)),
-  WeightEntry(id: 'w-2', petId: 'pet-1', weightKg: 4.6, date: DateTime(2026, 8, 12)),
-  WeightEntry(id: 'w-3', petId: 'pet-1', weightKg: 4.7, date: DateTime(2026, 9, 12)),
-  WeightEntry(id: 'w-4', petId: 'pet-1', weightKg: 4.8, date: DateTime(2026, 10, 12)),
-  WeightEntry(id: 'w-5', petId: 'pet-2', weightKg: 29.5, date: DateTime(2026, 10, 1)),
+  WeightEntry(
+    id: 'w-1',
+    petId: 'pet-1',
+    weightKg: 4.5,
+    date: DateTime(2026, 7, 12),
+  ),
+  WeightEntry(
+    id: 'w-2',
+    petId: 'pet-1',
+    weightKg: 4.6,
+    date: DateTime(2026, 8, 12),
+  ),
+  WeightEntry(
+    id: 'w-3',
+    petId: 'pet-1',
+    weightKg: 4.7,
+    date: DateTime(2026, 9, 12),
+  ),
+  WeightEntry(
+    id: 'w-4',
+    petId: 'pet-1',
+    weightKg: 4.8,
+    date: DateTime(2026, 10, 12),
+  ),
+  WeightEntry(
+    id: 'w-5',
+    petId: 'pet-2',
+    weightKg: 29.5,
+    date: DateTime(2026, 10, 1),
+  ),
 ];
 
 // ---------------------------------------------------------------------------
@@ -185,24 +210,66 @@ final List<WeightEntry> sampleWeightEntries = [
 // ---------------------------------------------------------------------------
 
 final List<SupplyItem> sampleSupplies = [
-  const SupplyItem(id: 's-1', petId: 'pet-1', name: 'Dry food', quantity: 2, unit: 'kg'),
-  const SupplyItem(id: 's-2', petId: 'pet-1', name: 'Cat litter', quantity: 1, unit: 'pack'),
+  const SupplyItem(
+    id: 's-1',
+    petId: 'pet-1',
+    name: 'Dry food',
+    quantity: 2,
+    unit: 'kg',
+  ),
+  const SupplyItem(
+    id: 's-2',
+    petId: 'pet-1',
+    name: 'Cat litter',
+    quantity: 1,
+    unit: 'pack',
+  ),
   const SupplyItem(id: 's-3', petId: 'pet-1', name: 'Toy mouse', quantity: 1),
   const SupplyItem(
-      id: 's-4', petId: 'pet-1', name: 'Hairball paste', quantity: 1, bought: true),
-  const SupplyItem(id: 's-5', petId: 'pet-2', name: 'Dog treats', quantity: 1, unit: 'pack'),
+    id: 's-4',
+    petId: 'pet-1',
+    name: 'Hairball paste',
+    quantity: 1,
+    bought: true,
+  ),
+  const SupplyItem(
+    id: 's-5',
+    petId: 'pet-2',
+    name: 'Dog treats',
+    quantity: 1,
+    unit: 'pack',
+  ),
 ];
 
 // ---------------------------------------------------------------------------
 // Photos (network images)
 // ---------------------------------------------------------------------------
 
-final List<PetPhoto> samplePhotos = List.generate(
-  8,
-  (i) => PetPhoto(
-    id: 'photo-${i + 1}',
-    petId: 'pet-1',
-    imageUrl: 'https://picsum.photos/seed/misket${i + 1}/400/400',
-    addedAt: DateTime(2026, 10, 1 + i),
-  ),
-);
+final List<PetPhoto> samplePhotos = [
+  // Misket - Cat
+  for (int i = 1; i <= 8; i++)
+    PetPhoto(
+      id: 'misket-photo-$i',
+      petId: 'pet-1',
+      imageUrl: 'assets/images/misket_$i.jpg',
+      addedAt: DateTime(2026, 10, i),
+    ),
+
+  // Ponçik - Dog
+  for (int i = 1; i <= 6; i++)
+    PetPhoto(
+      id: 'poncik-photo-$i',
+      petId: 'pet-2',
+      imageUrl: 'assets/images/poncik_$i.jpg',
+      addedAt: DateTime(2026, 10, i),
+    ),
+
+  // Cleo - Budgerigar
+  for (int i = 1; i <= 6; i++)
+    PetPhoto(
+      id: 'cleo-photo-$i',
+      petId: 'pet-3',
+      imageUrl: 'assets/images/cleo_$i.jpg',
+      addedAt: DateTime(2026, 10, i),
+    ),
+];
