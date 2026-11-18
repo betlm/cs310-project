@@ -210,28 +210,38 @@ final List<WeightEntry> sampleWeightEntries = [
 // ---------------------------------------------------------------------------
 
 final List<SupplyItem> sampleSupplies = [
+  // Misket: pending
   const SupplyItem(
     id: 's-1',
     petId: 'pet-1',
     name: 'Dry food',
     quantity: 2,
     unit: 'kg',
+    note: 'Grain-free',
   ),
   const SupplyItem(
     id: 's-2',
     petId: 'pet-1',
     name: 'Cat litter',
-    quantity: 1,
+    quantity: 2,
     unit: 'pack',
   ),
-  const SupplyItem(id: 's-3', petId: 'pet-1', name: 'Toy mouse', quantity: 1),
+  const SupplyItem(
+    id: 's-3',
+    petId: 'pet-1',
+    name: 'Grooming brush',
+    quantity: 1,
+  ),
+  // Misket: purchased
   const SupplyItem(
     id: 's-4',
     petId: 'pet-1',
-    name: 'Hairball paste',
+    name: 'Treats',
     quantity: 1,
+    unit: 'pack',
     bought: true,
   ),
+  // Ponçik
   const SupplyItem(
     id: 's-5',
     petId: 'pet-2',
