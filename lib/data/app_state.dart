@@ -99,3 +99,9 @@ void deletePet(Pet pet) {
     activePet = samplePets.first;
   }
 }
+
+
+/// Removes all bought supplies of a pet ("Clear purchased" on Supply list)
+void clearPurchasedSupplies(String petId) {
+  sampleSupplies.removeWhere((s) => s.petId == petId && s.bought);
+}
