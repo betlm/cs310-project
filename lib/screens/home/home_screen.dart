@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/app_state.dart';
 import '../../models/pet.dart';
 import '../../theme/app_spacing.dart';
+import '../pets/pet_details_sheet.dart';
 import 'widgets/active_pet_card.dart';
 import 'widgets/home_header.dart';
 import 'widgets/latest_weight_card.dart';
@@ -43,6 +44,12 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!mounted) return;
     setState(() {});
   }
+  /// opens the active pet's profile sheet and refreshes Home afterwards because the pet can be edited or deleted
+  Future<void> _openPetDetails() async {
+    await showPetDetails(context, activePet);
+    if (!mounted) return;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: AppSpacing.md),
             ActivePetCard(
               pet: pet,
-              onTap: () => _openScreen(AppRoutes.petDetails),
+              onTap: _openPetDetails,
             ),
             const SizedBox(height: AppSpacing.lg),
             UpcomingReminderSection(

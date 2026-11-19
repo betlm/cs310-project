@@ -6,8 +6,8 @@ import '../../models/pet.dart';
 import '../../routes/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
-import '../../widgets/confirm_dialog.dart';
 import '../../widgets/empty_state.dart';
+import 'pet_details_sheet.dart';
 import 'widgets/pet_list_card.dart';
 
 /// Bottom navigation tab: Pets
@@ -20,41 +20,29 @@ class MyPetsScreen extends StatefulWidget {
 }
 
 class _MyPetsScreenState extends State<MyPetsScreen> {
-  /// Opens another screen and refreshes this list when we come back,
-  /// because a pet may have been added or changed there
+  /// opens another screen and refreshes this list when we come back because a pet can be added or changed there
   Future<void> _openScreen(String routeName, {Object? arguments}) async {
     await Navigator.pushNamed(context, routeName, arguments: arguments);
     if (!mounted) return;
     setState(() {});
   }
 
-  /// Asks for confirmation, then deletes the pet
-  /// The last pet cannot be deleted because Home needs at least one.
-  Future<void> _confirmDelete(Pet pet) async {
-    if (samplePets.length == 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('You need at least one pet.')),
-      );
-      return;
-    }
-
-    final ok = await showConfirmDialog(
-      context: context,
-      title: 'Delete ${pet.name}?',
-      message: 'All reminders, health records, weights, supplies and '
-          'photos of ${pet.name} will be removed too.',
-      confirmText: 'Delete',
-    );
-
-    if (!ok || !mounted) return;
-
+  void _selectPet(Pet pet) {
     setState(() {
-      deletePet(pet);
+      activePet = pet;
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${pet.name} was deleted.')),
+      SnackBar(content: Text('${pet.name} is now the active pet.')),
     );
+  }
+
+  /// Asks for confirmation and deletes the pet (shared with the
+  /// details sheet), then refreshes the list
+  Future<void> _confirmDelete(Pet pet) async {
+    await confirmAndDeletePet(context, pet);
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override
@@ -85,7 +73,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
             return const Padding(
               padding: EdgeInsets.only(bottom: AppSpacing.md),
               child: Text(
-                'Select the profile whose details you want to view.',
+                'Tap a profile to make it the active pet.',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -107,7 +95,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
           return PetListCard(
             pet: pet,
             isActive: pet.id == activePet.id,
-            onTap: () => _openScreen(AppRoutes.petDetails, arguments: pet),
+            onTap: () => _selectPet(pet),
             onEdit: () => _openScreen(AppRoutes.petForm, arguments: pet),
             onDelete: () => _confirmDelete(pet),
           );
