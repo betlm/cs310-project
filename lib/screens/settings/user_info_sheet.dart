@@ -52,8 +52,84 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
     super.dispose();
   }
 
-  /// Saves the changes Filled in in the next commit
-  void _save() {}
+  /// True if the user typed anything into one of the password fields
+  /// Then all three password fields are checked; otherwise they are skipped
+  bool get _changingPassword {
+    return _currentPasswordController.text.isNotEmpty ||
+        _newPasswordController.text.isNotEmpty ||
+        _confirmPasswordController.text.isNotEmpty;
+  }
+
+  // Validators: return an error message, or null if the value is OK
+  String? _validateName(String? value) {
+    final name = value?.trim() ?? '';
+    if (name.isEmpty) {
+      return 'Please enter your name';
+    }
+    if (name.length > 40) {
+      return 'Name must be at most 40 characters';
+    }
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    final email = value?.trim() ?? '';
+    if (email.isEmpty) {
+      return 'Please enter your email';
+    }
+    // Same rule as the Sign in and Sign up screens.
+    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
+      return 'Please enter a valid email';
+    }
+    return null;
+  }
+
+  String? _validateCurrentPassword(String? value) {
+    if (!_changingPassword) return null;
+    if (value == null || value.isEmpty) {
+      return 'Enter your current password';
+    }
+    return null;
+  }
+
+  String? _validateNewPassword(String? value) {
+    if (!_changingPassword) return null;
+    if (value == null || value.length < 8) {
+      return 'At least 8 characters';
+    }
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (!_changingPassword) return null;
+    if (value != _newPasswordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
+  /// Checks for saves the name and e-mail, closes the sheet and shows a short message
+  void _save() {
+    if (!_formKey.currentState!.validate()) return;
+
+    final passwordChanged = _changingPassword;
+
+    userName = _nameController.text.trim();
+    userEmail = _emailController.text.trim();
+    // The password is not stored yet
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          passwordChanged
+              ? 'Profile and password updated.'
+              : 'Profile updated.',
+        ),
+      ),
+    );
+
+    Navigator.pop(context);
+  }
+
   Widget _label(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
@@ -75,6 +151,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
         horizontal: 16,
         vertical: 13,
       ),
+      errorMaxLines: 2,
     );
   }
 
@@ -148,6 +225,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
                   style: fieldText,
+                  validator: _validateName,
                   decoration: _inputDecoration(
                     'Your name',
                     icon: Icons.person_outline,
@@ -159,6 +237,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   style: fieldText,
+                  validator: _validateEmail,
                   decoration: _inputDecoration(
                     'you@example.com',
                     icon: Icons.mail_outline,
@@ -203,6 +282,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                   controller: _currentPasswordController,
                   obscureText: true,
                   style: fieldText,
+                  validator: _validateCurrentPassword,
                   decoration: _inputDecoration('Enter current password'),
                 ),
                 const SizedBox(height: 14),
@@ -218,6 +298,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                             controller: _newPasswordController,
                             obscureText: true,
                             style: fieldText,
+                            validator: _validateNewPassword,
                             decoration:
                                 _inputDecoration('At least 8 characters'),
                           ),
@@ -234,6 +315,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                             controller: _confirmPasswordController,
                             obscureText: true,
                             style: fieldText,
+                            validator: _validateConfirmPassword,
                             decoration: _inputDecoration('Repeat password'),
                           ),
                         ],
