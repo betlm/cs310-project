@@ -27,11 +27,14 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
     setState(() {});
   }
 
-    /// opens the pet's profile sheet and refreshes the list 
-  Future<void> _openPetDetails(Pet pet) async {
-    await showPetDetails(context, pet);
-    if (!mounted) return;
-    setState(() {});
+  void _selectPet(Pet pet) {
+    setState(() {
+      activePet = pet;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('${pet.name} is now the active pet.')),
+    );
   }
 
   /// Asks for confirmation and deletes the pet (shared with the
@@ -70,7 +73,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
             return const Padding(
               padding: EdgeInsets.only(bottom: AppSpacing.md),
               child: Text(
-                'Select the profile whose details you want to view.',
+                'Tap a profile to make it the active pet.',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -92,7 +95,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
           return PetListCard(
             pet: pet,
             isActive: pet.id == activePet.id,
-            onTap: () => _openPetDetails(pet),
+            onTap: () => _selectPet(pet),
             onEdit: () => _openScreen(AppRoutes.petForm, arguments: pet),
             onDelete: () => _confirmDelete(pet),
           );
