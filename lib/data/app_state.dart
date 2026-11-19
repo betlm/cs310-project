@@ -11,6 +11,19 @@ import 'sample_data.dart';
 /// Screens read this value when they build. To change it, a screen assigns a new pet inside setState, so the screen rebuilds with it.
 Pet activePet = samplePets.first;
 
+/// 'en' or 'tr'
+String appLanguage = 'en';
+
+/// 'light', 'dark' or 'system'
+String appAppearance = 'light';
+
+/// Whether local reminder notifications are allowed.
+bool notificationsEnabled = true;
+
+// The signed-in user. Real data comes from Firebase in Step 3.
+String userName = 'User';
+String userEmail = 'user@example.com';
+
 // Helpers that return only the records of one pet.
 
 List<Reminder> remindersFor(String petId) {

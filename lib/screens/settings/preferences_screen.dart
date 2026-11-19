@@ -1,35 +1,433 @@
 import 'package:flutter/material.dart';
 
+import '../../data/app_state.dart';
 import '../../routes/app_routes.dart';
+import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
-import '../../widgets/screen_placeholder.dart';
 
-//test
 /// Bottom navigation tab: Profile.
 /// Shown inside MainShell, so it has no back arrow.
-class PreferencesScreen extends StatelessWidget {
+///
+/// Language and appearance choices are saved in app_state.dart but do not
+/// change the app yet; that will be connected later.
+class PreferencesScreen extends StatefulWidget {
   const PreferencesScreen({super.key});
+
+  @override
+  State<PreferencesScreen> createState() => _PreferencesScreenState();
+}
+
+class _PreferencesScreenState extends State<PreferencesScreen> {
+  /// Opens the user information sheet. Added in the next commit.
+  void _openUserInfo() {}
+
+  /// Opens the notifications sheet (made by Ayça).
+  void _openNotifications() {}
+
+  /// Goes back to Welcome and clears the navigation history,
+  /// so the back button cannot return to the app.
+  void _signOut() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.welcome,
+      (route) => false,
+    );
+  }
+
+  /// Small grey title like "APP" or "ACCOUNT".
+  Widget _sectionTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.sm),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+          letterSpacing: 1.5,
+          color: AppColors.secondaryText,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Preferences')),
-      body: Column(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.white,
+        foregroundColor: AppColors.darkGreen,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        shape: const Border(
+          bottom: BorderSide(color: AppColors.cardBorder),
+        ),
+        title: const Text(
+          'Preferences',
+          style: TextStyle(
+            fontFamily: 'Manrope',
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
+            color: AppColors.darkGreen,
+          ),
+        ),
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.md + AppSpacing.xs, // 20
+          AppSpacing.md,
+          AppSpacing.md + AppSpacing.xs,
+          AppSpacing.lg,
+        ),
         children: [
-          const Expanded(child: ScreenPlaceholder(title: 'Preferences')),
-          Padding(
-            padding: AppSpacing.screenPadding,
-            child: OutlinedButton(
-              // Sign out: go back to Welcome and clear the navigation history.
-              onPressed: () => Navigator.pushNamedAndRemoveUntil(
-                context,
-                AppRoutes.welcome,
-                (route) => false,
+          _UserCard(
+            name: userName,
+            email: userEmail,
+            onTap: _openUserInfo,
+          ),
+          const SizedBox(height: AppSpacing.lg),
+
+          // APP settings
+          _sectionTitle('APP'),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              children: [
+                // Language
+                _SettingRow(
+                  icon: Icons.menu,
+                  title: 'Language',
+                  subtitle: 'Choose the app language',
+                  child: Row(
+                    children: [
+                      _OptionButton(
+                        text: 'English',
+                        selected: appLanguage == 'en',
+                        onTap: () {
+                          setState(() {
+                            appLanguage = 'en';
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      _OptionButton(
+                        text: 'Türkçe',
+                        selected: appLanguage == 'tr',
+                        onTap: () {
+                          setState(() {
+                            appLanguage = 'tr';
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1, color: AppColors.cardBorder),
+
+                // Appearance
+                _SettingRow(
+                  icon: Icons.visibility_outlined,
+                  title: 'Appearance',
+                  subtitle: 'Choose how PetPocket looks',
+                  child: Row(
+                    children: [
+                      _OptionButton(
+                        text: 'Light',
+                        selected: appAppearance == 'light',
+                        onTap: () {
+                          setState(() {
+                            appAppearance = 'light';
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      _OptionButton(
+                        text: 'Dark',
+                        selected: appAppearance == 'dark',
+                        onTap: () {
+                          setState(() {
+                            appAppearance = 'dark';
+                          });
+                        },
+                      ),
+                      const SizedBox(width: 8),
+                      _OptionButton(
+                        text: 'System',
+                        selected: appAppearance == 'system',
+                        onTap: () {
+                          setState(() {
+                            appAppearance = 'system';
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(height: 1, color: AppColors.cardBorder),
+
+                // Notifications
+                GestureDetector(
+                  onTap: _openNotifications,
+                  child: Container(
+                    color: Colors.transparent, // whole row is tappable
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 16,
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          Icons.notifications_none,
+                          size: 22,
+                          color: AppColors.darkGreen,
+                        ),
+                        const SizedBox(width: 14),
+                        const Expanded(
+                          child: Text(
+                            'Notifications',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.darkGreen,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          notificationsEnabled ? 'On' : 'Off',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.secondaryText,
+                          ),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(
+                          Icons.chevron_right,
+                          color: AppColors.darkGreen,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.lg),
+
+          // ACCOUNT
+          _sectionTitle('ACCOUNT'),
+          const SizedBox(height: AppSpacing.sm),
+          OutlinedButton(
+            onPressed: _signOut,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: AppColors.danger,
+              backgroundColor: AppColors.white,
+              minimumSize: const Size(double.infinity, 46),
+              side: const BorderSide(color: AppColors.dangerLight, width: 1.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text('Sign out'),
+              textStyle: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            child: const Text('Sign out'),
+          ),
+          const SizedBox(height: AppSpacing.md),
+
+          const Text(
+            'PetPocket v1.0.0 · This app does not provide medical advice.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              color: AppColors.secondaryText,
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// card with the user's initial, name and e-mail
+/// Tapping it opens the user information sheet
+class _UserCard extends StatelessWidget {
+  final String name;
+  final String email;
+  final VoidCallback onTap;
+
+  const _UserCard({
+    required this.name,
+    required this.email,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // First letter of the name 
+    String initial = '?';
+    if (name.trim().isNotEmpty) {
+      initial = name.trim()[0].toUpperCase();
+    }
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 26,
+              backgroundColor: AppColors.primary,
+              child: Text(
+                initial,
+                style: const TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 17,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.darkGreen,
+                ),
+              ),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontFamily: 'Manrope',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.darkGreen,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    email,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.secondaryText,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: AppColors.darkGreen),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// One setting inside the APP box: icon, title, subtitle and the choice buttons under them.
+class _SettingRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final Widget child;
+
+  const _SettingRow({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 22, color: AppColors.darkGreen),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.darkGreen,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.secondaryText,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                child,
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One choice button, e.g. "English" or "Dark"
+class _OptionButton extends StatelessWidget {
+  final String text;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _OptionButton({
+    required this.text,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 36,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: selected ? AppColors.lightMint : AppColors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: selected ? AppColors.primary : AppColors.cardBorder,
+              width: selected ? 2 : 1.5,
+            ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: selected ? AppColors.darkGreen : AppColors.secondaryText,
+            ),
+          ),
+        ),
       ),
     );
   }
