@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -51,33 +52,193 @@ class PhotoDetailScreen extends StatelessWidget {
 
   Widget _imageFallback() {
     return const Center(
-      child: Icon(Icons.pets, size: 48, color: AppColors.secondaryText),
+      child: Icon(
+        Icons.pets,
+        size: 48,
+        color: AppColors.secondaryText,
+      ),
     );
+  }
+
+  // Delete confirmation dialog
+  Future<void> _showDeleteConfirmation(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: AppColors.background,
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 24,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 32, 24, 28),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Delete icon
+                Container(
+                  width: 84,
+                  height: 84,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFFFF0E8),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.delete_outline,
+                    color: AppColors.danger,
+                    size: 36,
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Title
+                const Text(
+                  'Delete Photo?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Manrope',
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.darkGreen,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Warning message
+                const Text(
+                  'This photo will be permanently removed '
+                  'from the album.\n'
+                  'This action cannot be undone.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontFamily: 'Manrope',
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.secondaryText,
+                    height: 1.5,
+                  ),
+                ),
+
+                const SizedBox(height: 28),
+
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          Navigator.pop(dialogContext, false);
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.darkGreen,
+                          backgroundColor: AppColors.white,
+                          side: const BorderSide(
+                            color: AppColors.fieldBorder,
+                          ),
+                          minimumSize: const Size(0, 60),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 12),
+
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(dialogContext, true);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.danger,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          minimumSize: const Size(0, 60),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                        ),
+                        child: const Text(
+                          'Delete',
+                          style: TextStyle(
+                            fontFamily: 'Manrope',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    // Only delete when the user confirms
+    if (confirmed == true) {
+      onDelete();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       backgroundColor: AppColors.background,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 24,
+        vertical: 24,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Photo
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
-              child: AspectRatio(aspectRatio: 1.2, child: _photoImage()),
+              child: AspectRatio(
+                aspectRatio: 1.2,
+                child: _photoImage(),
+              ),
             ),
+
             const SizedBox(height: 18),
+
+            // Photo title
             Text(
               'Photo $photoNumber',
-              style: AppTextStyles.headingSmall.copyWith(
+              style: const TextStyle(
+                fontFamily: 'Manrope',
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
                 color: AppColors.darkGreen,
               ),
             ),
+
             const SizedBox(height: 8),
+
+            // Album information
             Text(
               "Added to $petName's album",
               textAlign: TextAlign.center,
@@ -86,16 +247,23 @@ class PhotoDetailScreen extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
             ),
+
             const SizedBox(height: 24),
+
+            // Close and Delete buttons
             Row(
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => Navigator.pop(context),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.darkGreen,
                       backgroundColor: AppColors.white,
-                      side: const BorderSide(color: AppColors.fieldBorder),
+                      side: const BorderSide(
+                        color: AppColors.fieldBorder,
+                      ),
                       minimumSize: const Size(0, 52),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -104,11 +272,18 @@ class PhotoDetailScreen extends StatelessWidget {
                     child: const Text('Close'),
                   ),
                 ),
+
                 const SizedBox(width: 10),
+
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: onDelete,
-                    icon: const Icon(Icons.delete_outline, size: 20),
+                    onPressed: () {
+                      _showDeleteConfirmation(context);
+                    },
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      size: 20,
+                    ),
                     label: const Text('Delete photo'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.danger,

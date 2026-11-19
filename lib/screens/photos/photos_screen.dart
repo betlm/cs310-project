@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,10 +10,10 @@ import '../../models/pet.dart';
 import '../../models/pet_photo.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
-import '../../theme/species_colors.dart';
-import '../../widgets/active_profile_card.dart';
+import '../../widgets/active_pet_bar.dart';
 import '../home/widgets/pet_chips_row.dart';
 import 'photo_detail_screen.dart';
+import 'photo_selection.dart';
 
 class PhotosScreen extends StatefulWidget {
   const PhotosScreen({super.key});
@@ -24,7 +25,23 @@ class PhotosScreen extends StatefulWidget {
 class _PhotosScreenState extends State<PhotosScreen> {
   final ImagePicker _picker = ImagePicker();
 
+  bool _isSelectionMode = false;
+
   List<PetPhoto> get _photos => photosFor(activePet.id);
+
+  void _startSelection() {
+    if (_photos.isEmpty) return;
+
+    setState(() {
+      _isSelectionMode = true;
+    });
+  }
+
+  void _cancelSelection() {
+    setState(() {
+      _isSelectionMode = false;
+    });
+  }
 
   Future<void> _selectPet() async {
     await showModalBottomSheet<void>(
@@ -32,7 +49,9 @@ class _PhotosScreenState extends State<PhotosScreen> {
       backgroundColor: AppColors.background,
       showDragHandle: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24),
+        ),
       ),
       builder: (sheetContext) {
         return SafeArea(
@@ -43,7 +62,10 @@ class _PhotosScreenState extends State<PhotosScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Select a pet', style: AppTextStyles.headingSmall),
+                Text(
+                  'Select a pet',
+                  style: AppTextStyles.headingSmall,
+                ),
                 const SizedBox(height: 8),
                 Text(
                   'Choose whose album to view',
@@ -57,6 +79,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                   onPetSelected: (Pet pet) {
                     setState(() {
                       activePet = pet;
+                      _isSelectionMode = false;
                     });
 
                     Navigator.pop(sheetContext);
@@ -82,7 +105,6 @@ class _PhotosScreenState extends State<PhotosScreen> {
   }
 
   Future<void> _addPhoto(ImageSource source) async {
-    // Keep the selected pet before opening the camera/gallery.
     final petId = activePet.id;
 
     try {
@@ -105,13 +127,18 @@ class _PhotosScreenState extends State<PhotosScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Photo added successfully!')),
+        const SnackBar(
+          content: Text('Photo added successfully!'),
+        ),
       );
     } catch (error) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Could not add photo: $error')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Could not add photo: $error'),
+        ),
+      );
     }
   }
 
@@ -130,9 +157,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
 
   Widget _photoImage(PetPhoto photo) {
     final path = photo.imageUrl;
-    debugPrint('PHOTO PATH: $path');
 
-    // Sample photos stored in the Flutter assets folder.
     if (path.startsWith('assets/')) {
       return Image.asset(
         path,
@@ -145,8 +170,8 @@ class _PhotosScreenState extends State<PhotosScreen> {
       );
     }
 
-    // Network photos, if added later.
-    if (path.startsWith('http://') || path.startsWith('https://')) {
+    if (path.startsWith('http://') ||
+        path.startsWith('https://')) {
       return Image.network(
         path,
         fit: BoxFit.cover,
@@ -158,7 +183,6 @@ class _PhotosScreenState extends State<PhotosScreen> {
       );
     }
 
-    // Photos selected from camera or gallery.
     return Image.file(
       File(path),
       fit: BoxFit.cover,
@@ -170,42 +194,18 @@ class _PhotosScreenState extends State<PhotosScreen> {
     );
   }
 
-  Future<void> _deletePhoto(PetPhoto photo, BuildContext dialogContext) async {
-    final shouldDelete = await showDialog<bool>(
-      context: dialogContext,
-      builder: (confirmContext) {
-        return AlertDialog(
-          title: const Text('Delete photo?'),
-          content: const Text(
-            'Are you sure you want to remove this photo from the album?',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(confirmContext, false);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(confirmContext, true);
-              },
-              child: Text(
-                'Delete',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.danger,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (shouldDelete != true || !mounted) return;
-
+  // Single photo deletion.
+  // The confirmation is handled by PhotoDetailScreen.
+  void _deletePhoto(
+    PetPhoto photo,
+    BuildContext dialogContext,
+  ) {
     setState(() {
-      samplePhotos.removeWhere((item) => item.id == photo.id);
+      samplePhotos.removeWhere(
+        (item) =>
+            item.id == photo.id &&
+            item.petId == photo.petId,
+      );
     });
 
     if (dialogContext.mounted) {
@@ -213,8 +213,11 @@ class _PhotosScreenState extends State<PhotosScreen> {
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Photo deleted.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Photo deleted.'),
+        ),
+      );
     }
   }
 
@@ -237,6 +240,63 @@ class _PhotosScreenState extends State<PhotosScreen> {
     );
   }
 
+  // Delete only selected photos from the current pet's album.
+  void _deleteSelectedPhotos(Set<String> selectedIds) {
+    if (selectedIds.isEmpty) return;
+
+    final petId = activePet.id;
+    final count = selectedIds.length;
+
+    setState(() {
+      samplePhotos.removeWhere(
+        (photo) =>
+            photo.petId == petId &&
+            selectedIds.contains(photo.id),
+      );
+
+      _isSelectionMode = false;
+    });
+
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.lightMint,
+        elevation: 2,
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(
+            color: AppColors.fieldBorder,
+          ),
+        ),
+        duration: const Duration(seconds: 3),
+        content: Row(
+          children: [
+            const Icon(
+              Icons.check_circle_outline,
+              color: AppColors.darkGreen,
+              size: 24,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                '$count ${count == 1 ? 'photo' : 'photos'} deleted successfully!',
+                style: const TextStyle(
+                  fontFamily: 'DM Sans',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.darkGreen,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+
+  }
+
   Widget _albumHeader() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -247,36 +307,78 @@ class _PhotosScreenState extends State<PhotosScreen> {
             children: [
               Text(
                 "${activePet.name}'s album",
-                style: AppTextStyles.headingSmall.copyWith(
+                style: const TextStyle(
+                  fontFamily: 'Manrope',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
                   color: AppColors.darkGreen,
-                  fontWeight: FontWeight.w700,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 '${_photos.length} photos',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.secondaryText,
+                style: const TextStyle(
+                  fontFamily: 'DM Sans',
+                  fontSize: 13,
                   fontWeight: FontWeight.w600,
+                  color: AppColors.secondaryText,
                 ),
               ),
             ],
           ),
         ),
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.more_horiz, color: AppColors.darkGreen),
-          onSelected: (value) {
-            if (value == 'gallery') {
-              _addPhoto(ImageSource.gallery);
-            } else if (value == 'camera') {
-              _addPhoto(ImageSource.camera);
-            }
-          },
-          itemBuilder: (context) => const [
-            PopupMenuItem(value: 'camera', child: Text('Take photo')),
-            PopupMenuItem(value: 'gallery', child: Text('Choose from gallery')),
-          ],
-        ),
+
+        if (_isSelectionMode)
+          TextButton(
+            onPressed: _cancelSelection,
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                fontFamily: 'DM Sans',
+                fontWeight: FontWeight.w700,
+                color: AppColors.darkGreen,
+              ),
+            ),
+          )
+        else
+          PopupMenuButton<String>(
+            icon: const Icon(
+              Icons.more_horiz,
+              color: AppColors.darkGreen,
+            ),
+            color: AppColors.background,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            onSelected: (value) {
+              if (value == 'select') {
+                _startSelection();
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem<String>(
+                value: 'select',
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: AppColors.darkGreen,
+                      size: 21,
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      'Select Photos',
+                      style: TextStyle(
+                        fontFamily: 'DM Sans',
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.darkGreen,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }
@@ -295,7 +397,10 @@ class _PhotosScreenState extends State<PhotosScreen> {
               color: AppColors.secondaryText,
             ),
             const SizedBox(height: 14),
-            Text('No photos yet', style: AppTextStyles.headingSmall),
+            Text(
+              'No photos yet',
+              style: AppTextStyles.headingSmall,
+            ),
             const SizedBox(height: 8),
             Text(
               'Add your first photo using Camera or Gallery.',
@@ -322,9 +427,12 @@ class _PhotosScreenState extends State<PhotosScreen> {
               height: itemWidth,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),
-                child: InkWell(
-                  onTap: () => _openPhoto(photo),
-                  child: _photoImage(photo),
+                child: Material(
+                  color: AppColors.lightMint,
+                  child: InkWell(
+                    onTap: () => _openPhoto(photo),
+                    child: _photoImage(photo),
+                  ),
                 ),
               ),
             );
@@ -347,12 +455,17 @@ class _PhotosScreenState extends State<PhotosScreen> {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.darkGreen,
           backgroundColor: AppColors.white,
-          side: const BorderSide(color: AppColors.fieldBorder, width: 1.5),
+          side: const BorderSide(
+            color: AppColors.fieldBorder,
+            width: 1.5,
+          ),
           minimumSize: const Size(0, 62),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
-          textStyle: AppTextStyles.bodyLarge.copyWith(
+          textStyle: const TextStyle(
+            fontFamily: 'DM Sans',
+            fontSize: 14,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -368,9 +481,18 @@ class _PhotosScreenState extends State<PhotosScreen> {
         backgroundColor: AppColors.white,
         centerTitle: true,
         elevation: 0,
-        title: Text(
+        scrolledUnderElevation: 0,
+        shape: const Border(
+          bottom: BorderSide(
+            color: AppColors.cardBorder,
+          ),
+        ),
+        title: const Text(
           'Photos',
-          style: AppTextStyles.headingMedium.copyWith(
+          style: TextStyle(
+            fontFamily: 'Manrope',
+            fontSize: 20,
+            fontWeight: FontWeight.w800,
             color: AppColors.darkGreen,
           ),
         ),
@@ -379,50 +501,77 @@ class _PhotosScreenState extends State<PhotosScreen> {
         children: [
           Expanded(
             child: ListView(
-              padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
+              padding: const EdgeInsets.fromLTRB(
+                20,
+                18,
+                20,
+                24,
+              ),
               children: [
-                ActiveProfileCard(
-                  petName: activePet.name,
-                  petType: speciesLabel(activePet.species),
-                  imageUrl: activePet.avatarPath,
+                ActivePetBar(
+                  pet: activePet,
                   onTap: _selectPet,
                 ),
-                const SizedBox(height: 30),
-                _albumHeader(),
                 const SizedBox(height: 24),
-                _photoGrid(),
+                _albumHeader(),
+                const SizedBox(height: 20),
+
+                // Show selection UI or regular photo grid.
+                if (_isSelectionMode)
+                  PhotoSelection(
+                    key: ValueKey(activePet.id),
+                    photos: _photos,
+                    imageBuilder: _photoImage,
+                    onDelete: _deleteSelectedPhotos,
+                    onCancel: _cancelSelection,
+                  )
+                else
+                  _photoGrid(),
               ],
             ),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-            decoration: const BoxDecoration(
-              color: AppColors.white,
-              border: Border(top: BorderSide(color: AppColors.fieldBorder)),
-            ),
-            child: SafeArea(
-              top: false,
-              child: Row(
-                children: [
-                  _bottomButton(
-                    label: 'Camera',
-                    icon: Icons.camera_alt_outlined,
-                    onPressed: () {
-                      _addPhoto(ImageSource.camera);
-                    },
+
+          // Camera and Gallery remain available
+          // outside selection mode.
+          if (!_isSelectionMode)
+            Container(
+              padding: const EdgeInsets.fromLTRB(
+                20,
+                16,
+                20,
+                16,
+              ),
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                border: Border(
+                  top: BorderSide(
+                    color: AppColors.fieldBorder,
                   ),
-                  const SizedBox(width: 12),
-                  _bottomButton(
-                    label: 'Gallery',
-                    icon: Icons.image_outlined,
-                    onPressed: () {
-                      _addPhoto(ImageSource.gallery);
-                    },
-                  ),
-                ],
+                ),
+              ),
+              child: SafeArea(
+                top: false,
+                child: Row(
+                  children: [
+                    _bottomButton(
+                      label: 'Camera',
+                      icon: Icons.camera_alt_outlined,
+                      onPressed: () {
+                        _addPhoto(ImageSource.camera);
+                      },
+                    ),
+                    const SizedBox(width: 12),
+                    _bottomButton(
+                      label: 'Gallery',
+                      icon: Icons.image_outlined,
+                      onPressed: () {
+                        _addPhoto(ImageSource.gallery);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
