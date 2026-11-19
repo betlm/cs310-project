@@ -4,6 +4,7 @@ import '../../data/app_state.dart';
 import '../../routes/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
+import 'user_info_sheet.dart';
 
 /// Bottom navigation tab: Profile.
 /// Shown inside MainShell, so it has no back arrow.
@@ -18,8 +19,12 @@ class PreferencesScreen extends StatefulWidget {
 }
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
-  /// Opens the user information sheet. Added in the next commit.
-  void _openUserInfo() {}
+  /// open the user information sheet
+  Future<void> _openUserInfo() async {
+    await showUserInfoSheet(context);
+    if (!mounted) return;
+    setState(() {});
+  }
 
   /// Opens the notifications sheet (made by Ayça).
   void _openNotifications() {}
