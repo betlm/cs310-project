@@ -11,6 +11,7 @@ import 'widgets/pet_chips_row.dart';
 import 'widgets/summary_grid.dart';
 import 'widgets/upcoming_reminder_section.dart';
 import '../../routes/app_routes.dart';
+import '../../theme/app_colors.dart';
 
 /// Bottom navigation tab: Home.
 /// Shown inside MainShell, so it has no back arrow.
@@ -21,8 +22,14 @@ class HomeScreen extends StatefulWidget {
   /// Called when the Health card is tapped. MainShell uses it to
   /// switch to the Health tab.
   final VoidCallback onOpenHealth;
+  /// Called when Light / Dark is chosen in the header.
+  final VoidCallback onAppearanceChanged;
 
-  const HomeScreen({super.key, required this.onOpenHealth});
+    const HomeScreen({
+    super.key,
+    required this.onOpenHealth,
+    required this.onAppearanceChanged,
+  });
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -55,16 +62,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final pet = activePet;
 
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md + AppSpacing.xs, // 20
-            vertical: AppSpacing.md,
+        return Scaffold(
+      body: Column(
+        children: [
+          // Header band: separate from the list, dark like the bottom bar
+          // in dark mode. SafeArea keeps it below the status bar.
+          Container(
+            color: AppColors.homeHeader,
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                child: HomeHeader(
+                  onAppearanceChanged: widget.onAppearanceChanged,
+                ),
+              ),
+            ),
           ),
-          children: [
-            const HomeHeader(),
-            const SizedBox(height: AppSpacing.md),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md + AppSpacing.xs, // 20
+                vertical: AppSpacing.md,
+              ),
+              children: [
             PetChipsRow(
               selectedPet: pet,
               onPetSelected: _selectPet,
@@ -94,6 +115,8 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: AppSpacing.md),
           ],
         ),
+      ),
+      ],
       ),
     );
   }

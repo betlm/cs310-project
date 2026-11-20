@@ -145,7 +145,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
   Widget _imageFallback() {
     return Container(
       color: AppColors.lightMint,
-      child: const Center(
+      child:  Center(
         child: Icon(
           Icons.image_not_supported_outlined,
           color: AppColors.secondaryText,
@@ -266,14 +266,14 @@ class _PhotosScreenState extends State<PhotosScreen> {
         margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(
+          side:  BorderSide(
             color: AppColors.fieldBorder,
           ),
         ),
         duration: const Duration(seconds: 3),
         content: Row(
           children: [
-            const Icon(
+             Icon(
               Icons.check_circle_outline,
               color: AppColors.darkGreen,
               size: 24,
@@ -282,7 +282,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
             Expanded(
               child: Text(
                 '$count ${count == 1 ? 'photo' : 'photos'} deleted successfully!',
-                style: const TextStyle(
+                style:  TextStyle(
                   fontFamily: 'DM Sans',
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -307,7 +307,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
             children: [
               Text(
                 "${activePet.name}'s album",
-                style: const TextStyle(
+                style:  TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
@@ -317,7 +317,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
               const SizedBox(height: 6),
               Text(
                 '${_photos.length} photos',
-                style: const TextStyle(
+                style:  TextStyle(
                   fontFamily: 'DM Sans',
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -331,7 +331,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
         if (_isSelectionMode)
           TextButton(
             onPressed: _cancelSelection,
-            child: const Text(
+            child:  Text(
               'Cancel',
               style: TextStyle(
                 fontFamily: 'DM Sans',
@@ -342,7 +342,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
           )
         else
           PopupMenuButton<String>(
-            icon: const Icon(
+            icon:  Icon(
               Icons.more_horiz,
               color: AppColors.darkGreen,
             ),
@@ -355,7 +355,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                 _startSelection();
               }
             },
-            itemBuilder: (context) => const [
+            itemBuilder: (context) =>  [
               PopupMenuItem<String>(
                 value: 'select',
                 child: Row(
@@ -391,7 +391,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
         padding: const EdgeInsets.symmetric(vertical: 60),
         child: Column(
           children: [
-            const Icon(
+             Icon(
               Icons.photo_library_outlined,
               size: 56,
               color: AppColors.secondaryText,
@@ -455,7 +455,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.darkGreen,
           backgroundColor: AppColors.white,
-          side: const BorderSide(
+          side:  BorderSide(
             color: AppColors.fieldBorder,
             width: 1.5,
           ),
@@ -478,16 +478,16 @@ class _PhotosScreenState extends State<PhotosScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         centerTitle: true,
         elevation: 0,
         scrolledUnderElevation: 0,
-        shape: const Border(
+        shape:  Border(
           bottom: BorderSide(
             color: AppColors.cardBorder,
           ),
         ),
-        title: const Text(
+        title:  Text(
           'Photos',
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -541,7 +541,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                 20,
                 16,
               ),
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 color: AppColors.white,
                 border: Border(
                   top: BorderSide(

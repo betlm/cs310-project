@@ -150,7 +150,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
               border: Border.all(
                 color: AppColors.fieldBorder,
               ),
-              boxShadow: const [
+              boxShadow:  [
                 BoxShadow(
                   color: AppColors.cardShadow,
                   blurRadius: 12,
@@ -206,7 +206,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                           ),
                         ),
                         if (isSelected)
-                          const Icon(
+                           Icon(
                             Icons.check,
                             size: 19,
                             color: AppColors.darkGreen,
@@ -342,7 +342,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                       Icon(
                         Icons.image_outlined,
                         size: 28,
                         color: AppColors.darkGreen,
@@ -465,7 +465,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
         backgroundColor: AppColors.white,
         centerTitle: true,
         elevation: 0,
-        iconTheme: const IconThemeData(
+        iconTheme:  IconThemeData(
           color: AppColors.darkGreen,
         ),
         title: Text(
@@ -517,7 +517,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
           AppSpacing.lg,
           AppSpacing.md,
         ),
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           color: AppColors.white,
           border: Border(
             top: BorderSide(

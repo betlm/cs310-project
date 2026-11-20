@@ -5,6 +5,7 @@ import '../models/weight_entry.dart';
 import '../models/supply_item.dart';
 import '../models/pet_photo.dart';
 import 'sample_data.dart';
+import 'package:flutter/widgets.dart';
 
 /// The pet currently selected in the app.
 ///
@@ -16,6 +17,23 @@ String appLanguage = 'en';
 
 /// 'light', 'dark' or 'system'
 String appAppearance = 'light';
+/// True when the app should use dark colors
+/// 'system' follows the phone's own light / dark setting
+bool isDarkMode() {
+  if (appAppearance == 'dark') {
+    return true;
+  }
+  if (appAppearance == 'system') {
+    final brightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
+    return brightness == Brightness.dark;
+  }
+  return false;
+}
+
+/// Rebuilds the whole app after the appearance changes.
+/// PetPocketApp (main.dart) fills this in when it starts.
+void Function()? refreshApp;
 
 /// Whether local reminder notifications are allowed.
 bool notificationsEnabled = true;

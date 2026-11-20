@@ -65,7 +65,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                     Text(
                       'SHOPPING',
                       style: TextStyle(
                         fontSize: 9,
@@ -78,7 +78,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                     Text(
                       'Shop on Petlebi for ${widget.pet.name}',
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontFamily: 'Manrope',
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -86,7 +86,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                       ),
                     ),
                     const SizedBox(height: 2),
-                    const Text(
+                     Text(
                       'Food, health, toy and care products in one place.',
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -197,7 +197,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
       );
       children.add(const SizedBox(height: AppSpacing.sm));
       children.add(
-        const Text(
+         Text(
           'Opens petlebi.com in your browser. Prices and stock are shown on Petlebi.',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -260,7 +260,7 @@ class _CategoryTile extends StatelessWidget {
                 color: iconBackground,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, size: 18, color: AppColors.darkGreen),
+              child: Icon(icon, size: 18, color: AppColors.ink),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -270,7 +270,7 @@ class _CategoryTile extends StatelessWidget {
                   Text(
                     title,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                       color: AppColors.darkGreen,
@@ -279,7 +279,7 @@ class _CategoryTile extends StatelessWidget {
                   Text(
                     subtitle,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,
                       color: AppColors.secondaryText,

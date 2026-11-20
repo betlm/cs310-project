@@ -134,7 +134,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
     final children = <Widget>[
       Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w700,
           color: AppColors.darkGreen,
@@ -164,7 +164,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
   /// The shared field style
   InputDecoration _inputDecoration(String hint) {
     return fieldDecoration(hint: hint).copyWith(
-      hintStyle: const TextStyle(fontSize: 14, color: AppColors.hint),
+      hintStyle:  TextStyle(fontSize: 14, color: AppColors.hint),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16,
         vertical: 13,
@@ -188,7 +188,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
             children: [
               GestureDetector(
                 onTap: () => _changeQuantity(1),
-                child: const Icon(
+                child:  Icon(
                   Icons.keyboard_arrow_up,
                   size: 14,
                   color: AppColors.darkGreen,
@@ -196,7 +196,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
               ),
               GestureDetector(
                 onTap: () => _changeQuantity(-1),
-                child: const Icon(
+                child:  Icon(
                   Icons.keyboard_arrow_down,
                   size: 14,
                   color: AppColors.darkGreen,
@@ -214,15 +214,15 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape: const Border(
+        shape:  Border(
           bottom: BorderSide(color: AppColors.cardBorder),
         ),
-        title: const Text(
+        title:  Text(
           'Add / edit supply',
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -247,7 +247,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
             TextFormField(
               controller: _nameController,
               textCapitalization: TextCapitalization.sentences,
-              style: const TextStyle(fontSize: 14, color: AppColors.darkGreen),
+              style:  TextStyle(fontSize: 14, color: AppColors.darkGreen),
               validator: _validateName,
               decoration: _inputDecoration('e.g. Dry food'),
             ),
@@ -265,7 +265,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
                       TextFormField(
                         controller: _quantityController,
                         keyboardType: TextInputType.number,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 14,
                           color: AppColors.darkGreen,
                         ),
@@ -285,7 +285,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
                       _label('Unit'),
                       TextFormField(
                         controller: _unitController,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 14,
                           color: AppColors.darkGreen,
                         ),
@@ -304,7 +304,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
               controller: _noteController,
               maxLines: 2,
               textCapitalization: TextCapitalization.sentences,
-              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
               decoration: _inputDecoration('Brand, details, or a short note...'),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -318,7 +318,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
               ),
               child: Row(
                 children: [
-                  const Icon(
+                   Icon(
                     Icons.shopping_bag_outlined,
                     color: AppColors.darkGreen,
                     size: 20,
@@ -329,7 +329,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
                       _editingItem == null
                           ? "The item will be added to ${activePet.name}'s supply list."
                           : "Changes will be saved to ${activePet.name}'s supply list.",
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.darkGreen,
@@ -344,7 +344,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
       ),
       // White strip at the bottom with the buton
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           color: AppColors.white,
           border: Border(top: BorderSide(color: AppColors.cardBorder)),
         ),

@@ -23,7 +23,7 @@ class LatestWeightCard extends StatelessWidget {
     // Left side: the latest weight, or a message if there is none.
     Widget weightInfo;
     if (entries.isEmpty) {
-      weightInfo = const Text(
+      weightInfo =  Text(
         'No entries yet',
         style: TextStyle(fontSize: 14, color: AppColors.darkGreen),
       );
@@ -37,7 +37,7 @@ class LatestWeightCard extends StatelessWidget {
             children: [
               Text(
                 '${latest.weightKg}',
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
@@ -46,7 +46,7 @@ class LatestWeightCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 2),
-              const Padding(
+               Padding(
                 padding: EdgeInsets.only(bottom: 5),
                 child: Text(
                   'kg',
@@ -61,7 +61,7 @@ class LatestWeightCard extends StatelessWidget {
           ),
           Text(
             'Updated ${formatDate(latest.date)}',
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
               color: AppColors.secondaryText,
@@ -85,7 +85,7 @@ class LatestWeightCard extends StatelessWidget {
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             colors: [AppColors.background, AppColors.lightMint],
           ),
           border: Border.all(color: AppColors.weightCardBorder),
@@ -96,7 +96,7 @@ class LatestWeightCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                 Text(
                   'LATEST WEIGHT',
                   style: TextStyle(
                     fontFamily: 'Manrope',

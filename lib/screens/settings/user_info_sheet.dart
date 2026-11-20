@@ -135,7 +135,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         text,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.w700,
           color: AppColors.secondaryText,
@@ -146,7 +146,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
 
   InputDecoration _inputDecoration(String hint, {IconData? icon}) {
     return fieldDecoration(hint: hint, icon: icon).copyWith(
-      hintStyle: const TextStyle(fontSize: 14, color: AppColors.hint),
+      hintStyle:  TextStyle(fontSize: 14, color: AppColors.hint),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16,
         vertical: 13,
@@ -160,7 +160,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
     // Height of the keyboard (0 when it is closed)
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
-    const fieldText = TextStyle(fontSize: 14, color: AppColors.darkGreen);
+    final fieldText = TextStyle(fontSize: 14, color: AppColors.darkGreen);
 
     return Padding(
       padding: EdgeInsets.only(bottom: keyboardHeight),
@@ -177,7 +177,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Expanded(
+                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -205,7 +205,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                     ),
                     GestureDetector(
                       onTap: () => Navigator.pop(context),
-                      child: const CircleAvatar(
+                      child: CircleAvatar(
                         radius: 20,
                         backgroundColor: AppColors.lightMint,
                         child: Icon(
@@ -244,11 +244,11 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                const Divider(height: 1, color: AppColors.cardBorder),
+                 Divider(height: 1, color: AppColors.cardBorder),
                 const SizedBox(height: AppSpacing.md),
 
                 // Change password
-                const Row(
+                 Row(
                   children: [
                     Icon(
                       Icons.lock_outline,
@@ -268,7 +268,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                const Text(
+                 Text(
                   'Leave blank to keep the current password.',
                   style: TextStyle(
                     fontSize: 11,
@@ -337,7 +337,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                           backgroundColor: AppColors.white,
                           minimumSize: const Size(0, 50),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
-                          side: const BorderSide(
+                          side:  BorderSide(
                             color: AppColors.cardBorder,
                             width: 1.5,
                           ),

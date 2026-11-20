@@ -51,7 +51,7 @@ class PhotoDetailScreen extends StatelessWidget {
   }
 
   Widget _imageFallback() {
-    return const Center(
+    return  Center(
       child: Icon(
         Icons.pets,
         size: 48,
@@ -97,7 +97,7 @@ class PhotoDetailScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Title
-                const Text(
+                 Text(
                   'Delete Photo?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -111,7 +111,7 @@ class PhotoDetailScreen extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 // Warning message
-                const Text(
+                 Text(
                   'This photo will be permanently removed '
                   'from the album.\n'
                   'This action cannot be undone.',
@@ -138,7 +138,7 @@ class PhotoDetailScreen extends StatelessWidget {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.darkGreen,
                           backgroundColor: AppColors.white,
-                          side: const BorderSide(
+                          side:  BorderSide(
                             color: AppColors.fieldBorder,
                           ),
                           minimumSize: const Size(0, 60),
@@ -228,7 +228,7 @@ class PhotoDetailScreen extends StatelessWidget {
             // Photo title
             Text(
               'Photo $photoNumber',
-              style: const TextStyle(
+              style:  TextStyle(
                 fontFamily: 'Manrope',
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -261,7 +261,7 @@ class PhotoDetailScreen extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.darkGreen,
                       backgroundColor: AppColors.white,
-                      side: const BorderSide(
+                      side:  BorderSide(
                         color: AppColors.fieldBorder,
                       ),
                       minimumSize: const Size(0, 52),

@@ -39,7 +39,7 @@ class UpcomingReminderSection extends StatelessWidget {
             ),
             TextButton(
               onPressed: onOpenReminders,
-              child: const Row(
+              child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
@@ -94,7 +94,7 @@ class _ReminderTile extends StatelessWidget {
             Container(
               width: 44,
               height: 44,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: AppColors.background,
               ),
@@ -111,7 +111,7 @@ class _ReminderTile extends StatelessWidget {
                 children: [
                   Text(
                     reminder.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -121,7 +121,7 @@ class _ReminderTile extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
-                      const Icon(
+                       Icon(
                         Icons.calendar_today_outlined,
                         size: 12,
                         color: AppColors.secondaryText,
@@ -129,7 +129,7 @@ class _ReminderTile extends StatelessWidget {
                       const SizedBox(width: AppSpacing.xs),
                       Text(
                         _whenText(reminder),
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           color: AppColors.secondaryText,
@@ -140,7 +140,7 @@ class _ReminderTile extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.darkGreen),
+           Icon(Icons.chevron_right, color: AppColors.darkGreen),
           ],
         ),
       ),

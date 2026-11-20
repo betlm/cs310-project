@@ -67,7 +67,7 @@ class AppFormField extends StatelessWidget {
                 borderRadius: BorderRadius.circular(
                   AppSpacing.radiusMedium,
                 ),
-                borderSide: const BorderSide(
+                borderSide:  BorderSide(
                   color: AppColors.fieldBorder,
                 ),
               )

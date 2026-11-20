@@ -57,7 +57,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
+                 Text(
                   'Delete Photos?',
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -73,7 +73,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                   'will be permanently removed from the album.\n'
                   'This action cannot be undone.',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontFamily: 'Manrope',
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -91,7 +91,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.darkGreen,
                           backgroundColor: AppColors.white,
-                          side: const BorderSide(
+                          side:  BorderSide(
                             color: AppColors.fieldBorder,
                           ),
                           minimumSize: const Size(0, 56),
@@ -143,7 +143,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
             Expanded(
               child: Text(
                 '${_selectedIds.length} selected',
-                style: const TextStyle(
+                style:  TextStyle(
                   fontFamily: 'DM Sans',
                   fontWeight: FontWeight.w700,
                   color: AppColors.darkGreen,

@@ -29,7 +29,7 @@ Future<void> showPetSwitcher(BuildContext context) async {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+               Text(
                 'Select a pet',
                 style: TextStyle(
                   fontFamily: 'Manrope',

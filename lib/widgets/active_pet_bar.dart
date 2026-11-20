@@ -38,7 +38,7 @@ class ActivePetBar extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'Active profile',
                     style: TextStyle(
                       fontSize: 11,
@@ -50,7 +50,7 @@ class ActivePetBar extends StatelessWidget {
                   Text(
                     '${pet.name} · ${speciesLabel(pet.species)}',
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
@@ -60,7 +60,7 @@ class ActivePetBar extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.darkGreen, size: 22),
+             Icon(Icons.chevron_right, color: AppColors.darkGreen, size: 22),
           ],
         ),
       ),

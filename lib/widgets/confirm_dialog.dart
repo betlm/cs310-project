@@ -84,7 +84,7 @@ class ConfirmDialog extends StatelessWidget {
               foregroundColor: AppColors.darkGreen,
               backgroundColor: AppColors.white,
               minimumSize: const Size(0, 52),
-              side: const BorderSide(color: AppColors.mintBorder, width: 1.5),
+              side:  BorderSide(color: AppColors.mintBorder, width: 1.5),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(14),
               ),
@@ -132,7 +132,7 @@ class ConfirmDialog extends StatelessWidget {
       insetPadding: const EdgeInsets.symmetric(horizontal: 24),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(28),
-        side: const BorderSide(color: AppColors.mintBorder, width: 1.5),
+        side:  BorderSide(color: AppColors.mintBorder, width: 1.5),
       ),
       child: Padding(
         padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),

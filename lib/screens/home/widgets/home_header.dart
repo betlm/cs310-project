@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
+import '../../../data/app_state.dart';
 
 /// Logo, app name, subtitle and the Light/Dark toggle at the top of Home.
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  /// Tells MainShell that Light or Dark was chosen.
+  final VoidCallback onAppearanceChanged;
+
+  const HomeHeader({super.key, required this.onAppearanceChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -36,28 +40,27 @@ class HomeHeader extends StatelessWidget {
             ],
           ),
         ),
-        const _ThemeToggle(),
+        _ThemeToggle(onChanged: onAppearanceChanged),
       ],
     );
   }
 }
 
-/// Light / Dark segmented toggle.
-///
-/// TODO: Connect to the shared theme setting so that it actually changes
-/// the app theme. For now it only switches its own selection.
-class _ThemeToggle extends StatefulWidget {
-  const _ThemeToggle();
+/// Light / Dark segmented toggle. Uses the same setting as Preferences so both always show the same choice.
+class _ThemeToggle extends StatelessWidget {
+  final VoidCallback onChanged;
 
-  @override
-  State<_ThemeToggle> createState() => _ThemeToggleState();
-}
+  const _ThemeToggle({required this.onChanged});
 
-class _ThemeToggleState extends State<_ThemeToggle> {
-  bool _isDark = false;
+  /// Saves the choice and asks MainShell to apply it.
+  void _select(String value) {
+    appAppearance = value;
+    onChanged();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = isDarkMode();
     return Container(
       padding: const EdgeInsets.all(3),
       decoration: BoxDecoration(
@@ -68,13 +71,9 @@ class _ThemeToggleState extends State<_ThemeToggle> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _option('Light', selected: !_isDark, onTap: () {
-            setState(() => _isDark = false);
-          }),
+          _option('Light', selected: !isDark, onTap: () => _select('light')),
           const SizedBox(width: 2),
-          _option('Dark', selected: _isDark, onTap: () {
-            setState(() => _isDark = true);
-          }),
+          _option('Dark', selected: isDark, onTap: () => _select('dark')),
         ],
       ),
     );
@@ -95,7 +94,7 @@ class _ThemeToggleState extends State<_ThemeToggle> {
           color: selected ? AppColors.background : Colors.transparent,
           borderRadius: BorderRadius.circular(9),
           boxShadow: selected
-              ? const [
+              ?  [
                   BoxShadow(
                     color: AppColors.cardShadow,
                     blurRadius: 7,

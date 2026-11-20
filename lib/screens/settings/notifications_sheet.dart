@@ -36,7 +36,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+             Text(
               'Notifications',
               style: TextStyle(
                 fontFamily: 'Manrope',
@@ -57,7 +57,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
               ),
               child: Row(
                 children: [
-                  const Expanded(
+                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -107,7 +107,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
                 color: AppColors.lightMint,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
+              child:  Text(
                 'Notification delivery depends on your device settings.',
                 style: TextStyle(
                   fontSize: 12,

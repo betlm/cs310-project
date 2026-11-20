@@ -46,7 +46,7 @@ class PetListCard extends StatelessWidget {
       Text(
         pet.name,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
+        style:  TextStyle(
           fontFamily: 'Manrope',
           fontSize: 16,
           fontWeight: FontWeight.w800,
@@ -57,7 +57,7 @@ class PetListCard extends StatelessWidget {
       Text(
         petBreedAndAge(pet),
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
+        style:  TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
           color: AppColors.secondaryText,
@@ -68,7 +68,7 @@ class PetListCard extends StatelessWidget {
     if (isActive) {
       textLines.add(const SizedBox(height: 6));
       textLines.add(
-        const Row(
+         Row(
           children: [
             Icon(Icons.check, size: 14, color: AppColors.darkGreen),
             SizedBox(width: AppSpacing.xs),
@@ -102,7 +102,7 @@ class PetListCard extends StatelessWidget {
               // Avatar with a thin white ring around it
               Container(
                 padding: const EdgeInsets.all(2),
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppColors.white,
                 ),
