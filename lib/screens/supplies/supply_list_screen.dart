@@ -11,6 +11,7 @@ import '../../widgets/confirm_dialog.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
+import 'widgets/petlebi_card.dart';
 
 
 /// Shopping list of the active pet: pending items first then the purchased ones
@@ -51,7 +52,7 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
     final ok = await showConfirmDialog(
       context: context,
       title: 'Delete ${item.name}?',
-      message: 'This item will be removed from the shopping list.',
+      message: 'This item will be permanently removed from the supply list. This action cannot be undone.',
       confirmText: 'Delete',
     );
 
@@ -157,6 +158,10 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
       }
     }
 
+    // Petlebi shopping card, always at the bottom of the list
+    children.add(const SizedBox(height: AppSpacing.md));
+    children.add(PetlebiCard(pet: pet));
+    
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
