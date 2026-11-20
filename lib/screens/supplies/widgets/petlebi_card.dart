@@ -57,8 +57,8 @@ class _PetlebiCardState extends State<PetlebiCard> {
             children: [
               Image.asset(
                 'assets/images/petlebi_logo.png',
-                width: 40,
-                height: 40,
+                width: 34,
+                height: 34,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -68,7 +68,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                     const Text(
                       'SHOPPING',
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 9,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 1.5,
                         color: AppColors.secondaryText,
@@ -80,7 +80,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontFamily: 'Manrope',
-                        fontSize: 15,
+                        fontSize: 14,
                         fontWeight: FontWeight.w800,
                         color: AppColors.darkGreen,
                       ),
@@ -88,8 +88,10 @@ class _PetlebiCardState extends State<PetlebiCard> {
                     const SizedBox(height: 2),
                     const Text(
                       'Food, health, toy and care products in one place.',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 11,
+                        fontSize: 10,
                         fontWeight: FontWeight.w600,
                         color: AppColors.secondaryText,
                       ),
@@ -107,6 +109,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                 ),
                 child: Icon(
                   _expanded ? Icons.expand_less : Icons.expand_more,
+                  size: 20,
                   color: AppColors.darkGreen,
                 ),
               ),
@@ -162,8 +165,8 @@ class _PetlebiCardState extends State<PetlebiCard> {
               child: _CategoryTile(
                 icon: Icons.cleaning_services_outlined,
                 iconBackground: AppColors.speciesHamster,
-                title: 'Care',
-                subtitle: 'Cleaning and hygiene',
+                title: 'Cleaning',
+                subtitle: 'Hygiene needs',
                 onTap: () => _open(links.care),
               ),
             ),
@@ -174,19 +177,19 @@ class _PetlebiCardState extends State<PetlebiCard> {
       children.add(
         ElevatedButton.icon(
           onPressed: () => _open(links.home),
-          icon: const Icon(Icons.open_in_new, size: 18),
+          icon: const Icon(Icons.open_in_new, size: 16),
           label: const Text('Go to Petlebi'),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.darkGreen,
             foregroundColor: AppColors.white,
             elevation: 0,
-            minimumSize: const Size(double.infinity, 46),
+            minimumSize: const Size(double.infinity, 40),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             textStyle: const TextStyle(
               fontFamily: 'DM Sans',
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: FontWeight.w800,
             ),
           ),
@@ -207,7 +210,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
     }
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
