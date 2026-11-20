@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../../data/app_state.dart';
@@ -6,7 +5,8 @@ import '../../data/sample_data.dart';
 import '../../models/reminder.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
-import '../../widgets/form_field_decoration.dart' as shared_form;
+import '../../widgets/form_field_decoration.dart';
+import '../../widgets/primary_button.dart';
 
 class ReminderFormScreen extends StatefulWidget {
   const ReminderFormScreen({super.key});
@@ -17,9 +17,11 @@ class ReminderFormScreen extends StatefulWidget {
 
 class _ReminderFormScreenState extends State<ReminderFormScreen> {
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController noteController = TextEditingController();
 
   ReminderCategory selectedCategory = ReminderCategory.appointment;
+
   bool isDaily = false;
   DateTime? selectedDate;
   TimeOfDay? selectedTime;
@@ -27,6 +29,19 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
   Reminder? editingReminder;
   bool formInitialized = false;
+
+  TextStyle get formTextStyle =>
+      AppTextStyles.bodyMedium.copyWith(color: AppColors.darkGreen);
+
+  TextStyle get formHintStyle =>
+      AppTextStyles.bodyMedium.copyWith(color: AppColors.hint);
+
+  InputDecoration formDecoration({String? hint, IconData? icon}) {
+    return fieldDecoration(
+      hint: hint,
+      icon: icon,
+    ).copyWith(hintStyle: formHintStyle);
+  }
 
   @override
   void didChangeDependencies() {
@@ -45,10 +60,9 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
       selectedCategory = arguments.category;
       isDaily = arguments.repeat == RepeatType.daily;
       selectedDate = arguments.date;
-      selectedTime = TimeOfDay(
-        hour: arguments.hour,
-        minute: arguments.minute,
-      );
+
+      selectedTime = TimeOfDay(hour: arguments.hour, minute: arguments.minute);
+
       sendNotification = arguments.sendNotification;
     }
   }
@@ -80,43 +94,33 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
       case ReminderCategory.appointment:
         return AppColors.peach;
       case ReminderCategory.feeding:
-        return const Color(0xFFE8D16F);
+        return AppColors.speciesBird;
       case ReminderCategory.other:
-        return const Color(0xFFCBB9D8);
+        return AppColors.speciesHamster;
     }
   }
 
-  TextStyle get labelStyle => AppTextStyles.bodyLarge.copyWith(
-        fontWeight: FontWeight.bold,
-        color: AppColors.darkGreen,
-      );
-
-  InputDecoration fieldDecoration({
-  String? hint,
-  Widget? prefixIcon,
-}) {
-  return shared_form.fieldDecoration(
-    hint: hint,
-    prefixIcon: prefixIcon,
-  );
-}
-    
-
   Widget sectionLabel(String title, {bool required = false}) {
-    return Row(
-      children: [
-        Text(title, style: labelStyle),
-        if (required)
-          const Text(
-            ' *',
-            style: TextStyle(
-              fontFamily: 'DM Sans',
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppColors.danger,
-            ),
+    final labelStyle = AppTextStyles.bodyMedium.copyWith(
+      color: AppColors.darkGreen,
+      fontWeight: FontWeight.w700,
+    );
+
+    if (!required) {
+      return Text(title, style: labelStyle);
+    }
+
+    return Text.rich(
+      TextSpan(
+        style: labelStyle,
+        children: [
+          TextSpan(text: title),
+          TextSpan(
+            text: ' *',
+            style: labelStyle.copyWith(color: AppColors.danger),
           ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -130,17 +134,15 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
         onTap: onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          height: 48,
+          height: 44,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: selected
-                ? AppColors.white
-                : Colors.transparent,
+            color: selected ? AppColors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: selected
-                ? [
-                    const BoxShadow(
-                      color: Color(0x14000000),
+                ? const [
+                    BoxShadow(
+                      color: AppColors.cardShadow,
                       blurRadius: 5,
                       offset: Offset(0, 2),
                     ),
@@ -149,11 +151,9 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
           ),
           child: Text(
             title,
-            style: AppTextStyles.bodyLarge.copyWith(
-              fontWeight: FontWeight.w600,
-              color: selected
-                  ? AppColors.darkGreen
-                  : AppColors.secondaryText,
+            style: AppTextStyles.bodyMedium.copyWith(
+              color: selected ? AppColors.darkGreen : AppColors.secondaryText,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ),
@@ -164,36 +164,27 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
   void saveReminder() {
     if (nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter a reminder name'),
-        ),
+        const SnackBar(content: Text('Please enter a reminder name')),
       );
       return;
     }
 
     if (!isDaily && selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a date'),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Please select a date')));
       return;
     }
 
     if (selectedTime == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please select a time'),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Please select a time')));
       return;
     }
 
     final note = noteController.text.trim();
 
     final reminder = Reminder(
-      id: editingReminder?.id ??
-          'rem-${DateTime.now().microsecondsSinceEpoch}',
+      id: editingReminder?.id ?? 'rem-${DateTime.now().microsecondsSinceEpoch}',
       petId: editingReminder?.petId ?? activePet.id,
       title: nameController.text.trim(),
       category: selectedCategory,
@@ -207,19 +198,15 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     );
 
     if (editingReminder == null) {
-      // Create a new reminder.
       sampleReminders.add(reminder);
     } else {
-      // Update the existing reminder.
       final index = sampleReminders.indexWhere(
         (item) => item.id == editingReminder!.id,
       );
 
       if (index == -1) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Reminder could not be found'),
-          ),
+          const SnackBar(content: Text('Reminder could not be found')),
         );
         return;
       }
@@ -235,50 +222,33 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.white,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
+        shape: const Border(bottom: BorderSide(color: AppColors.cardBorder)),
         title: Text(
-          'Create / edit reminder',
+          editingReminder == null ? 'Add Reminder' : 'Edit Reminder',
           style: AppTextStyles.headingSmall.copyWith(
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ),
-
-      // Save button stays visible at the bottom.
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(
-          color: AppColors.white,
+          decoration: const BoxDecoration(
+            color: AppColors.white,
+            border: Border(top: BorderSide(color: AppColors.cardBorder)),
+          ),
           padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
-          child: SizedBox(
-            width: double.infinity,
-            height: 56,
-            child: ElevatedButton(
-              onPressed: saveReminder,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.darkGreen,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
-                ),
-              ),
-              child: Text(
-                'Save reminder',
-                style: AppTextStyles.button.copyWith(
-                  color: AppColors.darkGreen,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                ),
-              ),
-            ),
+          child: PrimaryButton(
+            text: editingReminder == null ? 'Save reminder' : 'Save changes',
+            onPressed: saveReminder,
           ),
         ),
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 24, 20, 28),
         child: Column(
@@ -289,10 +259,8 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             const SizedBox(height: 12),
             TextFormField(
               controller: nameController,
-              style: AppTextStyles.bodyLarge,
-              decoration: fieldDecoration(
-                hint: 'e.g. Evening meal',
-              ),
+              style: formTextStyle,
+              decoration: formDecoration(hint: 'e.g. Evening meal'),
             ),
 
             // Category
@@ -304,18 +272,8 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               initialValue: selectedCategory,
               isExpanded: true,
               dropdownColor: AppColors.white,
-              style: AppTextStyles.bodyLarge.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
-              decoration: fieldDecoration().copyWith(
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(
-                    color: AppColors.primary,
-                    width: 1.6,
-                  ),
-                ),
-              ),
+              style: formTextStyle.copyWith(fontWeight: FontWeight.w600),
+              decoration: formDecoration(),
               items: ReminderCategory.values.map((category) {
                 return DropdownMenuItem<ReminderCategory>(
                   value: category,
@@ -378,22 +336,19 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               ),
             ),
 
-            // Date - only for one-time reminders.
+            // Date
             if (!isDaily) ...[
               const SizedBox(height: 24),
               sectionLabel('Date', required: true),
               const SizedBox(height: 12),
               TextFormField(
                 readOnly: true,
-                style: AppTextStyles.bodyLarge,
-                decoration: fieldDecoration(
+                style: formTextStyle,
+                decoration: formDecoration(
                   hint: selectedDate == null
                       ? 'Select date'
                       : '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}',
-                  prefixIcon: const Icon(
-                    Icons.calendar_today_outlined,
-                    color: AppColors.secondaryText,
-                  ),
+                  icon: Icons.calendar_today_outlined,
                 ),
                 onTap: () async {
                   final pickedDate = await showDatePicker(
@@ -418,15 +373,12 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             const SizedBox(height: 12),
             TextFormField(
               readOnly: true,
-              style: AppTextStyles.bodyLarge,
-              decoration: fieldDecoration(
+              style: formTextStyle,
+              decoration: formDecoration(
                 hint: selectedTime == null
                     ? 'Select time'
                     : selectedTime!.format(context),
-                prefixIcon: const Icon(
-                  Icons.access_time_outlined,
-                  color: AppColors.secondaryText,
-                ),
+                icon: Icons.access_time_outlined,
               ),
               onTap: () async {
                 final pickedTime = await showTimePicker(
@@ -457,14 +409,14 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
                   const Icon(
                     Icons.chevron_right,
                     color: AppColors.primary,
-                    size: 20,
+                    size: 18,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       'One-time reminders require Date and Time. '
                       'Daily reminders use Time only and repeat every day.',
-                      style: AppTextStyles.bodyMedium.copyWith(
+                      style: AppTextStyles.caption.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -475,19 +427,19 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
             // Send notification
             const SizedBox(height: 24),
+            const Divider(color: AppColors.cardBorder),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text(
-                'Send notification',
-                style: labelStyle,
-              ),
-              subtitle: const Text(
+              title: sectionLabel('Send notification'),
+              subtitle: Text(
                 'Get notified when it is time for this reminder',
-                style: AppTextStyles.bodyMedium,
+                style: AppTextStyles.caption.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               value: sendNotification,
               activeTrackColor: AppColors.primary,
-              activeThumbColor: AppColors.darkGreen,
+              activeThumbColor: AppColors.white,
               onChanged: (value) {
                 setState(() {
                   sendNotification = value;
@@ -496,16 +448,15 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             ),
 
             // Note
-            const SizedBox(height: 24),
+            const Divider(color: AppColors.cardBorder),
+            const SizedBox(height: 20),
             sectionLabel('Note (optional)'),
             const SizedBox(height: 12),
             TextFormField(
               controller: noteController,
               maxLines: 4,
-              style: AppTextStyles.bodyLarge,
-              decoration: fieldDecoration(
-                hint: 'Add a note...',
-              ),
+              style: formTextStyle,
+              decoration: formDecoration(hint: 'Add a short note...'),
             ),
           ],
         ),
