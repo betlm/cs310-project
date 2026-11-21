@@ -12,11 +12,11 @@ import '../screens/reminders/reminder_form_screen.dart';
 import '../screens/reminders/reminders_screen.dart';
 import '../screens/supplies/supply_form_screen.dart';
 import '../screens/supplies/supply_list_screen.dart';
+import '../screens/health/health_history_screen.dart';
 
 /// Names (addresses) of all screens that can be opened with Navigator.
 ///
-/// Home, Health history, My pets and Preferences are tabs inside the
-/// main shell, so they do not have their own route names.
+/// Home, My pets and Preferences are tabs inside the main shell. Health history is a tab too and it also has a route so Home can open it as a separate page
 
 class AppRoutes {
   AppRoutes._();
@@ -39,6 +39,7 @@ class AppRoutes {
   // Health
   static const String healthRecordForm = '/health/form';
   static const String weightTracking = '/health/weight';
+  static const String healthHistory = '/health';
 
   // Supplies
   static const String supplies = '/supplies';
@@ -56,6 +57,7 @@ class AppRoutes {
     petForm: (_) => const PetFormScreen(),
     reminders: (_) => const RemindersScreen(),
     reminderForm: (_) => const ReminderFormScreen(),
+    healthHistory: (_) => const HealthHistoryScreen(),
     healthRecordForm: (_) => const HealthRecordFormScreen(),
     weightTracking: (_) => const WeightTrackingScreen(),
     supplies: (_) => const SupplyListScreen(),

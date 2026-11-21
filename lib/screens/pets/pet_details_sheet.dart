@@ -68,7 +68,8 @@ Future<void> confirmAndDeletePet(BuildContext context, Pet pet) async {
     context: context,
     title: 'Delete ${pet.name}?',
     message: 'All reminders, health records, weights, supplies and '
-        'photos of ${pet.name} will be removed too.',
+        'photos of ${pet.name} will be removed too.'
+        'This action cannot be undone.',
     confirmText: 'Delete',
   );
 

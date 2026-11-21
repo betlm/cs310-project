@@ -68,7 +68,8 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
     final ok = await showConfirmDialog(
       context: context,
       title: 'Clear purchased items?',
-      message: 'All items marked as purchased will be removed from the list.',
+      message: 'All items marked as purchased will be permanently removed '
+          'from the list. This action cannot be undone.',
       confirmText: 'Clear',
     );
 

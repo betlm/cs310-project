@@ -6,6 +6,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import 'user_info_sheet.dart';
 import 'notifications_sheet.dart';
+import '../../widgets/confirm_dialog.dart';
 
 /// Bottom navigation tab: Profile.
 /// Shown inside MainShell, so it has no back arrow.
@@ -43,15 +44,24 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     setState(() {});
   }
 
-  /// Goes back to Welcome and clears the navigation history,
-  /// so the back button cannot return to the app.
-  void _signOut() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      AppRoutes.welcome,
-      (route) => false,
-    );
-  }
+/// Asks for confirmation then goes back to Welcome and clears navigation history so the back button cannot return
+Future<void> _signOut() async {
+  final ok = await showConfirmDialog(
+    context: context,
+    title: 'Sign out?',
+    message: 'Are you sure you want to sign out of PetPocket?',
+    confirmText: 'Sign out',
+    icon: Icons.logout,
+  );
+
+  if (!ok || !mounted) return;
+
+  Navigator.pushNamedAndRemoveUntil(
+    context,
+    AppRoutes.welcome,
+    (route) => false,
+  );
+}
 
   /// Small grey title like "APP" or "ACCOUNT".
   Widget _sectionTitle(String text) {

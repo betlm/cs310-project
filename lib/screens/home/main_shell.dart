@@ -37,12 +37,10 @@ class _MainShellState extends State<MainShell> {
     // always shows the current active pet.
     final tabs = [
       HomeScreen(
-        onOpenHealth: () => _selectTab(1),
+        
         onAppearanceChanged: _onAppearanceChanged,
       ),
-      HealthHistoryScreen(
-        onBackToHome: () => _selectTab(0),
-      ),
+      const HealthHistoryScreen(),
       const MyPetsScreen(),
       PreferencesScreen(onAppearanceChanged: _onAppearanceChanged),
     ];
@@ -50,9 +48,7 @@ class _MainShellState extends State<MainShell> {
     return Scaffold(
       body: tabs[_currentIndex],
       // Thin line above the bar, as in the Figma design.
-      bottomNavigationBar: _currentIndex == 1
-        ? null
-        : Container(
+      bottomNavigationBar: Container(
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: AppColors.navBorder)),
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../data/app_state.dart';
 import '../../data/sample_data.dart';
 import '../../models/pet.dart';
@@ -8,10 +8,12 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/empty_state.dart';
 import 'pet_details_sheet.dart';
-import 'adoption_screen.dart';
-import 'donation_screen.dart';
 import 'widgets/rescue_home_section.dart';
 import 'widgets/pet_list_card.dart';
+
+/// Kurtaran Ev pages opened by the Adopt and Donate buttons.
+const String kurtaranEvAdoptUrl = 'https://www.kurtaranev.org/sahiplendirme';
+const String kurtaranEvDonateUrl = 'https://fonzip.com/kurtaranev/genelbagis';
 
 /// Bottom navigation tab: Pets
 /// Lists all pets as cards, pet can be opened, edited, added or deleted
@@ -46,6 +48,25 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
     await confirmAndDeletePet(context, pet);
     if (!mounted) return;
     setState(() {});
+  }
+
+    /// Opens a Kurtaran Ev page in the phone's browser.
+  Future<void> _openLink(String url) async {
+    var opened = false;
+    try {
+      opened = await launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      opened = false;
+    }
+
+    if (!opened && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open Kurtaran Ev.')),
+      );
+    }
   }
 
   @override
@@ -93,22 +114,8 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
           // Kurtaran Ev section
           if (index == samplePets.length + 2) {
             return RescueHomeSection(
-              onAdopt: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (_) => const AdoptionScreen(),
-                  ),
-                );
-              },
-              onDonate: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute<void>(
-                    builder: (_) => const DonationScreen(),
-                  ),
-                );
-              },
+              onAdopt: () => _openLink(kurtaranEvAdoptUrl),
+              onDonate: () => _openLink(kurtaranEvDonateUrl),
             );
           }
 
