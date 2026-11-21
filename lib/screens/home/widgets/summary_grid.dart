@@ -10,16 +10,12 @@ import '../../../theme/app_spacing.dart';
 class SummaryGrid extends StatelessWidget {
   final String petId;
 
-  /// Switches to the Health tab.
-  final VoidCallback onOpenHealth;
-
   /// Opens a screen by its route name.
   final void Function(String routeName) onOpenScreen;
 
   const SummaryGrid({
     super.key,
     required this.petId,
-    required this.onOpenHealth,
     required this.onOpenScreen,
   });
 
@@ -44,7 +40,7 @@ class SummaryGrid extends StatelessWidget {
                 iconColor: AppColors.peach,
                 backgroundColor: AppColors.healthCardBackground,
                 borderColor: AppColors.healthCardBorder,
-                onTap: onOpenHealth,
+                onTap: () => onOpenScreen(AppRoutes.healthHistory),
               ),
             ),
             const SizedBox(width: gap),

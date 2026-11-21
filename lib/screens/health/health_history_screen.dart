@@ -14,9 +14,7 @@ import '../../widgets/square_icon_button.dart';
 import '../../widgets/confirm_dialog.dart';
 
 class HealthHistoryScreen extends StatefulWidget {
-  final VoidCallback onBackToHome;
-
-  const HealthHistoryScreen({super.key, required this.onBackToHome});
+  const HealthHistoryScreen({super.key});
 
   @override
   State<HealthHistoryScreen> createState() => _HealthHistoryScreenState();
@@ -424,11 +422,6 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded),
-          color: AppColors.darkGreen,
-          onPressed: widget.onBackToHome,
-        ),
         centerTitle: true,
         backgroundColor: AppColors.appBar,
         elevation: 0,

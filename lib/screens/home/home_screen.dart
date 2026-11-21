@@ -19,15 +19,11 @@ import '../../theme/app_colors.dart';
 /// Summarizes the active pet: profile, upcoming reminder,
 /// health/supplies/photos/reminders counts and latest weight.
 class HomeScreen extends StatefulWidget {
-  /// Called when the Health card is tapped. MainShell uses it to
-  /// switch to the Health tab.
-  final VoidCallback onOpenHealth;
   /// Called when Light / Dark is chosen in the header.
   final VoidCallback onAppearanceChanged;
 
     const HomeScreen({
     super.key,
-    required this.onOpenHealth,
     required this.onAppearanceChanged,
   });
 
@@ -104,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: AppSpacing.md),
             SummaryGrid(
               petId: pet.id,
-              onOpenHealth: widget.onOpenHealth,
               onOpenScreen: _openScreen,
             ),
             const SizedBox(height: AppSpacing.md),
