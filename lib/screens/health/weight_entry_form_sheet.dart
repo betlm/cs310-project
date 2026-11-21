@@ -175,7 +175,9 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
                     ],
-                    style: AppTextStyles.bodyLarge,
+                    style: AppTextStyles.bodyLarge.copyWith(
+                      fontSize: 14,
+                    ),
                     decoration: fieldDecoration(hint: '4.8').copyWith(
                       suffixText: 'kg',
                       suffixStyle: AppTextStyles.bodyMedium.copyWith(
@@ -214,7 +216,9 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                       ),
                       child: Text(
                         formatDate(_selectedDate),
-                        style: AppTextStyles.bodyLarge,
+                        style: AppTextStyles.bodyLarge.copyWith(
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ),

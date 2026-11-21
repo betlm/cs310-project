@@ -40,7 +40,9 @@ class _MainShellState extends State<MainShell> {
         onOpenHealth: () => _selectTab(1),
         onAppearanceChanged: _onAppearanceChanged,
       ),
-      const HealthHistoryScreen(),
+      HealthHistoryScreen(
+        onBackToHome: () => _selectTab(0),
+      ),
       const MyPetsScreen(),
       PreferencesScreen(onAppearanceChanged: _onAppearanceChanged),
     ];
@@ -48,7 +50,9 @@ class _MainShellState extends State<MainShell> {
     return Scaffold(
       body: tabs[_currentIndex],
       // Thin line above the bar, as in the Figma design.
-      bottomNavigationBar: Container(
+      bottomNavigationBar: _currentIndex == 1
+        ? null
+        : Container(
         decoration: BoxDecoration(
           border: Border(top: BorderSide(color: AppColors.navBorder)),
         ),
