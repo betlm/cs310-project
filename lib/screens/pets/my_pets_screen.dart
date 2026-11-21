@@ -8,6 +8,9 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/empty_state.dart';
 import 'pet_details_sheet.dart';
+import 'adoption_screen.dart';
+import 'donation_screen.dart';
+import 'widgets/rescue_home_section.dart';
 import 'widgets/pet_list_card.dart';
 
 /// Bottom navigation tab: Pets
@@ -66,7 +69,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
           AppSpacing.lg,
         ),
         // the text at the top and the "Add" card at the bottom.
-        itemCount: samplePets.length + 2,
+        itemCount: samplePets.length + 3,
         itemBuilder: (context, index) {
           // First row - the short explanation
           if (index == 0) {
@@ -83,10 +86,29 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
             );
           }
 
-          // Last row-the dashed "Add a new profile" card 
+          // Last row-the dashed "Add a new profile" card
           if (index == samplePets.length + 1) {
-            return _AddPetCard(
-              onTap: () => _openScreen(AppRoutes.petForm),
+            return _AddPetCard(onTap: () => _openScreen(AppRoutes.petForm));
+          }
+          // Kurtaran Ev section
+          if (index == samplePets.length + 2) {
+            return RescueHomeSection(
+              onAdopt: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => const AdoptionScreen(),
+                  ),
+                );
+              },
+              onDonate: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute<void>(
+                    builder: (_) => const DonationScreen(),
+                  ),
+                );
+              },
             );
           }
 
@@ -112,10 +134,8 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
         scrolledUnderElevation: 0,
         centerTitle: true,
         // Thin grey line under the app bar.
-        shape:  Border(
-          bottom: BorderSide(color: AppColors.cardBorder),
-        ),
-        title:  Text(
+        shape: Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        title: Text(
           'My pets',
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -149,13 +169,13 @@ class _AddPetCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Row(
             children: [
-               CircleAvatar(
+              CircleAvatar(
                 radius: 26,
                 backgroundColor: AppColors.lightMint,
                 child: Icon(Icons.add, color: AppColors.darkGreen, size: 28),
               ),
               const SizedBox(width: 14),
-               Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -187,7 +207,6 @@ class _AddPetCard extends StatelessWidget {
     );
   }
 }
-
 
 /// used also home page  it is func for dash lines
 /// Draws a dashed, rounded border: short lines with gaps
