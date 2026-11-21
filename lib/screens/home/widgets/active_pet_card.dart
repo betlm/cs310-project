@@ -29,7 +29,7 @@ class ActivePetCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(18),
-          boxShadow: const [
+          boxShadow:  [
             BoxShadow(
               color: AppColors.cardShadow,
               blurRadius: 18,
@@ -57,7 +57,7 @@ class ActivePetCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'ACTIVE PET',
                     style: TextStyle(
                       fontSize: 9,
@@ -69,20 +69,20 @@ class ActivePetCard extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     pet.name,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 22,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -0.5,
-                      color: AppColors.darkGreen,
+                      color: AppColors.ink,
                     ),
                   ),
                   Text(
                     petSubtitle(pet),
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.darkGreen,
+                      color: AppColors.ink,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs + 2), // 6
@@ -96,19 +96,19 @@ class ActivePetCard extends StatelessWidget {
                       color: AppColors.viewProfileBackground,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Text(
+                    child:  Text(
                       'View profile',
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.darkGreen,
+                        color: AppColors.ink,
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.darkGreen),
+             Icon(Icons.chevron_right, color: AppColors.ink),
           ],
         ),
       ),

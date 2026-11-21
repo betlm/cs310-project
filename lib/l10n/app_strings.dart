@@ -119,6 +119,123 @@ class AppStrings {
       'selectJpgPng': 'Please select a JPG or PNG image.',
       'imageTooLarge': 'The image must be smaller than 10 MB.',
       'photoError': 'Could not select the photo. Please try again.',
+
+      // Pet details sheet
+      'petDetailsAge': 'Age',
+      'petDetailsWeight': 'Weight',
+      'petDetailsMicrochip': 'Microchip',
+      'petDetailsTag': 'Tag',
+      'notSet': 'Not set',
+      'oneYear': '1 year',
+      'edit': 'Edit',
+      'deletePetNameTitle': 'Delete {name}?',
+      'deletePetNameRecords':
+          'All reminders, health records, weights, supplies and photos of {name} will be removed too.',
+      'petNameDeleted': '{name} was deleted.',
+
+      // Pet switcher and active pet bar
+      'selectPet': 'Select a pet',
+      'addPetShort': 'Add pet',
+
+      // Supply list
+      'supplyListTitle': 'Supply list',
+      'pendingItems': 'Pending items',
+      'clearPurchased': 'Clear purchased',
+      'clear': 'Clear',
+      'clearPurchasedTitle': 'Clear purchased items?',
+      'clearPurchasedMessage':
+          'All items marked as purchased will be removed from the list.',
+      'deleteItemTitle': 'Delete {name}?',
+      'deleteItemMessage':
+          'This item will be permanently removed from the supply list. This action cannot be undone.',
+      'noSuppliesYet': 'No supplies yet',
+      'noSuppliesMessage': 'Add food, litter or toys to your shopping list.',
+      'purchased': 'PURCHASED',
+      'addSupplyItem': 'Add supply item',
+      'addSupplySubtitle': 'Add something to the shopping list',
+      'item': 'item',
+      'items': 'items',
+
+      // Supply form
+      'addEditSupply': 'Add / edit supply',
+      'itemName': 'Item Name',
+      'itemNameHint': 'e.g. Dry food',
+      'quantity': 'Quantity',
+      'unit': 'Unit',
+      'noteOptional': 'Note (Optional)',
+      'noteHint': 'Brand, details, or a short note...',
+      'addToList': 'Add to list',
+      'saveChanges': 'Save changes',
+      'enterItemName': 'Please enter an item name',
+      'itemNameTooLong': 'Name must be at most 40 characters',
+      'enterWholeNumberShort': 'Enter a whole number',
+      'quantityRange': 'Use a number from 1 to 999',
+      'itemNotFound': 'This item could not be found.',
+
+      // Petlebi card
+      'shopping': 'SHOPPING',
+      'shopOnPetlebiFor': 'Shop on Petlebi for {name}',
+      'petlebiSubtitle': 'Food, health, toy and care products in one place.',
+      'food': 'Food',
+      'foodSubtitle': 'Dry and wet food',
+      'healthSubtitle': 'Vitamins and care',
+      'toys': 'Toys',
+      'toysSubtitle': 'Play and fun',
+      'decor': 'Decor',
+      'decorSubtitle': 'Aquarium design',
+      'cleaning': 'Cleaning',
+      'cleaningSubtitle': 'Hygiene needs',
+      'goToPetlebi': 'Go to Petlebi',
+      'petlebiNote':
+          'Opens petlebi.com in your browser. Prices and stock are shown on Petlebi.',
+      'petlebiError': 'Could not open Petlebi.',
+
+      // Preferences
+      'preferences': 'Preferences',
+      'appSection': 'APP',
+      'accountSection': 'ACCOUNT',
+      'language': 'Language',
+      'languageSubtitle': 'Choose the app language',
+      'english': 'English',
+      'turkish': 'Türkçe',
+      'appearance': 'Appearance',
+      'appearanceSubtitle': 'Choose how PetPocket looks',
+      'system': 'System',
+      'notifications': 'Notifications',
+      'on': 'On',
+      'off': 'Off',
+      'signOut': 'Sign out',
+      'versionNote':
+          'PetPocket v1.0.0 · This app does not provide medical advice.',
+
+      // User info sheet
+      'userInformation': 'User Information',
+      'fullName': 'Full Name',
+      'yourName': 'Your name',
+      'emailHint': 'you@example.com',
+      'changePassword': 'Change Password',
+      'keepPasswordNote': 'Leave blank to keep the current password.',
+      'currentPassword': 'Current Password',
+      'currentPasswordHint': 'Enter current password',
+      'newPassword': 'New Password',
+      'atLeast8': 'At least 8 characters',
+      'confirmPassword': 'Confirm Password',
+      'repeatPassword': 'Repeat password',
+      'saveChangesTitle': 'Save Changes',
+      'enterYourName': 'Please enter your name',
+      'enterYourEmail': 'Please enter your email',
+      'validEmail': 'Please enter a valid email',
+      'enterCurrentPassword': 'Enter your current password',
+      'passwordsDontMatch': 'Passwords do not match',
+      'profilePasswordUpdated': 'Profile and password updated.',
+      'profileUpdated': 'Profile updated.',
+
+      // Notifications sheet
+      'allowNotifications': 'Allow local reminder notifications',
+      'notificationsSubtitle': 'Alerts for medication, care, and visits.',
+      'notificationsInfo':
+          'Notification delivery depends on your device settings.',
+      'done': 'Done',
     },
     'tr': {
       'appName': 'PetPocket',
@@ -238,6 +355,123 @@ class AppStrings {
       'selectJpgPng': 'Lütfen JPG ya da PNG bir resim seç.',
       'imageTooLarge': 'Resim 10 MB\'tan küçük olmalı.',
       'photoError': 'Fotoğraf seçilemedi. Lütfen tekrar dene.',
+
+      // Pet details sheet
+      'petDetailsAge': 'Yaş',
+      'petDetailsWeight': 'Kilo',
+      'petDetailsMicrochip': 'Mikroçip',
+      'petDetailsTag': 'Künye',
+      'notSet': 'Belirtilmedi',
+      'oneYear': '1 yaş',
+      'edit': 'Düzenle',
+      'deletePetNameTitle': '{name} silinsin mi?',
+      'deletePetNameRecords':
+          '{name} için tüm hatırlatıcılar, sağlık kayıtları, kilolar, malzemeler ve fotoğraflar da silinecek.',
+      'petNameDeleted': '{name} silindi.',
+
+      // Pet switcher and active pet bar
+      'selectPet': 'Bir hayvan seç',
+      'addPetShort': 'Hayvan ekle',
+
+      // Supply list
+      'supplyListTitle': 'Malzeme listesi',
+      'pendingItems': 'Bekleyen ürünler',
+      'clearPurchased': 'Alınanları temizle',
+      'clear': 'Temizle',
+      'clearPurchasedTitle': 'Alınan ürünler temizlensin mi?',
+      'clearPurchasedMessage':
+          'Alındı olarak işaretlenen tüm ürünler listeden kaldırılacak.',
+      'deleteItemTitle': '{name} silinsin mi?',
+      'deleteItemMessage':
+          'Bu ürün malzeme listesinden kalıcı olarak silinecek. Bu işlem geri alınamaz.',
+      'noSuppliesYet': 'Henüz malzeme yok',
+      'noSuppliesMessage': 'Alışveriş listene mama, kum veya oyuncak ekle.',
+      'purchased': 'ALINANLAR',
+      'addSupplyItem': 'Malzeme ekle',
+      'addSupplySubtitle': 'Alışveriş listesine bir şey ekle',
+      'item': 'adet',
+      'items': 'adet',
+
+      // Supply form
+      'addEditSupply': 'Malzeme ekle / düzenle',
+      'itemName': 'Ürün Adı',
+      'itemNameHint': 'örn. Kuru mama',
+      'quantity': 'Miktar',
+      'unit': 'Birim',
+      'noteOptional': 'Not (İsteğe bağlı)',
+      'noteHint': 'Marka, detay veya kısa bir not...',
+      'addToList': 'Listeye ekle',
+      'saveChanges': 'Değişiklikleri kaydet',
+      'enterItemName': 'Lütfen bir ürün adı gir',
+      'itemNameTooLong': 'Ad en fazla 40 karakter olabilir',
+      'enterWholeNumberShort': 'Tam sayı gir',
+      'quantityRange': '1 ile 999 arasında bir sayı kullan',
+      'itemNotFound': 'Bu ürün bulunamadı.',
+
+      // Petlebi card
+      'shopping': 'ALIŞVERİŞ',
+      'shopOnPetlebiFor': '{name} için Petlebi\'den al',
+      'petlebiSubtitle': 'Mama, sağlık, oyuncak ve bakım ürünleri tek yerde.',
+      'food': 'Mama',
+      'foodSubtitle': 'Kuru ve yaş mama',
+      'healthSubtitle': 'Vitamin ve bakım',
+      'toys': 'Oyuncak',
+      'toysSubtitle': 'Oyun ve eğlence',
+      'decor': 'Dekor',
+      'decorSubtitle': 'Akvaryum tasarımı',
+      'cleaning': 'Temizlik',
+      'cleaningSubtitle': 'Hijyen ihtiyaçları',
+      'goToPetlebi': 'Petlebi\'ye git',
+      'petlebiNote':
+          'petlebi.com tarayıcında açılır. Fiyat ve stok bilgisi Petlebi\'de gösterilir.',
+      'petlebiError': 'Petlebi açılamadı.',
+
+      // Preferences
+      'preferences': 'Tercihler',
+      'appSection': 'UYGULAMA',
+      'accountSection': 'HESAP',
+      'language': 'Dil',
+      'languageSubtitle': 'Uygulama dilini seç',
+      'english': 'English',
+      'turkish': 'Türkçe',
+      'appearance': 'Görünüm',
+      'appearanceSubtitle': 'PetPocket\'ın görünümünü seç',
+      'system': 'Sistem',
+      'notifications': 'Bildirimler',
+      'on': 'Açık',
+      'off': 'Kapalı',
+      'signOut': 'Çıkış yap',
+      'versionNote':
+          'PetPocket v1.0.0 · Bu uygulama tıbbi tavsiye vermez.',
+
+      // User info sheet
+      'userInformation': 'Kullanıcı Bilgileri',
+      'fullName': 'Ad Soyad',
+      'yourName': 'Adın',
+      'emailHint': 'sen@ornek.com',
+      'changePassword': 'Şifre Değiştir',
+      'keepPasswordNote': 'Mevcut şifreni korumak için boş bırak.',
+      'currentPassword': 'Mevcut Şifre',
+      'currentPasswordHint': 'Mevcut şifreni gir',
+      'newPassword': 'Yeni Şifre',
+      'atLeast8': 'En az 8 karakter',
+      'confirmPassword': 'Şifreyi Onayla',
+      'repeatPassword': 'Şifreyi tekrar gir',
+      'saveChangesTitle': 'Değişiklikleri Kaydet',
+      'enterYourName': 'Lütfen adını gir',
+      'enterYourEmail': 'Lütfen e-postanı gir',
+      'validEmail': 'Lütfen geçerli bir e-posta gir',
+      'enterCurrentPassword': 'Mevcut şifreni gir',
+      'passwordsDontMatch': 'Şifreler eşleşmiyor',
+      'profilePasswordUpdated': 'Profil ve şifre güncellendi.',
+      'profileUpdated': 'Profil güncellendi.',
+
+      // Notifications sheet
+      'allowNotifications': 'Yerel hatırlatıcı bildirimlerine izin ver',
+      'notificationsSubtitle': 'İlaç, bakım ve ziyaret uyarıları.',
+      'notificationsInfo':
+          'Bildirimlerin gelmesi cihaz ayarlarına bağlıdır.',
+      'done': 'Tamam',
 
     },
   };

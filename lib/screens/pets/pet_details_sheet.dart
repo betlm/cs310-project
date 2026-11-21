@@ -137,7 +137,7 @@ class _PetDetailsContent extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(3),
-                  decoration: const BoxDecoration(
+                  decoration:  BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.lightMint,
                   ),
@@ -155,7 +155,7 @@ class _PetDetailsContent extends StatelessWidget {
                       Text(
                         pet.name,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontFamily: 'Manrope',
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
@@ -166,7 +166,7 @@ class _PetDetailsContent extends StatelessWidget {
                       Text(
                         _speciesAndBreed(pet),
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: AppColors.secondaryText,
@@ -218,7 +218,7 @@ class _PetDetailsContent extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.darkGreen,
                       minimumSize: const Size(0, 46),
-                      side: const BorderSide(
+                      side:  BorderSide(
                         color: AppColors.mintBorder,
                         width: 1.5,
                       ),
@@ -241,7 +241,7 @@ class _PetDetailsContent extends StatelessWidget {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.danger,
                       minimumSize: const Size(0, 46),
-                      side: const BorderSide(
+                      side:  BorderSide(
                         color: AppColors.dangerLight,
                         width: 1.5,
                       ),
@@ -284,7 +284,7 @@ class _InfoBox extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.secondaryText,
@@ -294,7 +294,7 @@ class _InfoBox extends StatelessWidget {
           Text(
             value,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
               color: AppColors.darkGreen,

@@ -107,7 +107,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
     return Padding(
       padding: EdgeInsets.only(bottom: keyboardHeight),
       child: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           color: AppColors.background,
           borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
         ),
@@ -232,7 +232,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.darkGreen,
                               backgroundColor: AppColors.white,
-                              side: const BorderSide(
+                              side:  BorderSide(
                                 color: AppColors.fieldBorder,
                               ),
                               shape: RoundedRectangleBorder(

@@ -29,7 +29,7 @@ InputDecoration fieldDecoration({
     ),
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
-      borderSide: const BorderSide(
+      borderSide:  BorderSide(
         color: AppColors.fieldBorder,
         width: 1.4,
       ),

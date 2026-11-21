@@ -19,12 +19,12 @@ class AppTheme {
         seedColor: AppColors.mint,
         brightness: Brightness.light,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.cream,
+      appBarTheme: AppBarTheme(
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
       ),
-      textTheme: const TextTheme(
+      textTheme: TextTheme(
         headlineLarge: AppTextStyles.headingLarge,
         headlineMedium: AppTextStyles.headingMedium,
         titleLarge: AppTextStyles.headingSmall,
@@ -48,68 +48,15 @@ class AppTheme {
     );
   }
 
+  /// Same as the light theme: AppColors already returns dark colors
+  /// when dark mode is on. Only the brightness is different, so Flutter's
+  /// own widgets (switches, dialogs, pickers) also use their dark look.
   static ThemeData get darkTheme {
-    return ThemeData(
-      useMaterial3: true,
-      fontFamily: 'DM Sans',
+    return lightTheme.copyWith(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: const Color(0xFF172823),
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.mint,
         brightness: Brightness.dark,
-      ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF172823),
-        foregroundColor: AppColors.white,
-        elevation: 0,
-      ),
-      textTheme: const TextTheme(
-        headlineLarge: TextStyle(
-          fontFamily: 'Manrope',
-          fontSize: 30,
-          fontWeight: FontWeight.bold,
-          color: AppColors.white,
-        ),
-        headlineMedium: TextStyle(
-          fontFamily: 'Manrope',
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: AppColors.white,
-        ),
-        titleLarge: TextStyle(
-          fontFamily: 'Manrope',
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: AppColors.white,
-        ),
-        bodyLarge: TextStyle(
-          fontFamily: 'DM Sans',
-          fontSize: 16,
-          color: AppColors.white,
-        ),
-        bodyMedium: TextStyle(
-          fontFamily: 'DM Sans',
-          fontSize: 14,
-          color: Color(0xFFB9CBC4),
-        ),
-        bodySmall: TextStyle(
-          fontFamily: 'DM Sans',
-          fontSize: 12,
-          color: Color(0xFFB9CBC4),
-        ),
-      ),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.mint,
-          foregroundColor: AppColors.white,
-          textStyle: AppTextStyles.button,
-          minimumSize: const Size(0, 52),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(
-              AppSpacing.radiusMedium,
-            ),
-          ),
-        ),
       ),
     );
   }

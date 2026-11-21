@@ -182,7 +182,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: AppColors.mintBorder, width: 1.3),
-            gradient: const LinearGradient(
+            gradient:  LinearGradient(
               colors: [AppColors.lightMint, AppColors.background],
             ),
           ),
@@ -226,7 +226,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                 ),
               ),
               const SizedBox(width: 5),
-              const Icon(
+               Icon(
                 Icons.chevron_right,
                 color: AppColors.darkGreen,
                 size: 24,
@@ -524,7 +524,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         elevation: 0,
         title: Text(
           'Health history',

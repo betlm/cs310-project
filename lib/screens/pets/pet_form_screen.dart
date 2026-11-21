@@ -226,7 +226,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
     final children = <Widget>[
       Text(
         text,
-        style: const TextStyle(
+        style:  TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w700,
           color: AppColors.darkGreen,
@@ -267,14 +267,14 @@ class _PetFormScreenState extends State<PetFormScreen> {
         child: Container(
           width: 96,
           height: 96,
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.cardBorder,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+               Icon(
                 Icons.photo_camera_outlined,
                 size: 22,
                 color: AppColors.secondaryText,
@@ -282,7 +282,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               const SizedBox(height: AppSpacing.xs),
               Text(
                 _isPickingPhoto ? 'Opening...' : 'Add photo',
-                style: const TextStyle(
+                style:  TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: AppColors.secondaryText,
@@ -310,7 +310,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                   _selectedPhoto = null;
                 });
               },
-              child: const CircleAvatar(
+              child:  CircleAvatar(
                 radius: 12,
                 backgroundColor: AppColors.white,
                 child: Icon(Icons.close, size: 14, color: AppColors.danger),
@@ -329,7 +329,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             child: circle,
           ),
           const SizedBox(height: AppSpacing.sm),
-          const Text(
+           Text(
             'Optional',
             style: TextStyle(
               fontSize: 11,
@@ -379,7 +379,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   speciesLabel(species),
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: AppColors.darkGreen,
@@ -412,13 +412,13 @@ class _PetFormScreenState extends State<PetFormScreen> {
     String? suffix,
   }) {
     return fieldDecoration(hint: hint, icon: icon).copyWith(
-      hintStyle: const TextStyle(fontSize: 15, color: AppColors.hint),
+      hintStyle:  TextStyle(fontSize: 15, color: AppColors.hint),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16,
         vertical: 14,
       ),
       suffixText: suffix,
-      suffixStyle: const TextStyle(
+      suffixStyle:  TextStyle(
         fontSize: 13,
         fontWeight: FontWeight.w700,
         color: AppColors.secondaryText,
@@ -438,7 +438,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             color: selected ? AppColors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
             boxShadow: selected
-                ? const [
+                ?  [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 6,
@@ -541,7 +541,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               children: [
                 GestureDetector(
                   onTap: () => _changeWeight(0.1),
-                  child: const Icon(
+                  child:  Icon(
                     Icons.keyboard_arrow_up,
                     size: 16,
                     color: AppColors.darkGreen,
@@ -549,7 +549,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 ),
                 GestureDetector(
                   onTap: () => _changeWeight(-0.1),
-                  child: const Icon(
+                  child:  Icon(
                     Icons.keyboard_arrow_down,
                     size: 16,
                     color: AppColors.darkGreen,
@@ -559,7 +559,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             ),
           ),
           const SizedBox(width: 10),
-          const Text(
+           Text(
             'kg',
             style: TextStyle(
               fontSize: 13,
@@ -630,15 +630,15 @@ class _PetFormScreenState extends State<PetFormScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape: const Border(
+        shape:  Border(
           bottom: BorderSide(color: AppColors.cardBorder),
         ),
-        title: const Text(
+        title:  Text(
           'Create / edit pet',
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -666,7 +666,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             TextFormField(
               controller: _nameController,
               textCapitalization: TextCapitalization.words,
-              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
               validator: _validateName,
               decoration: _inputDecoration('e.g. Misket'),
             ),
@@ -684,7 +684,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             TextFormField(
               controller: _breedController,
               textCapitalization: TextCapitalization.words,
-              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
               decoration: _inputDecoration('e.g. Tabby'),
             ),
             const SizedBox(height: AppSpacing.lg),
@@ -729,7 +729,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 controller: _birthDateController,
                 readOnly: true,
                 onTap: _pickBirthDate,
-                style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+                style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
                 decoration: _inputDecoration(
                   'DD/MM/YYYY',
                   icon: Icons.calendar_today_outlined,
@@ -740,7 +740,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               TextFormField(
                 controller: _ageController,
                 keyboardType: TextInputType.number,
-                style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+                style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
                 validator: _validateAge,
                 decoration: _inputDecoration('e.g. 3', suffix: 'years'),
               ),
@@ -767,7 +767,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
               validator: _validateWeight,
               decoration: _inputDecoration('4.8').copyWith(
                 suffixIcon: _weightStepper(),
@@ -780,7 +780,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             TextFormField(
               controller: _microchipController,
               keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
               validator: _validateMicrochip,
               decoration: _inputDecoration('Number'),
             ),
@@ -790,7 +790,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             _label('Tag Information (Optional)'),
             TextFormField(
               controller: _tagController,
-              style: const TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
               decoration: _inputDecoration('Tag ID or identifying details'),
             ),
           ],
@@ -799,7 +799,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
       // White strip at the bottom with the Save button
       // It stays visible while the form scrolls
       bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(
           color: AppColors.white,
           border: Border(top: BorderSide(color: AppColors.cardBorder)),
         ),

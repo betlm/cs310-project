@@ -5,20 +5,30 @@ import '../../routes/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import 'user_info_sheet.dart';
+import 'notifications_sheet.dart';
 
 /// Bottom navigation tab: Profile.
 /// Shown inside MainShell, so it has no back arrow.
 ///
-/// Language and appearance choices are saved in app_state.dart but do not
-/// change the app yet; that will be connected later.
+/// Appearance changes the app theme right away. Language is saved in app_state.dart and will be connected in the Turkish step.
 class PreferencesScreen extends StatefulWidget {
-  const PreferencesScreen({super.key});
+ /// Tells MainShell that Light / Dark / System 
+final VoidCallback onAppearanceChanged;
+
+const PreferencesScreen({super.key, required this.onAppearanceChanged});
 
   @override
   State<PreferencesScreen> createState() => _PreferencesScreenState();
 }
 
 class _PreferencesScreenState extends State<PreferencesScreen> {
+  /// Saves the appearance choice and asks MainShell to apply it.
+  void _setAppearance(String value) {
+    setState(() {
+      appAppearance = value;
+    });
+    widget.onAppearanceChanged();
+  }
   /// open the user information sheet
   Future<void> _openUserInfo() async {
     await showUserInfoSheet(context);
@@ -26,8 +36,12 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     setState(() {});
   }
 
-  /// Opens the notifications sheet (made by Ayça).
-  void _openNotifications() {}
+  /// Opens the notifications sheet 
+  Future<void> _openNotifications() async {
+    await showNotificationsSheet(context);
+    if (!mounted) return;
+    setState(() {});
+  }
 
   /// Goes back to Welcome and clears the navigation history,
   /// so the back button cannot return to the app.
@@ -45,7 +59,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
       padding: const EdgeInsets.only(left: 2, bottom: AppSpacing.sm),
       child: Text(
         text,
-        style: const TextStyle(
+        style:  TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w800,
           letterSpacing: 1.5,
@@ -60,16 +74,16 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
         automaticallyImplyLeading: false,
-        shape: const Border(
+        shape:  Border(
           bottom: BorderSide(color: AppColors.cardBorder),
         ),
-        title: const Text(
+        title:  Text(
           'Preferences',
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -132,7 +146,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                     ],
                   ),
                 ),
-                const Divider(height: 1, color: AppColors.cardBorder),
+                 Divider(height: 1, color: AppColors.cardBorder),
 
                 // Appearance
                 _SettingRow(
@@ -144,36 +158,24 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                       _OptionButton(
                         text: 'Light',
                         selected: appAppearance == 'light',
-                        onTap: () {
-                          setState(() {
-                            appAppearance = 'light';
-                          });
-                        },
+                        onTap: () => _setAppearance('light'),
                       ),
                       const SizedBox(width: 8),
                       _OptionButton(
                         text: 'Dark',
                         selected: appAppearance == 'dark',
-                        onTap: () {
-                          setState(() {
-                            appAppearance = 'dark';
-                          });
-                        },
+                        onTap: () => _setAppearance('dark'),
                       ),
                       const SizedBox(width: 8),
                       _OptionButton(
                         text: 'System',
                         selected: appAppearance == 'system',
-                        onTap: () {
-                          setState(() {
-                            appAppearance = 'system';
-                          });
-                        },
+                        onTap: () => _setAppearance('system'),
                       ),
                     ],
                   ),
                 ),
-                const Divider(height: 1, color: AppColors.cardBorder),
+                 Divider(height: 1, color: AppColors.cardBorder),
 
                 // Notifications
                 GestureDetector(
@@ -186,13 +188,13 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(
+                         Icon(
                           Icons.notifications_none,
                           size: 22,
                           color: AppColors.darkGreen,
                         ),
                         const SizedBox(width: 14),
-                        const Expanded(
+                         Expanded(
                           child: Text(
                             'Notifications',
                             style: TextStyle(
@@ -204,14 +206,14 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
                         ),
                         Text(
                           notificationsEnabled ? 'On' : 'Off',
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
                             color: AppColors.secondaryText,
                           ),
                         ),
                         const SizedBox(width: 4),
-                        const Icon(
+                         Icon(
                           Icons.chevron_right,
                           color: AppColors.darkGreen,
                         ),
@@ -233,7 +235,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
               foregroundColor: AppColors.danger,
               backgroundColor: AppColors.white,
               minimumSize: const Size(double.infinity, 46),
-              side: const BorderSide(color: AppColors.dangerLight, width: 1.5),
+              side:  BorderSide(color: AppColors.dangerLight, width: 1.5),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
@@ -246,7 +248,7 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
           ),
           const SizedBox(height: AppSpacing.md),
 
-          const Text(
+           Text(
             'PetPocket v1.0.0 · This app does not provide medical advice.',
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -297,7 +299,7 @@ class _UserCard extends StatelessWidget {
               backgroundColor: AppColors.primary,
               child: Text(
                 initial,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 17,
                   fontWeight: FontWeight.w800,
@@ -313,7 +315,7 @@ class _UserCard extends StatelessWidget {
                   Text(
                     name,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 16,
                       fontWeight: FontWeight.w800,
@@ -324,7 +326,7 @@ class _UserCard extends StatelessWidget {
                   Text(
                     email,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: AppColors.secondaryText,
@@ -333,7 +335,7 @@ class _UserCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.darkGreen),
+             Icon(Icons.chevron_right, color: AppColors.darkGreen),
           ],
         ),
       ),
@@ -370,7 +372,7 @@ class _SettingRow extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                     color: AppColors.darkGreen,
@@ -379,7 +381,7 @@ class _SettingRow extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                     color: AppColors.secondaryText,

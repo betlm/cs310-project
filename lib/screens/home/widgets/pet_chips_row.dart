@@ -125,11 +125,11 @@ class _AddPetChip extends StatelessWidget {
             child: CustomPaint(
               foregroundPainter: _DashedCirclePainter(color: AppColors.primary),
               child: Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: AppColors.lightMint,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.add,
                   color: AppColors.darkGreen,
                   size: 28,

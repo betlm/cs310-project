@@ -11,6 +11,7 @@ import '../../widgets/confirm_dialog.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
+import 'widgets/petlebi_card.dart';
 
 
 /// Shopping list of the active pet: pending items first then the purchased ones
@@ -51,7 +52,7 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
     final ok = await showConfirmDialog(
       context: context,
       title: 'Delete ${item.name}?',
-      message: 'This item will be removed from the shopping list.',
+      message: 'This item will be permanently removed from the supply list. This action cannot be undone.',
       confirmText: 'Delete',
     );
 
@@ -131,7 +132,7 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
 
     if (purchased.isNotEmpty) {
       children.add(
-        const Padding(
+         Padding(
           padding: EdgeInsets.only(top: AppSpacing.md, bottom: 12),
           child: Text(
             'PURCHASED',
@@ -157,18 +158,22 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
       }
     }
 
+    // Petlebi shopping card, always at the bottom of the list
+    children.add(const SizedBox(height: AppSpacing.md));
+    children.add(PetlebiCard(pet: pet));
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape: const Border(
+        shape:  Border(
           bottom: BorderSide(color: AppColors.cardBorder),
         ),
-        title: const Text(
+        title:  Text(
           'Supply list',
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -216,7 +221,7 @@ class _SummaryBox extends StatelessWidget {
         children: [
           Text(
             '$pendingCount',
-            style: const TextStyle(
+            style:  TextStyle(
               fontFamily: 'Manrope',
               fontSize: 26,
               fontWeight: FontWeight.w800,
@@ -225,7 +230,7 @@ class _SummaryBox extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          const Expanded(
+           Expanded(
             child: Text(
               'Pending items',
               style: TextStyle(
@@ -269,7 +274,7 @@ class _AddSupplyCard extends StatelessWidget {
           color: AppColors.lightMint,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.primary, width: 1.5),
-          boxShadow: const [
+          boxShadow:  [
             BoxShadow(
               color: AppColors.cardShadow,
               blurRadius: 10,
@@ -286,10 +291,10 @@ class _AddSupplyCard extends StatelessWidget {
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.add, color: AppColors.darkGreen, size: 26),
+              child:  Icon(Icons.add, color: AppColors.darkGreen, size: 26),
             ),
             const SizedBox(width: 12),
-            const Expanded(
+             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -314,7 +319,7 @@ class _AddSupplyCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right, color: AppColors.darkGreen),
+             Icon(Icons.chevron_right, color: AppColors.darkGreen),
           ],
         ),
       ),
@@ -374,7 +379,7 @@ class _SupplyCard extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side: const BorderSide(color: AppColors.cardBorder, width: 1.5),
+        side:  BorderSide(color: AppColors.cardBorder, width: 1.5),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -395,7 +400,7 @@ class _SupplyCard extends StatelessWidget {
                   ),
                 ),
                 child: bought
-                    ? const Icon(Icons.check, size: 15, color: AppColors.white)
+                    ?  Icon(Icons.check, size: 15, color: AppColors.white)
                     : null,
               ),
             ),
@@ -419,7 +424,7 @@ class _SupplyCard extends StatelessWidget {
                   Text(
                     _amountText(item),
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: AppColors.secondaryText,

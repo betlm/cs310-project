@@ -140,7 +140,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             color: selected ? AppColors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: selected
-                ? const [
+                ?  [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 5,
@@ -222,12 +222,12 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape: const Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        shape:  Border(bottom: BorderSide(color: AppColors.cardBorder)),
         title: Text(
           editingReminder == null ? 'Add Reminder' : 'Edit Reminder',
           style: AppTextStyles.headingSmall.copyWith(
@@ -238,7 +238,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(
             color: AppColors.white,
             border: Border(top: BorderSide(color: AppColors.cardBorder)),
           ),
@@ -427,7 +427,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
             // Send notification
             const SizedBox(height: 24),
-            const Divider(color: AppColors.cardBorder),
+             Divider(color: AppColors.cardBorder),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: sectionLabel('Send notification'),
@@ -448,7 +448,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             ),
 
             // Note
-            const Divider(color: AppColors.cardBorder),
+             Divider(color: AppColors.cardBorder),
             const SizedBox(height: 20),
             sectionLabel('Note (optional)'),
             const SizedBox(height: 12),

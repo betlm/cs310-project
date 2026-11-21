@@ -43,7 +43,7 @@ class ActiveProfileCard extends StatelessWidget {
                     ? AssetImage(imageUrl!)
                     : null,
                 child: imageUrl == null
-                    ? const Icon(
+                    ?  Icon(
                         Icons.pets,
                         color: AppColors.white,
                         size: 28,
@@ -67,7 +67,7 @@ class ActiveProfileCard extends StatelessWidget {
                   ],
                 ),
               ),
-              const Icon(
+               Icon(
                 Icons.chevron_right,
                 color: AppColors.darkGreen,
               ),

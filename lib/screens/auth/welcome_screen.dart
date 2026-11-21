@@ -205,7 +205,7 @@ class WelcomeScreen extends StatelessWidget {
                               style: OutlinedButton.styleFrom(
                                 foregroundColor: AppColors.darkGreen,
                                 backgroundColor: AppColors.background,
-                                side: const BorderSide(
+                                side:  BorderSide(
                                   color: AppColors.mintBorder,
                                   width: 1.5,
                                 ),

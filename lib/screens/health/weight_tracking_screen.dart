@@ -226,7 +226,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: AppColors.mintBorder, width: 1.3),
-            gradient: const LinearGradient(
+            gradient:  LinearGradient(
               colors: [AppColors.lightMint, AppColors.background],
             ),
           ),
@@ -239,7 +239,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(13),
                 ),
-                child: const Icon(
+                child:  Icon(
                   Icons.add,
                   color: AppColors.darkGreen,
                   size: 27,
@@ -272,7 +272,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                 ),
               ),
               const SizedBox(width: 5),
-              const Icon(
+               Icon(
                 Icons.chevron_right,
                 color: AppColors.darkGreen,
                 size: 24,
@@ -289,7 +289,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
     required IconData icon,
     required String tooltip,
     required VoidCallback onPressed,
-    Color color = AppColors.darkGreen,
+    Color? color,
   }) {
     return Tooltip(
       message: tooltip,
@@ -306,7 +306,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
               border: Border.all(color: AppColors.fieldBorder, width: 1.2),
               borderRadius: BorderRadius.circular(9),
             ),
-            child: Icon(icon, size: 19, color: color),
+            child: Icon(icon, size: 19, color: color?? AppColors.darkGreen),
           ),
         ),
       ),
@@ -393,7 +393,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         elevation: 0,
         title: Text(
           'Weight tracking',

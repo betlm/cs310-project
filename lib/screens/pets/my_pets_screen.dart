@@ -70,7 +70,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
         itemBuilder: (context, index) {
           // First row - the short explanation
           if (index == 0) {
-            return const Padding(
+            return Padding(
               padding: EdgeInsets.only(bottom: AppSpacing.md),
               child: Text(
                 'Tap a profile to make it the active pet.',
@@ -106,16 +106,16 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
         // Thin grey line under the app bar.
-        shape: const Border(
+        shape:  Border(
           bottom: BorderSide(color: AppColors.cardBorder),
         ),
-        title: const Text(
+        title:  Text(
           'My pets',
           style: TextStyle(
             fontFamily: 'Manrope',
@@ -149,13 +149,13 @@ class _AddPetCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Row(
             children: [
-              const CircleAvatar(
+               CircleAvatar(
                 radius: 26,
                 backgroundColor: AppColors.lightMint,
                 child: Icon(Icons.add, color: AppColors.darkGreen, size: 28),
               ),
               const SizedBox(width: 14),
-              const Expanded(
+               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

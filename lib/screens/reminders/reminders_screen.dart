@@ -121,7 +121,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
             color: selected ? AppColors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: selected
-                ? const [
+                ?  [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 5,
@@ -345,12 +345,12 @@ class _RemindersScreenState extends State<RemindersScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.appBar,
         foregroundColor: AppColors.darkGreen,
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape: const Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        shape:  Border(bottom: BorderSide(color: AppColors.cardBorder)),
         title: Text(
           'Reminders',
           style: AppTextStyles.headingSmall.copyWith(
@@ -375,7 +375,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                   color: AppColors.lightMint,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: AppColors.primary, width: 1.5),
-                  boxShadow: const [
+                  boxShadow:  [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 10,
@@ -392,7 +392,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                         color: AppColors.primary,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(
+                      child:  Icon(
                         Icons.add,
                         color: AppColors.darkGreen,
                         size: 26,
@@ -422,7 +422,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                         ],
                       ),
                     ),
-                    const Icon(Icons.chevron_right, color: AppColors.darkGreen),
+                     Icon(Icons.chevron_right, color: AppColors.darkGreen),
                   ],
                 ),
               ),
