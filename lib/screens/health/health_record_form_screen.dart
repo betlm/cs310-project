@@ -78,8 +78,8 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
   Color _typeColor(HealthRecordType type) {
     return switch (type) {
       HealthRecordType.vaccination => AppColors.primary,
-      HealthRecordType.vetVisit => AppColors.peach,
-      HealthRecordType.checkUp => AppColors.speciesHamster,
+      HealthRecordType.vetVisit => AppColors.speciesHamster,
+      HealthRecordType.checkUp => AppColors.peach,
       HealthRecordType.medication => AppColors.darkGreen,
       HealthRecordType.parasiteTreatment => AppColors.speciesRabbit,
       HealthRecordType.feedingNote => AppColors.speciesBird,
@@ -124,7 +124,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                     _typeLabel(_selectedType),
                     style: AppTextStyles.bodyLarge.copyWith(
                       fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
                 ),
@@ -471,7 +471,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
         title: Text(
           'Create / edit record',
           style: AppTextStyles.headingSmall.copyWith(
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ),

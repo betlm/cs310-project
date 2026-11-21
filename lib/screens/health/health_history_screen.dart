@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 import '../../data/app_state.dart';
 import '../../data/sample_data.dart';
 import '../../models/health_record.dart';
-import '../../models/pet.dart';
 import '../../routes/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
-import '../../theme/species_colors.dart';
-import '../../widgets/active_profile_card.dart';
-import '../home/widgets/pet_chips_row.dart';
 import 'health_record_form_screen.dart';
+import '../../widgets/active_pet_bar.dart';
+import '../../widgets/pet_switcher_sheet.dart';
+import '../../widgets/square_icon_button.dart';
+import '../../widgets/confirm_dialog.dart';
 
 class HealthHistoryScreen extends StatefulWidget {
-  const HealthHistoryScreen({super.key});
+  final VoidCallback onBackToHome;
+
+  const HealthHistoryScreen({super.key, required this.onBackToHome});
 
   @override
   State<HealthHistoryScreen> createState() => _HealthHistoryScreenState();
@@ -23,59 +26,13 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   HealthRecordType? selectedFilter;
 
   Future<void> _selectPet() async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.background,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (sheetContext) {
-        return SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Select a pet',
-                  style: AppTextStyles.headingMedium.copyWith(fontSize: 20),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Choose whose health records to view',
-                  style: AppTextStyles.bodyMedium.copyWith(fontSize: 12),
-                ),
-                const SizedBox(height: 20),
-                PetChipsRow(
-                  selectedPet: activePet,
-                  onPetSelected: (Pet pet) {
-                    setState(() {
-                      activePet = pet;
-                      selectedFilter = null;
-                    });
+    await showPetSwitcher(context);
 
-                    Navigator.pop(sheetContext);
-                  },
-                  onAddPet: () {
-                    Navigator.pop(sheetContext);
+    if (!mounted) return;
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'You can add a new pet from the Pets tab.',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    setState(() {
+      selectedFilter = null;
+    });
   }
 
   String _typeLabel(HealthRecordType type) {
@@ -97,16 +54,16 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   }
 
   Color _recordColor(HealthRecordType type) {
-    return switch (type) {
-      HealthRecordType.checkUp => AppColors.peach,
-      HealthRecordType.vaccination => AppColors.primary,
-      HealthRecordType.medication => AppColors.darkGreen,
-      HealthRecordType.vetVisit => AppColors.peach,
-      HealthRecordType.parasiteTreatment => AppColors.primary,
-      HealthRecordType.feedingNote => AppColors.primary,
-      HealthRecordType.other => AppColors.darkGreen,
-    };
-  }
+  return switch (type) {
+    HealthRecordType.vaccination => AppColors.primary,
+    HealthRecordType.vetVisit => AppColors.speciesHamster,
+    HealthRecordType.checkUp => AppColors.peach,
+    HealthRecordType.medication => AppColors.darkGreen,
+    HealthRecordType.parasiteTreatment => AppColors.speciesRabbit,
+    HealthRecordType.feedingNote => AppColors.speciesBird,
+    HealthRecordType.other => AppColors.speciesBird,
+  };
+}
 
   IconData _recordIcon(HealthRecordType type) {
     return switch (type) {
@@ -129,33 +86,13 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   }
 
   Future<void> _deleteRecord(HealthRecord record) async {
-    final shouldDelete = await showDialog<bool>(
+    final shouldDelete = await showConfirmDialog(
       context: context,
-      builder: (dialogContext) {
-        return AlertDialog(
-          title: const Text('Delete health record?'),
-          content: Text('Are you sure you want to delete "${record.title}"?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext, false);
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext, true);
-              },
-              child: Text(
-                'Delete',
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: AppColors.danger,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+      title: 'Delete ${record.title}?',
+      message:
+          'This health record will be permanently removed. '
+          'This action cannot be undone.',
+      confirmText: 'Delete',
     );
 
     if (shouldDelete == true && mounted) {
@@ -171,68 +108,62 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
     required IconData icon,
     required VoidCallback onTap,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: AppColors.mintBorder, width: 1.3),
-            gradient:  LinearGradient(
-              colors: [AppColors.lightMint, AppColors.background],
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(14),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: AppColors.lightMint,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.primary, width: 1.5),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.cardShadow,
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Icon(icon, color: AppColors.darkGreen, size: 27),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.darkGreen,
-                      ),
+              child: Icon(icon, color: AppColors.darkGreen, size: 26),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      fontFamily: 'Manrope',
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.darkGreen,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        height: 1.3,
-                        color: AppColors.secondaryText,
-                      ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.caption.copyWith(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 5),
-               Icon(
-                Icons.chevron_right,
-                color: AppColors.darkGreen,
-                size: 24,
-              ),
-            ],
-          ),
+            ),
+            Icon(Icons.chevron_right, color: AppColors.darkGreen),
+          ],
         ),
       ),
     );
@@ -308,34 +239,6 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
             );
           }),
         ],
-      ),
-    );
-  }
-
-  Widget _recordActionButton({
-    required IconData icon,
-    required Color color,
-    required String tooltip,
-    required VoidCallback onPressed,
-  }) {
-    return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(9),
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(9),
-          child: Container(
-            width: 33,
-            height: 33,
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.fieldBorder, width: 1.2),
-              borderRadius: BorderRadius.circular(9),
-            ),
-            child: Icon(icon, color: color, size: 19),
-          ),
-        ),
       ),
     );
   }
@@ -441,21 +344,20 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                         padding: const EdgeInsets.only(top: 6),
                                         child: Text(
                                           record.title,
-                                          style: AppTextStyles.bodyLarge
-                                              .copyWith(
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.darkGreen,
-                                              ),
+                                          style: AppTextStyles.bodyLarge.copyWith(
+                                            fontFamily: 'Manrope',
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w800,
+                                            color: AppColors.darkGreen,
+                                          ),
                                         ),
                                       ),
                                     ),
                                     const SizedBox(width: 5),
-                                    _recordActionButton(
+                                    SquareIconButton(
                                       icon: Icons.edit_outlined,
                                       color: AppColors.darkGreen,
-                                      tooltip: 'Edit record',
-                                      onPressed: () async {
+                                      onTap: () async {
                                         final updated =
                                             await Navigator.push<bool>(
                                               context,
@@ -473,11 +375,10 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                       },
                                     ),
                                     const SizedBox(width: 5),
-                                    _recordActionButton(
+                                    SquareIconButton(
                                       icon: Icons.delete_outline,
                                       color: AppColors.danger,
-                                      tooltip: 'Delete record',
-                                      onPressed: () {
+                                      onTap: () {
                                         _deleteRecord(record);
                                       },
                                     ),
@@ -523,6 +424,11 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+          color: AppColors.darkGreen,
+          onPressed: widget.onBackToHome,
+        ),
         centerTitle: true,
         backgroundColor: AppColors.appBar,
         elevation: 0,
@@ -537,12 +443,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
-          ActiveProfileCard(
-            petName: activePet.name,
-            petType: speciesLabel(activePet.species),
-            imageUrl: activePet.avatarPath,
-            onTap: _selectPet,
-          ),
+          ActivePetBar(pet: activePet, onTap: _selectPet),
           const SizedBox(height: 30),
           _actionCard(
             title: 'Add health record',
@@ -566,20 +467,75 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
           const SizedBox(height: 20),
           _filterRow(),
           const SizedBox(height: 24),
-          if (records.isEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: Text(
-                  'No health records yet.',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.secondaryText,
-                  ),
+           if (records.isEmpty)
+            DottedBorder(
+              options: RoundedRectDottedBorderOptions(
+                radius: const Radius.circular(20),
+                color: AppColors.primary.withValues(alpha: 0.35),
+                strokeWidth: 1.5,
+                dashPattern: const [6, 5],
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.lightMint.withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      bottom: 0,
+                      child: Container(
+                        width: 1.5,
+                        color: AppColors.fieldBorder,
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 28,
+                          backgroundColor: AppColors.lightMint,
+                          child: Icon(
+                            Icons.favorite_border,
+                            size: 30,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        Text(
+                          'No health records yet',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.headingSmall.copyWith(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.darkGreen,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Add the first health record for ${activePet.name}.',
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.secondaryText,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
             )
           else
-            ...records.map(_recordTimelineItem),
+            ...records.map(_recordTimelineItem),        
         ],
       ),
     );

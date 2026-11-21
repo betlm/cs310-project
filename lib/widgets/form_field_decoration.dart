@@ -61,7 +61,8 @@ Widget fieldLabel(String label) {
   return RichText(
     text: TextSpan(
       style: AppTextStyles.bodyLarge.copyWith(
-        fontWeight: FontWeight.bold,
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
         color: AppColors.darkGreen,
       ),
       children: [

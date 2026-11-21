@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../data/app_state.dart';
 import '../../data/sample_data.dart';
-import '../../models/pet.dart';
 import '../../models/weight_entry.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
-import '../../theme/species_colors.dart';
 import '../../utils/date_format.dart';
-import '../../widgets/active_profile_card.dart';
-
-import '../home/widgets/pet_chips_row.dart';
+import '../../widgets/active_pet_bar.dart';
+import '../../widgets/square_icon_button.dart';
+import '../../widgets/confirm_dialog.dart';
 import 'weight_entry_form_sheet.dart';
 import 'widgets/weight_chart.dart';
+import '../../widgets/pet_switcher_sheet.dart';
 
 class WeightTrackingScreen extends StatefulWidget {
   const WeightTrackingScreen({super.key});
@@ -22,64 +21,21 @@ class WeightTrackingScreen extends StatefulWidget {
 }
 
 class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
-  List<WeightEntry> get _entries => weightEntriesFor(activePet.id);
+  List<WeightEntry> get _entries {
+    final entries = weightEntriesFor(activePet.id).toList();
+    entries.sort((a, b) => a.date.compareTo(b.date));
+    return entries;
+  }
 
   String _weight(double value) => value.toStringAsFixed(1);
 
   // Select an active pet using the existing shared pet chips.
   Future<void> _selectPet() async {
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: AppColors.background,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (sheetContext) {
-        return SafeArea(
-          top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Select a pet',
-                  style: AppTextStyles.headingMedium.copyWith(fontSize: 20),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Choose whose weight history to view',
-                  style: AppTextStyles.bodyMedium.copyWith(fontSize: 12),
-                ),
-                const SizedBox(height: 20),
-                PetChipsRow(
-                  selectedPet: activePet,
-                  onPetSelected: (Pet pet) {
-                    setState(() {
-                      activePet = pet;
-                    });
+    await showPetSwitcher(context);
 
-                    Navigator.pop(sheetContext);
-                  },
-                  onAddPet: () {
-                    Navigator.pop(sheetContext);
+    if (!mounted) return;
 
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text(
-                          'You can add a new pet from the Pets tab.',
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+    setState(() {});
   }
 
   // Open the form for adding or editing a weight entry.
@@ -99,33 +55,12 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
 
   // Delete a weight entry after confirmation.
   Future<void> _deleteEntry(WeightEntry entry) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: Text('Delete weight entry?', style: AppTextStyles.headingSmall),
-        content: Text(
-          'Are you sure you want to delete this entry?',
-          style: AppTextStyles.bodyMedium,
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text('Cancel', style: AppTextStyles.bodyMedium),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(
-              'Delete',
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.danger,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+   final confirmed = await showConfirmDialog(
+    context: context,
+    title: 'Delete weight entry?',
+    message: 'This weight entry will be permanently removed. This action cannot be undone.',
+    confirmText: 'Delete',
+  );
 
     if (confirmed == true && mounted) {
       setState(() {
@@ -154,27 +89,21 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
           .toList();
 
       if (previous.length >= 2) {
-        change = latest.weightKg - previous.first.weightKg;
+        final oldestWeight = previous.first.weightKg;
+        change = latest.weightKg - oldestWeight;
       }
     }
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: AppColors.lightMint,
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         children: [
-          Text(
-            'Current weight',
-            style: AppTextStyles.bodyMedium.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 8),
+          
           if (latest == null)
             Text('No entries yet', style: AppTextStyles.headingSmall)
           else
@@ -184,7 +113,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                   TextSpan(
                     text: _weight(latest.weightKg),
                     style: AppTextStyles.headingLarge.copyWith(
-                      fontSize: 40,
+                      fontSize: 36,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -198,7 +127,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                 ],
               ),
             ),
-          const SizedBox(height: 5),
+          const SizedBox(height: 2),
           Text(
             change == null
                 ? 'Track your pet’s weight over time'
@@ -220,32 +149,29 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () => _openForm(),
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(14),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: AppColors.mintBorder, width: 1.3),
-            gradient:  LinearGradient(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.primary, width: 1.5),
+            gradient: LinearGradient(
               colors: [AppColors.lightMint, AppColors.background],
             ),
           ),
           child: Row(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 40,
+                height: 40,
                 decoration: BoxDecoration(
                   color: AppColors.primary,
-                  borderRadius: BorderRadius.circular(13),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child:  Icon(
-                  Icons.add,
-                  color: AppColors.darkGreen,
-                  size: 27,
-                ),
+                child: Icon(Icons.add, color: AppColors.darkGreen, size: 24),
               ),
-              const SizedBox(width: 13),
+              
+              const SizedBox(width: 10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,10 +180,10 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                       'Add weight entry',
                       style: AppTextStyles.bodyLarge.copyWith(
                         fontSize: 14,
-                        fontWeight: FontWeight.w700,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
                       'Keep the growth chart up to date',
                       maxLines: 2,
@@ -272,41 +198,8 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                 ),
               ),
               const SizedBox(width: 5),
-               Icon(
-                Icons.chevron_right,
-                color: AppColors.darkGreen,
-                size: 24,
-              ),
+              Icon(Icons.chevron_right, color: AppColors.darkGreen, size: 24),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Reusable edit/delete action button.
-  Widget _actionButton({
-    required IconData icon,
-    required String tooltip,
-    required VoidCallback onPressed,
-    Color? color,
-  }) {
-    return Tooltip(
-      message: tooltip,
-      child: Material(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(9),
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(9),
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.fieldBorder, width: 1.2),
-              borderRadius: BorderRadius.circular(9),
-            ),
-            child: Icon(icon, size: 19, color: color?? AppColors.darkGreen),
           ),
         ),
       ),
@@ -335,11 +228,15 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
           ),
         ...recent.map(
           (entry) => Container(
-            margin: const EdgeInsets.only(bottom: 8),
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+            margin: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(13),
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(
+                color: AppColors.cardBorder,
+                width: 1.5,
+              ),
             ),
             child: Row(
               children: [
@@ -350,7 +247,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                       Text(
                         '${_weight(entry.weightKg)} kg',
                         style: AppTextStyles.headingSmall.copyWith(
-                          fontSize: 17,
+                          fontSize: 14,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
@@ -365,18 +262,20 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                     ],
                   ),
                 ),
-                _actionButton(
+                SquareIconButton(
                   icon: Icons.edit_outlined,
-                  tooltip: 'Edit weight',
-                  onPressed: () => _openForm(entry),
+                  color: AppColors.darkGreen,
+                  size: 34,
+                  onTap: () => _openForm(entry),
                 ),
-                const SizedBox(width: 5),
-                _actionButton(
+                const SizedBox(width: 6),
+                SquareIconButton(
                   icon: Icons.delete_outline,
-                  tooltip: 'Delete weight',
                   color: AppColors.danger,
-                  onPressed: () => _deleteEntry(entry),
+                  size: 34,
+                  onTap: () => _deleteEntry(entry),
                 ),
+                
               ],
             ),
           ),
@@ -406,12 +305,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
         children: [
-          ActiveProfileCard(
-            petName: activePet.name,
-            petType: speciesLabel(activePet.species),
-            imageUrl: activePet.avatarPath,
-            onTap: _selectPet,
-          ),
+          ActivePetBar(pet: activePet, onTap: _selectPet),
           const SizedBox(height: 30),
           _currentWeightCard(entries),
           const SizedBox(height: 14),

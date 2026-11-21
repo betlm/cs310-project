@@ -42,7 +42,9 @@ class AppFormField extends StatelessWidget {
       keyboardType: keyboardType,
       validator: validator,
       maxLines: maxLines,
-      style: AppTextStyles.bodyLarge,
+      style: AppTextStyles.bodyLarge.copyWith(
+        fontSize: 14,
+      ),
       decoration: InputDecoration(
         labelText: labelAbove ? null : label,
         hintText: hintText,
@@ -96,9 +98,10 @@ class AppFormField extends StatelessWidget {
         RichText(
           text: TextSpan(
             style: AppTextStyles.bodyLarge.copyWith(
+              fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
-            children: [
+                        children: [
               TextSpan(text: label),
               if (isRequired)
                 const TextSpan(
