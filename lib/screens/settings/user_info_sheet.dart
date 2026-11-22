@@ -5,6 +5,7 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/form_field_decoration.dart';
 import '../../l10n/app_strings.dart';
+import '../../utils/form_validators.dart';
 
 /// "User Information" sheet from the bottom,
 /// change their name, e-mail and password
@@ -73,18 +74,6 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
     return null;
   }
 
-  String? _validateEmail(String? value) {
-    final email = value?.trim() ?? '';
-    if (email.isEmpty) {
-      return AppStrings.get('enterYourEmail');
-    }
-    // Same rule as the Sign in and Sign up screens.
-    if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
-      return AppStrings.get('validEmail');
-    }
-    return null;
-  }
-
   String? _validateCurrentPassword(String? value) {
     if (!_changingPassword) return null;
     if (value == null || value.isEmpty) {
@@ -122,7 +111,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
       SnackBar(
         content: Text(
           passwordChanged
-              ? AppStrings.get('profilePasswordUpdated')
+              ? AppStrings.get('profileUpdatedPasswordUnavailable')
               : AppStrings.get('profileUpdated'),
         ),
       ),
@@ -238,7 +227,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   style: fieldText,
-                  validator: _validateEmail,
+                  validator: validateEmail,
                   decoration: _inputDecoration(
                     AppStrings.get('emailHint'),
                     icon: Icons.mail_outline,

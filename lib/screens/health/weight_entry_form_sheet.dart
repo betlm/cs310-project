@@ -38,7 +38,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
     _selectedDate = widget.entry?.date ?? DateTime.now();
 
     if (widget.entry != null) {
-      _weightController.text = widget.entry!.weightKg.toStringAsFixed(1);
+      _weightController.text = widget.entry!.weightKg.toString();
     }
   }
 
@@ -202,6 +202,9 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
 
                       if (number == null || !number.isFinite || number <= 0) {
                         return AppStrings.get('validWeight');
+                      }
+                      if (number > 200) {
+                        return AppStrings.get('petRealisticWeight');
                       }
 
                       return null;

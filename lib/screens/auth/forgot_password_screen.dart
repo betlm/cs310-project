@@ -6,6 +6,7 @@ import '../../theme/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
 import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
+import '../../utils/form_validators.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -112,20 +113,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         hint: AppStrings.get('emailExample'),
                         icon: Icons.mail_outline,
                       ),
-                      validator: (value) {
-                        final email = value?.trim() ?? '';
-
-                        if (email.isEmpty) {
-                          return AppStrings.get('enterYourEmail');
-                        }
-
-                        if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-                            .hasMatch(email)) {
-                          return AppStrings.get('validEmail');
-                        }
-
-                        return null;
-                      },
+                      validator: validateEmail,
                       onFieldSubmitted: (_) => _resetPassword(),
                     ),
 

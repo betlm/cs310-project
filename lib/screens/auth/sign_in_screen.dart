@@ -8,6 +8,7 @@ import '../../theme/app_text_styles.dart';
 import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
 import 'forgot_password_screen.dart';
+import '../../utils/form_validators.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -130,20 +131,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         hint: AppStrings.get('emailExample'),
                         icon: Icons.mail_outline,
                       ),
-                      validator: (value) {
-                        final email = value?.trim() ?? '';
-
-                        if (email.isEmpty) {
-                          return AppStrings.get('enterYourEmail');
-                        }
-
-                        if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
-                            .hasMatch(email)) {
-                          return AppStrings.get('validEmail');
-                        }
-
-                        return null;
-                      },
+                      validator: validateEmail,
                     ),
 
                     const SizedBox(height: AppSpacing.lg),

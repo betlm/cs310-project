@@ -66,11 +66,11 @@ class ConfirmDialog extends StatelessWidget {
     if (isDanger) {
       mainColor = AppColors.danger;
       iconBackground = AppColors.dangerLight;
-      buttonTextColor = AppColors.white;
+      buttonTextColor = Colors.white;
     } else {
       mainColor = AppColors.primary;
       iconBackground = AppColors.lightMint;
-      buttonTextColor = AppColors.darkGreen;
+      buttonTextColor = AppColors.ink;
     }
 
     // 2) The buttons at the bottom

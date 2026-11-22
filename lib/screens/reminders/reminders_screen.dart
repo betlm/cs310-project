@@ -12,6 +12,8 @@ import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
 import '../../l10n/app_strings.dart';
 import '../../utils/sample_localization.dart';
+import '../../utils/date_format.dart';
+import '../../theme/reminder_category_colors.dart';
 
 class RemindersScreen extends StatefulWidget {
   const RemindersScreen({super.key});
@@ -37,19 +39,6 @@ class _RemindersScreenState extends State<RemindersScreen> {
     setState(() {});
   }
 
-  String categoryName(ReminderCategory category) {
-    switch (category) {
-      case ReminderCategory.medication:
-        return AppStrings.get('medication');
-      case ReminderCategory.appointment:
-        return AppStrings.get('appointment');
-      case ReminderCategory.feeding:
-        return AppStrings.get('feeding');
-      case ReminderCategory.other:
-        return AppStrings.get('other');
-    }
-  }
-
   IconData categoryIcon(ReminderCategory category) {
     switch (category) {
       case ReminderCategory.medication:
@@ -61,31 +50,6 @@ class _RemindersScreenState extends State<RemindersScreen> {
       case ReminderCategory.other:
         return Icons.notifications_outlined;
     }
-  }
-
-  Color categoryColor(ReminderCategory category) {
-    switch (category) {
-      case ReminderCategory.medication:
-        return AppColors.darkGreen;
-      case ReminderCategory.appointment:
-        return AppColors.peach;
-      case ReminderCategory.feeding:
-        return AppColors.speciesBird;
-      case ReminderCategory.other:
-        return AppColors.speciesHamster;
-    }
-  }
-
-  String formatTime(Reminder reminder) {
-    final hour = reminder.hour.toString().padLeft(2, '0');
-    final minute = reminder.minute.toString().padLeft(2, '0');
-    return '$hour:$minute';
-  }
-
-  String formatDate(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    return '$day/$month/${date.year}';
   }
 
   Future<void> confirmDeleteReminder(Reminder reminder) async {
@@ -164,8 +128,12 @@ class _RemindersScreenState extends State<RemindersScreen> {
   }
 
   Widget buildReminderCard(Reminder reminder) {
-    final badgeColor = categoryColor(reminder.category);
+    final badgeColor = reminderCategoryColor(
+      reminder.category,
+      forBadge: true,
+    );
     final isDarkBadge = reminder.category == ReminderCategory.medication;
+    final time = formatTime(reminder.hour, reminder.minute);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -214,8 +182,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
                 const SizedBox(height: 3),
                 Text(
                   reminder.repeat == RepeatType.daily
-                      ? '${AppStrings.get('daily')} · ${formatTime(reminder)}'
-                      : '${formatTime(reminder)} · ${AppStrings.get('oneTime')}',
+                    ? '${AppStrings.get('daily')} · $time'
+                    : '$time · ${AppStrings.get('oneTime')}',
                   style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -231,7 +199,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    categoryName(reminder.category),
+                    AppStrings.get(reminder.category.name),
                     style: AppTextStyles.caption.copyWith(
                       fontWeight: FontWeight.w700,
                       color: isDarkBadge

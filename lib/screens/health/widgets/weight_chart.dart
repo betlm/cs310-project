@@ -8,6 +8,20 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
 import '../../../l10n/app_strings.dart';
 
+double _chartDateX(
+  DateTime date,
+  DateTime firstMonth,
+  double left,
+  double width,
+) {
+  final start = DateTime.utc(firstMonth.year, firstMonth.month, 1);
+  final end = DateTime.utc(firstMonth.year, firstMonth.month + 6, 1);
+  final day = DateTime.utc(date.year, date.month, date.day);
+
+  return left +
+      width * day.difference(start).inDays / end.difference(start).inDays;
+}
+
 class WeightChart extends StatefulWidget {
   final List<WeightEntry> entries;
 
@@ -107,12 +121,7 @@ class _WeightChartState extends State<WeightChart> {
                           if (plotWidth <= 0 || chartEntries.isEmpty) return;
 
                           double entryX(WeightEntry entry) {
-                            final monthIndex =
-                                (entry.date.year - firstMonth.year) * 12 +
-                                entry.date.month -
-                                firstMonth.month;
-
-                            return left + plotWidth * monthIndex / 5;
+                            return _chartDateX(entry.date, firstMonth, left, plotWidth);
                           }
                           
                           final closestEntry = chartEntries.reduce((a, b) {
@@ -212,7 +221,8 @@ class _WeightChartPainter extends CustomPainter {
     }
 
     double monthX(int index) {
-      return left + width * index / 5;
+      final month = DateTime(firstMonth.year, firstMonth.month + index, 1);
+      return _chartDateX(month, firstMonth, left, width);
     }
 
     // Horizontal axis month labels
@@ -240,7 +250,7 @@ class _WeightChartPainter extends CustomPainter {
         continue;
       }
 
-      final x = monthX(monthIndex);
+      final x = _chartDateX(entry.date, firstMonth, left, width);
 
       final y = top + height * (maxAxis - entry.weightKg) / range;
 

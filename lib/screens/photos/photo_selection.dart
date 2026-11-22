@@ -48,8 +48,8 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                 Container(
                   width: 84,
                   height: 84,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFFFF0E8),
+                  decoration: BoxDecoration(
+                    color: AppColors.dangerLight,
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(

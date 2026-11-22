@@ -252,7 +252,7 @@ class AppStrings {
       'validEmail': 'Please enter a valid email',
       'enterCurrentPassword': 'Enter your current password',
       'passwordsDontMatch': 'Passwords do not match',
-      'profilePasswordUpdated': 'Profile and password updated.',
+      'profileUpdatedPasswordUnavailable': 'Profile saved. Password changes are unavailable in this version.',
       'profileUpdated': 'Profile updated.',
 
       // Notifications sheet
@@ -721,7 +721,7 @@ class AppStrings {
       'validEmail': 'Lütfen geçerli bir e-posta gir',
       'enterCurrentPassword': 'Mevcut şifreni gir',
       'passwordsDontMatch': 'Şifreler eşleşmiyor',
-      'profilePasswordUpdated': 'Profil ve şifre güncellendi.',
+      'profileUpdatedPasswordUnavailable': 'Profil kaydedildi. Bu sürümde şifre değiştirilemez.',
       'profileUpdated': 'Profil güncellendi.',
 
       // Notifications sheet
