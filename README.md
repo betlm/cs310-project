@@ -28,6 +28,7 @@ PetPocket is a record-keeping and reminder tool; it does not provide medical adv
 | Betül Merey | 33963 |
 
 **Step 1 Coordinator:** Betül Merey
+
 **Step 2 Coordinator:** Ayça Ceylin Oktay
 
 ## Tech Stack
