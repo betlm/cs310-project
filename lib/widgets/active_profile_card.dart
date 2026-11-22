@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../l10n/app_strings.dart';
 
 class ActiveProfileCard extends StatelessWidget {
   final String petName;
@@ -56,7 +57,7 @@ class ActiveProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Active profile',
+                      AppStrings.get('activeProfile'),
                       style: AppTextStyles.bodyMedium,
                     ),
                     const SizedBox(height: 4),

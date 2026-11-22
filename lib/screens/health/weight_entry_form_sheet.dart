@@ -9,6 +9,9 @@ import '../../theme/app_text_styles.dart';
 import '../../utils/date_format.dart';
 import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
+import '../../l10n/app_strings.dart';
+
+
 
 class WeightEntryFormSheet extends StatefulWidget {
   final String petId;
@@ -89,7 +92,9 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
 
       if (index == -1) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Weight entry not found.')),
+          SnackBar(
+            content: Text(AppStrings.get('weightNotFound')),
+          ),
         );
         return;
       }
@@ -133,7 +138,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    'WEIGHT TRACKING',
+                    AppStrings.get('weightTrackingLabel'),
                     style: AppTextStyles.caption.copyWith(
                       color: AppColors.primary,
                       fontSize: 11,
@@ -146,7 +151,9 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                     children: [
                       Expanded(
                         child: Text(
-                          _isEditing ? 'Edit Weight Entry' : 'Add Weight Entry',
+                          _isEditing
+                              ? AppStrings.get('editWeightEntryTitle')
+                              : AppStrings.get('addWeightEntryTitle'),
                           style: AppTextStyles.headingMedium.copyWith(
                             fontSize: 24,
                           ),
@@ -165,7 +172,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                   const SizedBox(height: 22),
 
                   // Weight field
-                  fieldLabel('Weight (kg)'),
+                  fieldLabel(AppStrings.get('weightKg')),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _weightController,
@@ -186,7 +193,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a weight';
+                        return AppStrings.get('enterWeight');
                       }
 
                       final number = double.tryParse(
@@ -194,7 +201,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                       );
 
                       if (number == null || !number.isFinite || number <= 0) {
-                        return 'Enter a valid weight greater than 0';
+                        return AppStrings.get('validWeight');
                       }
 
                       return null;
@@ -203,7 +210,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                   const SizedBox(height: 22),
 
                   // Date field
-                  fieldLabel('Date'),
+                  fieldLabel(AppStrings.get('date')),
                   const SizedBox(height: 8),
                   InkWell(
                     onTap: _pickDate,
@@ -246,7 +253,7 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                               ),
                             ),
                             child: Text(
-                              'Cancel',
+                              AppStrings.get('cancel'),
                               style: AppTextStyles.button.copyWith(
                                 color: AppColors.darkGreen,
                                 fontSize: 14,
@@ -259,7 +266,9 @@ class _WeightEntryFormSheetState extends State<WeightEntryFormSheet> {
                       Expanded(
                         flex: 3,
                         child: PrimaryButton(
-                          text: _isEditing ? 'Save Changes' : 'Save Weight',
+                          text: _isEditing
+                              ? AppStrings.get('saveChanges')
+                              : AppStrings.get('saveWeight'),
                           onPressed: _saveWeight,
                         ),
                       ),

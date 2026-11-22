@@ -6,6 +6,7 @@ import '../pets/my_pets_screen.dart';
 import '../settings/preferences_screen.dart';
 import 'home_screen.dart';
 import '../../data/app_state.dart';
+import '../../l10n/app_strings.dart';
 
 /// The main app layout after sign-in, with the bottom navigation bar.
 class MainShell extends StatefulWidget {
@@ -63,22 +64,22 @@ class _MainShellState extends State<MainShell> {
           selectedFontSize: 11,
           unselectedFontSize: 11,
           selectedLabelStyle: const TextStyle(fontWeight: FontWeight.w800),
-          items: const [
+          items:  [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
-              label: 'Home',
+              label: AppStrings.get('home'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.favorite_border),
-              label: 'Health',
+              label: AppStrings.get('health'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.pets),
-              label: 'Pets',
+              label: AppStrings.get('pets'),
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person_outline),
-              label: 'Profile',
+              label: AppStrings.get('profile'),
             ),
           ],
         ),

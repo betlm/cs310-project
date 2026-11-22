@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../data/app_state.dart';
+import '../../../l10n/app_strings.dart';
 
 /// Logo, app name, subtitle and the Light/Dark toggle at the top of Home.
 class HomeHeader extends StatelessWidget {
@@ -24,14 +25,14 @@ class HomeHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'PetPocket',
+                 AppStrings.get('appName'),
                 style: textTheme.headlineLarge?.copyWith(
                   fontSize: 30,
                   height: 1.1,
                 ),
               ),
               Text(
-                'Pet Care & Tracking App',
+                AppStrings.get('appSubtitle'),
                 style: textTheme.bodySmall?.copyWith(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -71,9 +72,17 @@ class _ThemeToggle extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _option('Light', selected: !isDark, onTap: () => _select('light')),
+          _option(
+            AppStrings.get('light'),
+            selected: !isDark,
+            onTap: () => _select('light'),
+          ),
           const SizedBox(width: 2),
-          _option('Dark', selected: isDark, onTap: () => _select('dark')),
+          _option(
+            AppStrings.get('dark'),
+            selected: isDark,
+            onTap: () => _select('dark'),
+          ),
         ],
       ),
     );

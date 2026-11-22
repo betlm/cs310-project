@@ -7,6 +7,8 @@ import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
 import '../../data/sample_data.dart';
 import '../../models/supply_item.dart';
+import '../../l10n/app_strings.dart';
+import '../../utils/sample_localization.dart';
 
 /// Add / edit supply form
 /// Opened empty to add an item
@@ -19,6 +21,7 @@ class SupplyFormScreen extends StatefulWidget {
 
 class _SupplyFormScreenState extends State<SupplyFormScreen> {
   final _formKey = GlobalKey<FormState>();
+
   /// The item being edited or null when a new item is being added
   SupplyItem? _editingItem;
 
@@ -51,28 +54,96 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
     if (arguments is! SupplyItem) return; // no item: adding a new one
 
     _editingItem = arguments;
-    _nameController.text = arguments.name;
+
+    _nameController.text = SampleLocalization.text(
+      id: arguments.id,
+      field: 'name',
+      value: arguments.name,
+    );
+
     _quantityController.text = '${arguments.quantity}';
-    _unitController.text = arguments.unit ?? '';
-    _noteController.text = arguments.note ?? '';
+
+    _unitController.text = arguments.unit == null
+        ? ''
+        : SampleLocalization.text(
+            id: arguments.id,
+            field: 'unit',
+            value: arguments.unit!,
+          );
+
+    _noteController.text = arguments.note == null
+        ? ''
+        : SampleLocalization.text(
+            id: arguments.id,
+            field: 'note',
+            value: arguments.note!,
+          );
   }
 
   /// Checks the form then adds the new item or updates the edited one and goes back to the list
   void _save() {
     if (!_formKey.currentState!.validate()) return;
 
-    final unit = _unitController.text.trim();
-    final note = _noteController.text.trim();
+    final enteredName = _nameController.text.trim();
+    final enteredUnit = _unitController.text.trim();
+    final enteredNote = _noteController.text.trim();
+
+    final existingItem = _editingItem;
+
+    final originalDisplayedName = existingItem == null
+        ? null
+        : SampleLocalization.text(
+            id: existingItem.id,
+            field: 'name',
+            value: existingItem.name,
+          );
+
+    final originalDisplayedUnit =
+        existingItem == null || existingItem.unit == null
+        ? null
+        : SampleLocalization.text(
+            id: existingItem.id,
+            field: 'unit',
+            value: existingItem.unit!,
+          );
+
+    final originalDisplayedNote =
+        existingItem == null || existingItem.note == null
+        ? null
+        : SampleLocalization.text(
+            id: existingItem.id,
+            field: 'note',
+            value: existingItem.note!,
+          );
+
+    final nameToSave =
+        existingItem != null && enteredName == originalDisplayedName
+        ? existingItem.name
+        : enteredName;
+
+    final unitToSave =
+        existingItem != null && enteredUnit == originalDisplayedUnit
+        ? existingItem.unit
+        : enteredUnit.isEmpty
+        ? null
+        : enteredUnit;
+
+    final noteToSave =
+        existingItem != null && enteredNote == originalDisplayedNote
+        ? existingItem.note
+        : enteredNote.isEmpty
+        ? null
+        : enteredNote;
 
     final item = SupplyItem(
       // Keep the id, pet and bought state when editing
-      id: _editingItem?.id ?? 's-${DateTime.now().microsecondsSinceEpoch}',
-      petId: _editingItem?.petId ?? activePet.id,
-      name: _nameController.text.trim(),
+      id: existingItem?.id ?? 's-${DateTime.now().microsecondsSinceEpoch}',
+      petId: existingItem?.petId ?? activePet.id,
+      name: nameToSave,
       quantity: int.parse(_quantityController.text.trim()),
-      unit: unit.isEmpty ? null : unit,
-      note: note.isEmpty ? null : note,
-      bought: _editingItem?.bought ?? false,
+      unit: unitToSave,
+      note: noteToSave,
+      bought: existingItem?.bought ?? false,
     );
 
     if (_editingItem == null) {
@@ -80,9 +151,9 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
     } else {
       final index = sampleSupplies.indexWhere((s) => s.id == item.id);
       if (index == -1) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('This item could not be found.')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(AppStrings.get('itemNotFound'))));
         return;
       }
       sampleSupplies[index] = item;
@@ -106,14 +177,13 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
     _quantityController.text = '$newQuantity';
   }
 
-
   String? _validateName(String? value) {
     final name = value?.trim() ?? '';
     if (name.isEmpty) {
-      return 'Please enter an item name';
+      return AppStrings.get('enterItemName');
     }
     if (name.length > 40) {
-      return 'Name must be at most 40 characters';
+      return AppStrings.get('itemNameTooLong');
     }
     return null;
   }
@@ -121,10 +191,10 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
   String? _validateQuantity(String? value) {
     final quantity = int.tryParse(value?.trim() ?? '');
     if (quantity == null) {
-      return 'Enter a whole number';
+      return AppStrings.get('enterWholeNumberShort');
     }
     if (quantity < 1 || quantity > 999) {
-      return 'Use a number from 1 to 999';
+      return AppStrings.get('quantityRange');
     }
     return null;
   }
@@ -164,11 +234,8 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
   /// The shared field style
   InputDecoration _inputDecoration(String hint) {
     return fieldDecoration(hint: hint).copyWith(
-      hintStyle:  TextStyle(fontSize: 14, color: AppColors.hint),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 13,
-      ),
+      hintStyle: TextStyle(fontSize: 14, color: AppColors.hint),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
     );
   }
 
@@ -188,7 +255,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
             children: [
               GestureDetector(
                 onTap: () => _changeQuantity(1),
-                child:  Icon(
+                child: Icon(
                   Icons.keyboard_arrow_up,
                   size: 14,
                   color: AppColors.darkGreen,
@@ -196,7 +263,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
               ),
               GestureDetector(
                 onTap: () => _changeQuantity(-1),
-                child:  Icon(
+                child: Icon(
                   Icons.keyboard_arrow_down,
                   size: 14,
                   color: AppColors.darkGreen,
@@ -219,11 +286,9 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape:  Border(
-          bottom: BorderSide(color: AppColors.cardBorder),
-        ),
-        title:  Text(
-          'Add / edit supply',
+        shape: Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        title: Text(
+          AppStrings.get('addEditSupply'),
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 20,
@@ -243,13 +308,13 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
           ),
           children: [
             // Item name
-            _label('Item Name', required: true),
+            _label(AppStrings.get('itemName'), required: true),
             TextFormField(
               controller: _nameController,
               textCapitalization: TextCapitalization.sentences,
-              style:  TextStyle(fontSize: 14, color: AppColors.darkGreen),
+              style: TextStyle(fontSize: 14, color: AppColors.darkGreen),
               validator: _validateName,
-              decoration: _inputDecoration('e.g. Dry food'),
+              decoration: _inputDecoration(AppStrings.get('itemNameHint')),
             ),
             const SizedBox(height: AppSpacing.lg),
 
@@ -261,18 +326,17 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _label('Quantity', required: true),
+                      _label(AppStrings.get('quantity'), required: true),
                       TextFormField(
                         controller: _quantityController,
                         keyboardType: TextInputType.number,
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           color: AppColors.darkGreen,
                         ),
                         validator: _validateQuantity,
-                        decoration: _inputDecoration('1').copyWith(
-                          suffixIcon: _quantityStepper(),
-                        ),
+                        decoration: _inputDecoration('1')
+                            .copyWith(suffixIcon: _quantityStepper()),
                       ),
                     ],
                   ),
@@ -282,10 +346,10 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _label('Unit'),
+                      _label(AppStrings.get('unit')),
                       TextFormField(
                         controller: _unitController,
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           color: AppColors.darkGreen,
                         ),
@@ -299,13 +363,13 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // Note
-            _label('Note (Optional)'),
+            _label(AppStrings.get('noteOptional')),
             TextFormField(
               controller: _noteController,
               maxLines: 2,
               textCapitalization: TextCapitalization.sentences,
-              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
-              decoration: _inputDecoration('Brand, details, or a short note...'),
+              style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              decoration: _inputDecoration(AppStrings.get('noteHint')),
             ),
             const SizedBox(height: AppSpacing.lg),
 
@@ -318,7 +382,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
               ),
               child: Row(
                 children: [
-                   Icon(
+                  Icon(
                     Icons.shopping_bag_outlined,
                     color: AppColors.darkGreen,
                     size: 20,
@@ -326,10 +390,14 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      _editingItem == null
-                          ? "The item will be added to ${activePet.name}'s supply list."
-                          : "Changes will be saved to ${activePet.name}'s supply list.",
-                      style:  TextStyle(
+                      appLanguage == 'tr'
+                          ? (_editingItem == null
+                                ? '${activePet.name} adlı dostunun ihtiyaç listesine eklenecek.'
+                                : 'Değişiklikler ${activePet.name} adlı dostunun ihtiyaç listesine kaydedilecek.')
+                          : (_editingItem == null
+                                ? "The item will be added to ${activePet.name}'s supply list."
+                                : "Changes will be saved to ${activePet.name}'s supply list."),
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: AppColors.darkGreen,
@@ -344,7 +412,7 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
       ),
       // White strip at the bottom with the buton
       bottomNavigationBar: Container(
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.white,
           border: Border(top: BorderSide(color: AppColors.cardBorder)),
         ),
@@ -358,7 +426,9 @@ class _SupplyFormScreenState extends State<SupplyFormScreen> {
               AppSpacing.md,
             ),
             child: PrimaryButton(
-              text: _editingItem == null ? 'Add to list' : 'Save changes',
+              text: _editingItem == null
+                  ? AppStrings.get('addToList')
+                  : AppStrings.get('saveChanges'),
               onPressed: _save,
             ),
           ),

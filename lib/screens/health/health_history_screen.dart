@@ -12,6 +12,8 @@ import '../../widgets/active_pet_bar.dart';
 import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
 import '../../widgets/confirm_dialog.dart';
+import '../../l10n/app_strings.dart';
+import '../../utils/sample_localization.dart';
 
 class HealthHistoryScreen extends StatefulWidget {
   const HealthHistoryScreen({super.key});
@@ -35,13 +37,13 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
 
   String _typeLabel(HealthRecordType type) {
     return switch (type) {
-      HealthRecordType.vaccination => 'Vaccination',
-      HealthRecordType.vetVisit => 'Vet visit',
-      HealthRecordType.checkUp => 'Check-up',
-      HealthRecordType.medication => 'Medication',
-      HealthRecordType.parasiteTreatment => 'Parasite treatment',
-      HealthRecordType.feedingNote => 'Feeding notes',
-      HealthRecordType.other => 'Other',
+      HealthRecordType.vaccination => AppStrings.get('vaccination'),
+      HealthRecordType.vetVisit => AppStrings.get('vetVisit'),
+      HealthRecordType.checkUp => AppStrings.get('checkUp'),
+      HealthRecordType.medication => AppStrings.get('medication'),
+      HealthRecordType.parasiteTreatment => AppStrings.get('parasiteTreatment'),
+      HealthRecordType.feedingNote => AppStrings.get('feedingNotes'),
+      HealthRecordType.other => AppStrings.get('other'),
     };
   }
 
@@ -52,16 +54,16 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   }
 
   Color _recordColor(HealthRecordType type) {
-  return switch (type) {
-    HealthRecordType.vaccination => AppColors.primary,
-    HealthRecordType.vetVisit => AppColors.speciesHamster,
-    HealthRecordType.checkUp => AppColors.peach,
-    HealthRecordType.medication => AppColors.darkGreen,
-    HealthRecordType.parasiteTreatment => AppColors.speciesRabbit,
-    HealthRecordType.feedingNote => AppColors.speciesBird,
-    HealthRecordType.other => AppColors.speciesBird,
-  };
-}
+    return switch (type) {
+      HealthRecordType.vaccination => AppColors.primary,
+      HealthRecordType.vetVisit => AppColors.speciesHamster,
+      HealthRecordType.checkUp => AppColors.peach,
+      HealthRecordType.medication => AppColors.darkGreen,
+      HealthRecordType.parasiteTreatment => AppColors.speciesRabbit,
+      HealthRecordType.feedingNote => AppColors.speciesBird,
+      HealthRecordType.other => AppColors.speciesBird,
+    };
+  }
 
   IconData _recordIcon(HealthRecordType type) {
     return switch (type) {
@@ -86,11 +88,16 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   Future<void> _deleteRecord(HealthRecord record) async {
     final shouldDelete = await showConfirmDialog(
       context: context,
-      title: 'Delete ${record.title}?',
-      message:
-          'This health record will be permanently removed. '
-          'This action cannot be undone.',
-      confirmText: 'Delete',
+      title: AppStrings.get('deleteRecordTitle').replaceAll(
+        '{title}',
+        SampleLocalization.text(
+          id: record.id,
+          field: 'title',
+          value: record.title,
+        ),
+      ),
+      message: AppStrings.get('deleteRecordMessage'),
+      confirmText: AppStrings.get('delete'),
     );
 
     if (shouldDelete == true && mounted) {
@@ -217,7 +224,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
         padding: EdgeInsets.zero,
         children: [
           _filterChip(
-            label: 'All',
+            label: AppStrings.get('all'),
             selected: selectedFilter == null,
             onTap: () {
               setState(() {
@@ -341,13 +348,18 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.only(top: 6),
                                         child: Text(
-                                          record.title,
-                                          style: AppTextStyles.bodyLarge.copyWith(
-                                            fontFamily: 'Manrope',
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w800,
-                                            color: AppColors.darkGreen,
+                                          SampleLocalization.text(
+                                            id: record.id,
+                                            field: 'title',
+                                            value: record.title,
                                           ),
+                                          style: AppTextStyles.bodyLarge
+                                              .copyWith(
+                                                fontFamily: 'Manrope',
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w800,
+                                                color: AppColors.darkGreen,
+                                              ),
                                         ),
                                       ),
                                     ),
@@ -386,7 +398,11 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                     record.notes!.isNotEmpty) ...[
                                   const SizedBox(height: 7),
                                   Text(
-                                    record.notes!,
+                                    SampleLocalization.text(
+                                      id: record.id,
+                                      field: 'notes',
+                                      value: record.notes!,
+                                    ),
                                     style: AppTextStyles.bodyMedium.copyWith(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
@@ -426,7 +442,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
         backgroundColor: AppColors.appBar,
         elevation: 0,
         title: Text(
-          'Health history',
+          AppStrings.get('healthHistory'),
           style: AppTextStyles.headingMedium.copyWith(
             fontSize: 20,
             color: AppColors.darkGreen,
@@ -439,15 +455,15 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
           ActivePetBar(pet: activePet, onTap: _selectPet),
           const SizedBox(height: 30),
           _actionCard(
-            title: 'Add health record',
-            subtitle: 'Record a vaccination, treatment, or visit',
+            title: AppStrings.get('addHealthRecord'),
+            subtitle: AppStrings.get('addHealthRecordSubtitle'),
             icon: Icons.add,
             onTap: _openAddRecord,
           ),
           const SizedBox(height: 14),
           _actionCard(
-            title: 'Weight Tracking',
-            subtitle: '4.8 kg · View chart and recent entries',
+            title: AppStrings.get('weightTrackingCard'),
+            subtitle: AppStrings.get('weightTrackingCardSubtitle'),
             icon: Icons.monitor_weight_outlined,
             onTap: () async {
               await Navigator.pushNamed(context, AppRoutes.weightTracking);
@@ -460,7 +476,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
           const SizedBox(height: 20),
           _filterRow(),
           const SizedBox(height: 24),
-           if (records.isEmpty)
+          if (records.isEmpty)
             DottedBorder(
               options: RoundedRectDottedBorderOptions(
                 radius: const Radius.circular(20),
@@ -503,7 +519,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                         ),
                         const SizedBox(height: 18),
                         Text(
-                          'No health records yet',
+                          AppStrings.get('noHealthRecords'),
                           textAlign: TextAlign.center,
                           style: AppTextStyles.headingSmall.copyWith(
                             fontSize: 16,
@@ -513,7 +529,8 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                         ),
                         const SizedBox(height: 6),
                         Text(
-                          'Add the first health record for ${activePet.name}.',
+                          AppStrings.get('noHealthRecordsMessage')
+                              .replaceAll('{name}', activePet.name),
                           textAlign: TextAlign.center,
                           style: AppTextStyles.bodyMedium.copyWith(
                             fontSize: 12,
@@ -528,7 +545,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
               ),
             )
           else
-            ...records.map(_recordTimelineItem),        
+            ...records.map(_recordTimelineItem),
         ],
       ),
     );

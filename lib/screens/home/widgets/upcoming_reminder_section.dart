@@ -4,6 +4,8 @@ import '../../../models/reminder.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../utils/date_format.dart';
+import '../../../l10n/app_strings.dart';
+import '../../../utils/sample_localization.dart';
 
 /// "Upcoming Reminders" title with a "See all" link and a card
 /// for the next reminder of the active pet.
@@ -29,7 +31,7 @@ class UpcomingReminderSection extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                'Upcoming Reminders',
+                AppStrings.get('upcomingReminders'),
                 style: textTheme.titleLarge?.copyWith(
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
@@ -43,7 +45,7 @@ class UpcomingReminderSection extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'See all',
+                    AppStrings.get('seeAll'),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -63,7 +65,10 @@ class UpcomingReminderSection extends StatelessWidget {
         const SizedBox(height: AppSpacing.xs),
         // Show the card if there is a reminder, otherwise a short message.
         reminder == null
-            ? Text('No upcoming reminders', style: textTheme.bodyMedium)
+            ? Text(
+                AppStrings.get('noUpcomingReminders'),
+                style: textTheme.bodyMedium,
+              )
             : _ReminderTile(reminder: reminder!, onTap: onOpenReminders),
       ],
     );
@@ -110,7 +115,11 @@ class _ReminderTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    reminder.title,
+                    SampleLocalization.text(
+                      id: reminder.id,
+                      field: 'title',
+                      value: reminder.title,
+                    ),
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 14,
@@ -121,7 +130,7 @@ class _ReminderTile extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs),
                   Row(
                     children: [
-                       Icon(
+                      Icon(
                         Icons.calendar_today_outlined,
                         size: 12,
                         color: AppColors.secondaryText,
@@ -129,7 +138,7 @@ class _ReminderTile extends StatelessWidget {
                       const SizedBox(width: AppSpacing.xs),
                       Text(
                         _whenText(reminder),
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w700,
                           color: AppColors.secondaryText,
@@ -140,7 +149,7 @@ class _ReminderTile extends StatelessWidget {
                 ],
               ),
             ),
-           Icon(Icons.chevron_right, color: AppColors.darkGreen),
+            Icon(Icons.chevron_right, color: AppColors.darkGreen),
           ],
         ),
       ),
@@ -151,7 +160,7 @@ class _ReminderTile extends StatelessWidget {
   static String _whenText(Reminder reminder) {
     final time = formatTime(reminder.hour, reminder.minute);
     if (reminder.repeat == RepeatType.daily || reminder.date == null) {
-      return 'Daily · $time';
+      return '${AppStrings.get('daily')} · $time';
     }
     return '${formatDate(reminder.date!)} · $time';
   }

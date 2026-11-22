@@ -4,6 +4,7 @@ import '../../data/app_state.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/primary_button.dart';
+import '../../l10n/app_strings.dart';
 
 /// Opens the "Notifications" sheet from the bottom, where the user can turn local reminder notifications on or off
 
@@ -37,7 +38,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
              Text(
-              'Notifications',
+              AppStrings.get('notifications'),
               style: TextStyle(
                 fontFamily: 'Manrope',
                 fontSize: 20,
@@ -62,7 +63,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Allow local reminder notifications',
+                          AppStrings.get('allowNotifications'),
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
@@ -71,7 +72,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
                         ),
                         SizedBox(height: 2),
                         Text(
-                          'Alerts for medication, care, and visits.',
+                          AppStrings.get('notificationsSubtitle'),
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -108,7 +109,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child:  Text(
-                'Notification delivery depends on your device settings.',
+                AppStrings.get('notificationsInfo'),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
@@ -119,7 +120,7 @@ class _NotificationsSheetState extends State<_NotificationsSheet> {
             const SizedBox(height: AppSpacing.md),
 
             PrimaryButton(
-              text: 'Done',
+              text: AppStrings.get('done'),
               onPressed: () => Navigator.pop(context),
             ),
           ],

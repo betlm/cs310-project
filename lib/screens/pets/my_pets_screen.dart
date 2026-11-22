@@ -10,6 +10,7 @@ import '../../widgets/empty_state.dart';
 import 'pet_details_sheet.dart';
 import 'widgets/rescue_home_section.dart';
 import 'widgets/pet_list_card.dart';
+import '../../l10n/app_strings.dart';
 
 /// Kurtaran Ev pages opened by the Adopt and Donate buttons.
 const String kurtaranEvAdoptUrl = 'https://www.kurtaranev.org/sahiplendirme';
@@ -38,7 +39,11 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('${pet.name} is now the active pet.')),
+      SnackBar(
+        content: Text(
+          '${AppStrings.get('activeProfile')}: ${pet.name}',
+        ),
+      ),
     );
   }
 
@@ -64,7 +69,9 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
 
     if (!opened && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open Kurtaran Ev.')),
+        SnackBar(
+          content: Text(AppStrings.get('kurtaranEvError')),
+        ),
       );
     }
   }
@@ -76,9 +83,9 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
     if (samplePets.isEmpty) {
       body = EmptyState(
         icon: Icons.pets,
-        title: 'No pets yet',
-        message: 'Add your first pet to start tracking their care.',
-        buttonText: 'Add pet',
+        title: AppStrings.get('noPetsYet'),
+        message: AppStrings.get('noPetsMessage'),
+        buttonText: AppStrings.get('addPet'),
         onButtonPressed: () => _openScreen(AppRoutes.petForm),
       );
     } else {
@@ -97,7 +104,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
             return Padding(
               padding: EdgeInsets.only(bottom: AppSpacing.md),
               child: Text(
-                'Tap a profile to make it the active pet.',
+                AppStrings.get('selectProfile'),
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -143,7 +150,7 @@ class _MyPetsScreenState extends State<MyPetsScreen> {
         // Thin grey line under the app bar.
         shape: Border(bottom: BorderSide(color: AppColors.cardBorder)),
         title: Text(
-          'My pets',
+          AppStrings.get('myPetsTitle'),
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 20,
@@ -187,7 +194,7 @@ class _AddPetCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Add a new profile',
+                      AppStrings.get('addNewProfile'),
                       style: TextStyle(
                         fontFamily: 'Manrope',
                         fontSize: 16,
@@ -197,7 +204,7 @@ class _AddPetCard extends StatelessWidget {
                     ),
                     SizedBox(height: AppSpacing.xs),
                     Text(
-                      'Add another companion',
+                      AppStrings.get('addAnotherCompanion'),
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,

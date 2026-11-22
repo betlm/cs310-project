@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
+import '../../l10n/app_strings.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
@@ -98,7 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
                     // Heading
                     Text(
-                      'Welcome back',
+                      AppStrings.get('welcomeBack'),
                       style: AppTextStyles.headingLarge.copyWith(
                         color: AppColors.darkGreen,
                         fontWeight: FontWeight.w800,
@@ -108,7 +109,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: AppSpacing.sm),
 
                     Text(
-                      'Your companions are waiting for you.',
+                      AppStrings.get('signInSubtitle'),
                       style: AppTextStyles.bodyLarge.copyWith(
                         color: AppColors.secondaryText,
                         fontWeight: FontWeight.w600,
@@ -118,7 +119,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: AppSpacing.xxl),
 
                     // Email
-                    fieldLabel('Email'),
+                    fieldLabel(AppStrings.get('email')),
                     const SizedBox(height: AppSpacing.sm),
                     TextFormField(
                       controller: _emailController,
@@ -126,19 +127,19 @@ class _SignInScreenState extends State<SignInScreen> {
                       textInputAction: TextInputAction.next,
                       style: AppTextStyles.bodyLarge,
                       decoration: fieldDecoration(
-                        hint: 'example@email.com',
+                        hint: AppStrings.get('emailExample'),
                         icon: Icons.mail_outline,
                       ),
                       validator: (value) {
                         final email = value?.trim() ?? '';
 
                         if (email.isEmpty) {
-                          return 'Please enter your email';
+                          return AppStrings.get('enterYourEmail');
                         }
 
                         if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
                             .hasMatch(email)) {
-                          return 'Please enter a valid email';
+                          return AppStrings.get('validEmail');
                         }
 
                         return null;
@@ -148,7 +149,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     const SizedBox(height: AppSpacing.lg),
 
                     // Password
-                    fieldLabel('Password'),
+                    fieldLabel(AppStrings.get('password')),
                     const SizedBox(height: AppSpacing.sm),
                     TextFormField(
                       controller: _passwordController,
@@ -157,7 +158,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       style: AppTextStyles.bodyLarge,
                       decoration:
                           fieldDecoration(
-                            hint: 'At least 8 characters',
+                            hint: AppStrings.get('atLeast8'),
                             icon: Icons.lock_outline,
                           ).copyWith(
                             suffixIcon: IconButton(
@@ -168,8 +169,8 @@ class _SignInScreenState extends State<SignInScreen> {
                                 color: AppColors.secondaryText,
                               ),
                               tooltip: _obscurePassword
-                                  ? 'Show password'
-                                  : 'Hide password',
+                                ? AppStrings.get('showPassword')
+                                : AppStrings.get('hidePassword'),
                               onPressed: () {
                                 setState(() {
                                   _obscurePassword = !_obscurePassword;
@@ -179,11 +180,11 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return AppStrings.get('enterPassword');
                         }
 
                         if (value.length < 8) {
-                          return 'Password must be at least 8 characters';
+                          return AppStrings.get('passwordMin8');
                         }
 
                         return null;
@@ -197,7 +198,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: TextButton(
                         onPressed: _openForgotPassword,
                         child: Text(
-                          'Forgot password?',
+                          AppStrings.get('forgotPassword'),
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: AppColors.darkGreen,
                             fontWeight: FontWeight.w700,
@@ -205,10 +206,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: AppSpacing.lg),
 
-                    PrimaryButton(text: 'Sign in', onPressed: _signIn),
+                    PrimaryButton(
+                      text: AppStrings.get('signIn'),
+                      onPressed: _signIn,
+                    ),
 
                     const SizedBox(height: AppSpacing.md),
 
@@ -218,7 +221,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            "Don't have an account yet? ",
+                            '${AppStrings.get('noAccount')} ',
                             style: AppTextStyles.bodyMedium.copyWith(
                               color: AppColors.secondaryText,
                               fontWeight: FontWeight.w600,
@@ -236,7 +239,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 4),
                           ),
                           child: Text(
-                            'Sign up',
+                            AppStrings.get('signUp'),
                             style: AppTextStyles.bodyMedium.copyWith(
                               color: AppColors.darkGreen,
                               fontWeight: FontWeight.w700,
@@ -245,6 +248,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ),
                       ],
                     ),
+                  
                   ],
                 ),
               ),

@@ -5,6 +5,7 @@ import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../theme/species_colors.dart';
 import '../../../utils/pet_format.dart';
+import '../../../l10n/app_strings.dart';
 
 /// Large card on Home showing the active pet's avatar, name,
 /// species, age and weight. Its color depends on the pet's species.
@@ -58,7 +59,7 @@ class ActivePetCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                    Text(
-                    'ACTIVE PET',
+                    AppStrings.get('activePetLabel').toUpperCase(),
                     style: TextStyle(
                       fontSize: 9,
                       fontWeight: FontWeight.w500,
@@ -97,7 +98,7 @@ class ActivePetCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child:  Text(
-                      'View profile',
+                      AppStrings.get('viewProfile'),
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w700,

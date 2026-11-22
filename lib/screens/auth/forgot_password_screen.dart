@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_strings.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
@@ -27,9 +28,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Password reset emails are not available yet.'),
-      ),
+      SnackBar(content: Text(AppStrings.get('resetNotAvailable'))),
     );
   }
 
@@ -81,7 +80,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     const SizedBox(height: AppSpacing.xxl),
 
                     Text(
-                      'Forgot password?',
+                      AppStrings.get('forgotPassword'),
                       style: AppTextStyles.headingLarge.copyWith(
                         color: AppColors.darkGreen,
                         fontWeight: FontWeight.w800,
@@ -91,8 +90,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     const SizedBox(height: AppSpacing.md),
 
                     Text(
-                      "Enter your email address and we'll help "
-                      'you reset your password.',
+                      AppStrings.get('forgotPasswordSubtitle'),
                       style: AppTextStyles.bodyLarge.copyWith(
                         color: AppColors.secondaryText,
                         fontWeight: FontWeight.w600,
@@ -102,7 +100,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
                     const SizedBox(height: AppSpacing.xxl),
 
-                    fieldLabel('Email'),
+                    fieldLabel(AppStrings.get('email')),
                     const SizedBox(height: AppSpacing.sm),
 
                     TextFormField(
@@ -111,19 +109,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       textInputAction: TextInputAction.done,
                       style: AppTextStyles.bodyLarge,
                       decoration: fieldDecoration(
-                        hint: 'example@email.com',
+                        hint: AppStrings.get('emailExample'),
                         icon: Icons.mail_outline,
                       ),
                       validator: (value) {
                         final email = value?.trim() ?? '';
 
                         if (email.isEmpty) {
-                          return 'Please enter your email';
+                          return AppStrings.get('enterYourEmail');
                         }
 
                         if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
                             .hasMatch(email)) {
-                          return 'Please enter a valid email';
+                          return AppStrings.get('validEmail');
                         }
 
                         return null;
@@ -134,7 +132,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     const SizedBox(height: AppSpacing.xl),
 
                     PrimaryButton(
-                      text: 'Reset password',
+                      text: AppStrings.get('resetPassword'),
                       onPressed: _resetPassword,
                     ),
 
@@ -145,7 +143,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(Icons.arrow_back, size: 18),
                         label: Text(
-                          'Back to Sign in',
+                          AppStrings.get('backToSignIn'),
                           style: AppTextStyles.bodyMedium.copyWith(
                             color: AppColors.darkGreen,
                             fontWeight: FontWeight.w700,

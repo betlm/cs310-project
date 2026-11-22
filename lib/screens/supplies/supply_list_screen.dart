@@ -11,8 +11,9 @@ import '../../widgets/confirm_dialog.dart';
 import '../../widgets/empty_state.dart';
 import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
+import '../../l10n/app_strings.dart';
+import '../../utils/sample_localization.dart';
 import 'widgets/petlebi_card.dart';
-
 
 /// Shopping list of the active pet: pending items first then the purchased ones
 class SupplyListScreen extends StatefulWidget {
@@ -51,9 +52,12 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
   Future<void> _confirmDelete(SupplyItem item) async {
     final ok = await showConfirmDialog(
       context: context,
-      title: 'Delete ${item.name}?',
-      message: 'This item will be permanently removed from the supply list. This action cannot be undone.',
-      confirmText: 'Delete',
+      title: AppStrings.get('deleteItemTitle').replaceAll(
+        '{name}',
+        SampleLocalization.text(id: item.id, field: 'name', value: item.name),
+      ),
+      message: AppStrings.get('deleteItemMessage'),
+      confirmText: AppStrings.get('delete'),
     );
 
     if (!ok || !mounted) return;
@@ -67,10 +71,9 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
   Future<void> _confirmClearPurchased() async {
     final ok = await showConfirmDialog(
       context: context,
-      title: 'Clear purchased items?',
-      message: 'All items marked as purchased will be permanently removed '
-          'from the list. This action cannot be undone.',
-      confirmText: 'Clear',
+      title: AppStrings.get('clearPurchasedTitle'),
+      message: AppStrings.get('clearPurchasedMessage'),
+      confirmText: AppStrings.get('clear'),
     );
 
     if (!ok || !mounted) return;
@@ -112,10 +115,10 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
 
     if (supplies.isEmpty) {
       children.add(
-        const EmptyState(
+        EmptyState(
           icon: Icons.shopping_bag_outlined,
-          title: 'No supplies yet',
-          message: 'Add food, litter or toys to your shopping list.',
+          title: AppStrings.get('noSuppliesYet'),
+          message: AppStrings.get('noSuppliesMessage'),
         ),
       );
     }
@@ -133,10 +136,10 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
 
     if (purchased.isNotEmpty) {
       children.add(
-         Padding(
+        Padding(
           padding: EdgeInsets.only(top: AppSpacing.md, bottom: 12),
           child: Text(
-            'PURCHASED',
+            AppStrings.get('purchased').toUpperCase(),
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
@@ -171,11 +174,9 @@ class _SupplyListScreenState extends State<SupplyListScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape:  Border(
-          bottom: BorderSide(color: AppColors.cardBorder),
-        ),
-        title:  Text(
-          'Supply list',
+        shape: Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        title: Text(
+          AppStrings.get('supplyListTitle'),
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 20,
@@ -222,7 +223,7 @@ class _SummaryBox extends StatelessWidget {
         children: [
           Text(
             '$pendingCount',
-            style:  TextStyle(
+            style: TextStyle(
               fontFamily: 'Manrope',
               fontSize: 26,
               fontWeight: FontWeight.w800,
@@ -231,9 +232,9 @@ class _SummaryBox extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-           Expanded(
+          Expanded(
             child: Text(
-              'Pending items',
+              AppStrings.get('pendingItems'),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
@@ -245,7 +246,7 @@ class _SummaryBox extends StatelessWidget {
             // Does nothing when there is nothing to clear
             onTap: canClear ? onClear : null,
             child: Text(
-              'Clear purchased',
+              AppStrings.get('clearPurchased'),
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w800,
@@ -275,7 +276,7 @@ class _AddSupplyCard extends StatelessWidget {
           color: AppColors.lightMint,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppColors.primary, width: 1.5),
-          boxShadow:  [
+          boxShadow: [
             BoxShadow(
               color: AppColors.cardShadow,
               blurRadius: 10,
@@ -292,15 +293,15 @@ class _AddSupplyCard extends StatelessWidget {
                 color: AppColors.primary,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child:  Icon(Icons.add, color: AppColors.darkGreen, size: 26),
+              child: Icon(Icons.add, color: AppColors.darkGreen, size: 26),
             ),
             const SizedBox(width: 12),
-             Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Add supply item',
+                    AppStrings.get('addSupplyItem'),
                     style: TextStyle(
                       fontFamily: 'Manrope',
                       fontSize: 14,
@@ -310,7 +311,7 @@ class _AddSupplyCard extends StatelessWidget {
                   ),
                   SizedBox(height: 2),
                   Text(
-                    'Add something to the shopping list',
+                    AppStrings.get('addSupplySubtitle'),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
@@ -320,7 +321,7 @@ class _AddSupplyCard extends StatelessWidget {
                 ],
               ),
             ),
-             Icon(Icons.chevron_right, color: AppColors.darkGreen),
+            Icon(Icons.chevron_right, color: AppColors.darkGreen),
           ],
         ),
       ),
@@ -344,29 +345,48 @@ class _SupplyCard extends StatelessWidget {
 
   /// "2 kg · Grain-free", "2 packs", "1 item"
   static String _amountText(SupplyItem item) {
+    final originalUnit = item.unit?.trim() ?? '';
+
+    final unit = SampleLocalization.text(
+      id: item.id,
+      field: 'unit',
+      value: originalUnit,
+    );
+
+    final isTurkish = AppStrings.get('samplePack') == 'paket';
+
     String unitText;
-    final unit = item.unit?.trim() ?? '';
 
     if (unit.isEmpty) {
-      unitText = item.quantity == 1 ? 'item' : 'items';
-    } else if (item.quantity == 1 ||
+      unitText = item.quantity == 1
+          ? AppStrings.get('item')
+          : AppStrings.get('items');
+    } else if (isTurkish ||
+        item.quantity == 1 ||
         unit == 'kg' ||
         unit == 'g' ||
         unit == 'l' ||
         unit == 'ml' ||
         unit.endsWith('s')) {
-      // Units like "kg" or words
       unitText = unit;
     } else {
-      unitText = '${unit}s'; // "pack" -> "packs"
+      unitText = '${unit}s';
     }
 
     var text = '${item.quantity} $unitText';
 
-    final note = item.note?.trim() ?? '';
-    if (note.isNotEmpty) {
-      text = '$text · $note';
+    final originalNote = item.note?.trim() ?? '';
+
+    if (originalNote.isNotEmpty) {
+      final localizedNote = SampleLocalization.text(
+        id: item.id,
+        field: 'note',
+        value: originalNote,
+      );
+
+      text = '$text · $localizedNote';
     }
+
     return text;
   }
 
@@ -380,7 +400,7 @@ class _SupplyCard extends StatelessWidget {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(14),
-        side:  BorderSide(color: AppColors.cardBorder, width: 1.5),
+        side: BorderSide(color: AppColors.cardBorder, width: 1.5),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -401,7 +421,7 @@ class _SupplyCard extends StatelessWidget {
                   ),
                 ),
                 child: bought
-                    ?  Icon(Icons.check, size: 15, color: AppColors.white)
+                    ? Icon(Icons.check, size: 15, color: AppColors.white)
                     : null,
               ),
             ),
@@ -411,7 +431,11 @@ class _SupplyCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    item.name,
+                    SampleLocalization.text(
+                      id: item.id,
+                      field: 'name',
+                      value: item.name,
+                    ),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontFamily: 'Manrope',
@@ -425,7 +449,7 @@ class _SupplyCard extends StatelessWidget {
                   Text(
                     _amountText(item),
                     overflow: TextOverflow.ellipsis,
-                    style:  TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: AppColors.secondaryText,
@@ -446,14 +470,14 @@ class _SupplyCard extends StatelessWidget {
               icon: Icons.delete_outline,
               color: AppColors.danger,
               onTap: onDelete,
-              size: 34
+              size: 34,
             ),
           ],
         ),
       ),
     );
 
-    // Purchased items 
+    // Purchased items
     if (bought) {
       return Opacity(opacity: 0.55, child: card);
     }

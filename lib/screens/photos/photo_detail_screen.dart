@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../models/pet_photo.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
+import '../../l10n/app_strings.dart';
 
 class PhotoDetailScreen extends StatelessWidget {
   final PetPhoto photo;
@@ -98,7 +99,7 @@ class PhotoDetailScreen extends StatelessWidget {
 
                 // Title
                  Text(
-                  'Delete Photo?',
+                  AppStrings.get('deletePhotoTitle'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Manrope',
@@ -112,9 +113,7 @@ class PhotoDetailScreen extends StatelessWidget {
 
                 // Warning message
                  Text(
-                  'This photo will be permanently removed '
-                  'from the album.\n'
-                  'This action cannot be undone.',
+                  AppStrings.get('deletePhotoMessage'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Manrope',
@@ -146,8 +145,8 @@ class PhotoDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text(
-                          'Cancel',
+                        child: Text(
+                          AppStrings.get('cancel'),
                           style: TextStyle(
                             fontFamily: 'Manrope',
                             fontSize: 16,
@@ -173,8 +172,8 @@ class PhotoDetailScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                        child: const Text(
-                          'Delete',
+                        child: Text(
+                          AppStrings.get('delete'),
                           style: TextStyle(
                             fontFamily: 'Manrope',
                             fontSize: 16,
@@ -227,8 +226,9 @@ class PhotoDetailScreen extends StatelessWidget {
 
             // Photo title
             Text(
-              'Photo $photoNumber',
-              style:  TextStyle(
+              AppStrings.get('photoNumber')
+                  .replaceAll('{number}', photoNumber.toString()),
+              style: TextStyle(
                 fontFamily: 'Manrope',
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
@@ -240,7 +240,8 @@ class PhotoDetailScreen extends StatelessWidget {
 
             // Album information
             Text(
-              "Added to $petName's album",
+              AppStrings.get('addedToAlbum')
+                  .replaceAll('{name}', petName),
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.secondaryText,
@@ -269,7 +270,7 @@ class PhotoDetailScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('Close'),
+                    child: Text(AppStrings.get('close')),
                   ),
                 ),
 
@@ -284,7 +285,7 @@ class PhotoDetailScreen extends StatelessWidget {
                       Icons.delete_outline,
                       size: 20,
                     ),
-                    label: const Text('Delete photo'),
+                    label: Text(AppStrings.get('deletePhoto')),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.danger,
                       backgroundColor: AppColors.white,

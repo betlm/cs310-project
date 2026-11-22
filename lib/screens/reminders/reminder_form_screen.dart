@@ -7,6 +7,8 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
+import '../../l10n/app_strings.dart';
+import '../../utils/sample_localization.dart';
 
 class ReminderFormScreen extends StatefulWidget {
   const ReminderFormScreen({super.key});
@@ -55,7 +57,11 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     if (arguments is Reminder) {
       editingReminder = arguments;
 
-      nameController.text = arguments.title;
+      nameController.text = SampleLocalization.text(
+        id: arguments.id,
+        field: 'title',
+        value: arguments.title,
+      );
       noteController.text = arguments.note ?? '';
       selectedCategory = arguments.category;
       isDaily = arguments.repeat == RepeatType.daily;
@@ -77,13 +83,13 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
   String categoryLabel(ReminderCategory category) {
     switch (category) {
       case ReminderCategory.medication:
-        return 'Medication';
+        return AppStrings.get('medication');
       case ReminderCategory.appointment:
-        return 'Appointment';
+        return AppStrings.get('appointment');
       case ReminderCategory.feeding:
-        return 'Feeding';
+        return AppStrings.get('feeding');
       case ReminderCategory.other:
-        return 'Other';
+        return AppStrings.get('other');
     }
   }
 
@@ -140,7 +146,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             color: selected ? AppColors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: selected
-                ?  [
+                ? [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 5,
@@ -164,29 +170,46 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
   void saveReminder() {
     if (nameController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a reminder name')),
+        SnackBar(content: Text(AppStrings.get('enterReminderName'))),
       );
       return;
     }
 
     if (!isDaily && selectedDate == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Please select a date')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppStrings.get('selectDateError'))),
+      );
       return;
     }
 
     if (selectedTime == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Please select a time')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppStrings.get('selectTimeError'))),
+      );
       return;
     }
 
     final note = noteController.text.trim();
 
+    final enteredTitle = nameController.text.trim();
+
+    final originalDisplayedTitle = editingReminder == null
+        ? null
+        : SampleLocalization.text(
+            id: editingReminder!.id,
+            field: 'title',
+            value: editingReminder!.title,
+          );
+
+    final titleToSave =
+        editingReminder != null && enteredTitle == originalDisplayedTitle
+        ? editingReminder!.title
+        : enteredTitle;
+
     final reminder = Reminder(
       id: editingReminder?.id ?? 'rem-${DateTime.now().microsecondsSinceEpoch}',
       petId: editingReminder?.petId ?? activePet.id,
-      title: nameController.text.trim(),
+      title: titleToSave,
       category: selectedCategory,
       repeat: isDaily ? RepeatType.daily : RepeatType.oneTime,
       date: isDaily ? null : selectedDate,
@@ -206,7 +229,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
       if (index == -1) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Reminder could not be found')),
+          SnackBar(content: Text(AppStrings.get('reminderNotFound'))),
         );
         return;
       }
@@ -227,9 +250,11 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape:  Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        shape: Border(bottom: BorderSide(color: AppColors.cardBorder)),
         title: Text(
-          editingReminder == null ? 'Add Reminder' : 'Edit Reminder',
+          editingReminder == null
+              ? AppStrings.get('addReminderTitle')
+              : AppStrings.get('editReminderTitle'),
           style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w800,
           ),
@@ -238,13 +263,15 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.white,
             border: Border(top: BorderSide(color: AppColors.cardBorder)),
           ),
           padding: const EdgeInsets.fromLTRB(20, 14, 20, 16),
           child: PrimaryButton(
-            text: editingReminder == null ? 'Save reminder' : 'Save changes',
+            text: editingReminder == null
+                ? AppStrings.get('saveReminder')
+                : AppStrings.get('saveChanges'),
             onPressed: saveReminder,
           ),
         ),
@@ -255,17 +282,19 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Reminder name
-            sectionLabel('Reminder name', required: true),
+            sectionLabel(AppStrings.get('reminderName'), required: true),
             const SizedBox(height: 12),
             TextFormField(
               controller: nameController,
               style: formTextStyle,
-              decoration: formDecoration(hint: 'e.g. Evening meal'),
+              decoration: formDecoration(
+                hint: AppStrings.get('reminderNameHint'),
+              ),
             ),
 
             // Category
             const SizedBox(height: 24),
-            sectionLabel('Category', required: true),
+            sectionLabel(AppStrings.get('category'), required: true),
             const SizedBox(height: 12),
             DropdownButtonFormField<ReminderCategory>(
               key: ValueKey(selectedCategory),
@@ -304,7 +333,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
             // Repeat
             const SizedBox(height: 24),
-            sectionLabel('Repeat'),
+            sectionLabel(AppStrings.get('repeat')),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(5),
@@ -315,7 +344,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               child: Row(
                 children: [
                   repeatOption(
-                    title: 'One-time',
+                    title: AppStrings.get('oneTime'),
                     selected: !isDaily,
                     onTap: () {
                       setState(() {
@@ -324,7 +353,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
                     },
                   ),
                   repeatOption(
-                    title: 'Daily',
+                    title: AppStrings.get('daily'),
                     selected: isDaily,
                     onTap: () {
                       setState(() {
@@ -339,14 +368,14 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             // Date
             if (!isDaily) ...[
               const SizedBox(height: 24),
-              sectionLabel('Date', required: true),
+              sectionLabel(AppStrings.get('date'), required: true),
               const SizedBox(height: 12),
               TextFormField(
                 readOnly: true,
                 style: formTextStyle,
                 decoration: formDecoration(
                   hint: selectedDate == null
-                      ? 'Select date'
+                      ? AppStrings.get('selectDate')
                       : '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}',
                   icon: Icons.calendar_today_outlined,
                 ),
@@ -369,14 +398,14 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
             // Time
             const SizedBox(height: 24),
-            sectionLabel('Time', required: true),
+            sectionLabel(AppStrings.get('time'), required: true),
             const SizedBox(height: 12),
             TextFormField(
               readOnly: true,
               style: formTextStyle,
               decoration: formDecoration(
                 hint: selectedTime == null
-                    ? 'Select time'
+                    ? AppStrings.get('selectTime')
                     : selectedTime!.format(context),
                 icon: Icons.access_time_outlined,
               ),
@@ -414,8 +443,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      'One-time reminders require Date and Time. '
-                      'Daily reminders use Time only and repeat every day.',
+                      AppStrings.get('reminderInfo'),
                       style: AppTextStyles.caption.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -427,12 +455,12 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
 
             // Send notification
             const SizedBox(height: 24),
-             Divider(color: AppColors.cardBorder),
+            Divider(color: AppColors.cardBorder),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: sectionLabel('Send notification'),
+              title: sectionLabel(AppStrings.get('sendNotification')),
               subtitle: Text(
-                'Get notified when it is time for this reminder',
+                AppStrings.get('sendNotificationSubtitle'),
                 style: AppTextStyles.caption.copyWith(
                   fontWeight: FontWeight.w600,
                 ),
@@ -448,15 +476,15 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
             ),
 
             // Note
-             Divider(color: AppColors.cardBorder),
+            Divider(color: AppColors.cardBorder),
             const SizedBox(height: 20),
-            sectionLabel('Note (optional)'),
+            sectionLabel(AppStrings.get('noteOptional')),
             const SizedBox(height: 12),
             TextFormField(
               controller: noteController,
               maxLines: 4,
               style: formTextStyle,
-              decoration: formDecoration(hint: 'Add a short note...'),
+              decoration: formDecoration(hint: AppStrings.get('addShortNote')),
             ),
           ],
         ),

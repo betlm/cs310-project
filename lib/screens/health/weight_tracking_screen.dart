@@ -12,6 +12,7 @@ import '../../widgets/confirm_dialog.dart';
 import 'weight_entry_form_sheet.dart';
 import 'widgets/weight_chart.dart';
 import '../../widgets/pet_switcher_sheet.dart';
+import '../../l10n/app_strings.dart';
 
 class WeightTrackingScreen extends StatefulWidget {
   const WeightTrackingScreen({super.key});
@@ -57,9 +58,9 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
   Future<void> _deleteEntry(WeightEntry entry) async {
    final confirmed = await showConfirmDialog(
     context: context,
-    title: 'Delete weight entry?',
-    message: 'This weight entry will be permanently removed. This action cannot be undone.',
-    confirmText: 'Delete',
+    title: AppStrings.get('deleteWeightTitle'),
+    message: AppStrings.get('deleteWeightMessage'),
+    confirmText: AppStrings.get('delete'),
   );
 
     if (confirmed == true && mounted) {
@@ -105,7 +106,10 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
         children: [
           
           if (latest == null)
-            Text('No entries yet', style: AppTextStyles.headingSmall)
+            Text(
+              AppStrings.get('noEntriesYet'),
+              style: AppTextStyles.headingSmall,
+            )
           else
             RichText(
               text: TextSpan(
@@ -130,8 +134,11 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
           const SizedBox(height: 2),
           Text(
             change == null
-                ? 'Track your pet’s weight over time'
-                : '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)} kg in the last 3 months',
+                ? AppStrings.get('trackWeightSubtitle')
+                : AppStrings.get('weightChangeLast3').replaceAll(
+                    '{change}',
+                    '${change >= 0 ? '+' : ''}${change.toStringAsFixed(1)}',
+                  ),
             style: AppTextStyles.caption.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w700,
@@ -177,7 +184,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Add weight entry',
+                      AppStrings.get('addWeightEntry'),
                       style: AppTextStyles.bodyLarge.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w800,
@@ -185,7 +192,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Keep the growth chart up to date',
+                      AppStrings.get('addWeightSubtitle'),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.bodyMedium.copyWith(
@@ -214,7 +221,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Recent entries',
+          AppStrings.get('recentEntries'),
           style: AppTextStyles.headingMedium.copyWith(fontSize: 20),
         ),
         const SizedBox(height: 12),
@@ -222,7 +229,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              'No weight entries yet.',
+              AppStrings.get('noWeightEntries'),
               style: AppTextStyles.bodyMedium,
             ),
           ),
@@ -295,7 +302,7 @@ class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
         backgroundColor: AppColors.appBar,
         elevation: 0,
         title: Text(
-          'Weight tracking',
+          AppStrings.get('weightTracking'),
           style: AppTextStyles.headingMedium.copyWith(
             fontSize: 20,
             color: AppColors.darkGreen,

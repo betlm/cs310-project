@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../l10n/app_strings.dart';
 import '../../routes/app_routes.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
@@ -94,7 +95,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     // Heading
                     Text(
-                      'Join PetPocket',
+                      AppStrings.get('joinPetPocket'),
                       style: AppTextStyles.headingLarge.copyWith(
                         color: AppColors.darkGreen,
                         fontWeight: FontWeight.w800,
@@ -104,7 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: AppSpacing.sm),
 
                     Text(
-                      'Start your pet care journey today.',
+                      AppStrings.get('signUpSubtitle'),
                       style: AppTextStyles.bodyLarge.copyWith(
                         color: AppColors.secondaryText,
                         fontWeight: FontWeight.w600,
@@ -114,7 +115,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: AppSpacing.xl),
 
                     // Full name
-                    fieldLabel('Full name'),
+                    fieldLabel(AppStrings.get('fullName')),
                     const SizedBox(height: AppSpacing.sm),
                     TextFormField(
                       controller: _nameController,
@@ -122,12 +123,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textInputAction: TextInputAction.next,
                       style: AppTextStyles.bodyLarge,
                       decoration: fieldDecoration(
-                        hint: 'Enter your name',
+                        hint: AppStrings.get('enterYourNameHint'),
                         icon: Icons.person_outline,
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your name';
+                          return AppStrings.get('enterYourName');
                         }
                         return null;
                       },
@@ -136,7 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: AppSpacing.lg),
 
                     // Email
-                    fieldLabel('Email'),
+                    fieldLabel(AppStrings.get('email')),
                     const SizedBox(height: AppSpacing.sm),
                     TextFormField(
                       controller: _emailController,
@@ -144,19 +145,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       textInputAction: TextInputAction.next,
                       style: AppTextStyles.bodyLarge,
                       decoration: fieldDecoration(
-                        hint: 'example@email.com',
+                        hint: AppStrings.get('emailExample'),
                         icon: Icons.mail_outline,
                       ),
                       validator: (value) {
                         final email = value?.trim() ?? '';
 
                         if (email.isEmpty) {
-                          return 'Please enter your email';
+                          return AppStrings.get('enterYourEmail');
                         }
 
                         if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
                             .hasMatch(email)) {
-                          return 'Please enter a valid email';
+                          return AppStrings.get('validEmail');
                         }
 
                         return null;
@@ -166,7 +167,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: AppSpacing.lg),
 
                     // Password
-                    fieldLabel('Password'),
+                    fieldLabel(AppStrings.get('password')),
                     const SizedBox(height: AppSpacing.sm),
                     TextFormField(
                       controller: _passwordController,
@@ -175,7 +176,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       style: AppTextStyles.bodyLarge,
                       decoration:
                           fieldDecoration(
-                            hint: 'At least 8 characters',
+                            hint: AppStrings.get('atLeast8'),
                             icon: Icons.lock_outline,
                           ).copyWith(
                             suffixIcon: IconButton(
@@ -186,8 +187,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 color: AppColors.secondaryText,
                               ),
                               tooltip: _obscurePassword
-                                  ? 'Show password'
-                                  : 'Hide password',
+                                ? AppStrings.get('showPassword')
+                                : AppStrings.get('hidePassword'),
                               onPressed: () {
                                 setState(() {
                                   _obscurePassword = !_obscurePassword;
@@ -197,11 +198,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a password';
+                          return AppStrings.get('enterNewPassword');
                         }
 
                         if (value.length < 8) {
-                          return 'Password must be at least 8 characters';
+                          return AppStrings.get('passwordMin8');
                         }
 
                         return null;
@@ -211,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     const SizedBox(height: AppSpacing.lg),
 
                     // Confirm password
-                    fieldLabel('Confirm password'),
+                    fieldLabel(AppStrings.get('confirmPassword')),
                     const SizedBox(height: AppSpacing.sm),
                     TextFormField(
                       controller: _confirmPasswordController,
@@ -220,7 +221,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       style: AppTextStyles.bodyLarge,
                       decoration:
                           fieldDecoration(
-                            hint: 'Enter your password again',
+                            hint: AppStrings.get('confirmPasswordHint'),
                             icon: Icons.lock_outline,
                           ).copyWith(
                             suffixIcon: IconButton(
@@ -231,8 +232,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 color: AppColors.secondaryText,
                               ),
                               tooltip: _obscureConfirmPassword
-                                  ? 'Show password'
-                                  : 'Hide password',
+                                ? AppStrings.get('showPassword')
+                                : AppStrings.get('hidePassword'),
                               onPressed: () {
                                 setState(() {
                                   _obscureConfirmPassword =
@@ -243,11 +244,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
+                          return AppStrings.get('confirmYourPassword');
                         }
 
                         if (value != _passwordController.text) {
-                          return 'Passwords do not match';
+                          return AppStrings.get('passwordsDontMatch');
                         }
 
                         return null;
@@ -259,7 +260,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                     // Shared primary button
                     PrimaryButton(
-                      text: 'Create account',
+                      text: AppStrings.get('createAccount'),
                       onPressed: _createAccount,
                     ),
 
@@ -271,7 +272,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: [
                         Flexible(
                           child: Text(
-                            'Already have an account? ',
+                            '${AppStrings.get('haveAccount')} ',
                             style: AppTextStyles.bodyMedium.copyWith(
                               color: AppColors.secondaryText,
                               fontWeight: FontWeight.w600,
@@ -289,7 +290,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 4),
                           ),
                           child: Text(
-                            'Sign in',
+                            AppStrings.get('signIn'),
                             style: AppTextStyles.bodyMedium.copyWith(
                               color: AppColors.darkGreen,
                               fontWeight: FontWeight.w700,

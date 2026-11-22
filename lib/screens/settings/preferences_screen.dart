@@ -7,6 +7,7 @@ import '../../theme/app_spacing.dart';
 import 'user_info_sheet.dart';
 import 'notifications_sheet.dart';
 import '../../widgets/confirm_dialog.dart';
+import '../../l10n/app_strings.dart';
 
 /// Bottom navigation tab: Profile.
 /// Shown inside MainShell, so it has no back arrow.
@@ -48,9 +49,9 @@ class _PreferencesScreenState extends State<PreferencesScreen> {
 Future<void> _signOut() async {
   final ok = await showConfirmDialog(
     context: context,
-    title: 'Sign out?',
-    message: 'Are you sure you want to sign out of PetPocket?',
-    confirmText: 'Sign out',
+    title: AppStrings.get('signOutTitle'),
+    message: AppStrings.get('signOutMessage'),
+    confirmText: AppStrings.get('signOut'),
     icon: Icons.logout,
   );
 
@@ -94,7 +95,7 @@ Future<void> _signOut() async {
           bottom: BorderSide(color: AppColors.cardBorder),
         ),
         title:  Text(
-          'Preferences',
+          AppStrings.get('preferences'),
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 20,
@@ -119,7 +120,7 @@ Future<void> _signOut() async {
           const SizedBox(height: AppSpacing.lg),
 
           // APP settings
-          _sectionTitle('APP'),
+          _sectionTitle(AppStrings.get('appSection')),
           Container(
             decoration: BoxDecoration(
               color: AppColors.white,
@@ -130,8 +131,8 @@ Future<void> _signOut() async {
                 // Language
                 _SettingRow(
                   icon: Icons.menu,
-                  title: 'Language',
-                  subtitle: 'Choose the app language',
+                  title: AppStrings.get('language'),
+                  subtitle: AppStrings.get('languageSubtitle'),
                   child: Row(
                     children: [
                       _OptionButton(
@@ -141,6 +142,7 @@ Future<void> _signOut() async {
                           setState(() {
                             appLanguage = 'en';
                           });
+                          widget.onAppearanceChanged();
                         },
                       ),
                       const SizedBox(width: 8),
@@ -151,6 +153,7 @@ Future<void> _signOut() async {
                           setState(() {
                             appLanguage = 'tr';
                           });
+                          widget.onAppearanceChanged();
                         },
                       ),
                     ],
@@ -161,24 +164,24 @@ Future<void> _signOut() async {
                 // Appearance
                 _SettingRow(
                   icon: Icons.visibility_outlined,
-                  title: 'Appearance',
-                  subtitle: 'Choose how PetPocket looks',
+                  title: AppStrings.get('appearance'),
+                  subtitle: AppStrings.get('appearanceSubtitle'),
                   child: Row(
                     children: [
                       _OptionButton(
-                        text: 'Light',
+                        text: AppStrings.get('light'),
                         selected: appAppearance == 'light',
                         onTap: () => _setAppearance('light'),
                       ),
                       const SizedBox(width: 8),
                       _OptionButton(
-                        text: 'Dark',
+                        text: AppStrings.get('dark'),
                         selected: appAppearance == 'dark',
                         onTap: () => _setAppearance('dark'),
                       ),
                       const SizedBox(width: 8),
                       _OptionButton(
-                        text: 'System',
+                        text: AppStrings.get('system'),
                         selected: appAppearance == 'system',
                         onTap: () => _setAppearance('system'),
                       ),
@@ -206,7 +209,7 @@ Future<void> _signOut() async {
                         const SizedBox(width: 14),
                          Expanded(
                           child: Text(
-                            'Notifications',
+                            AppStrings.get('notifications'),
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w800,
@@ -215,7 +218,9 @@ Future<void> _signOut() async {
                           ),
                         ),
                         Text(
-                          notificationsEnabled ? 'On' : 'Off',
+                          notificationsEnabled
+                            ? AppStrings.get('on')
+                            : AppStrings.get('off'),
                           style:  TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.w700,
@@ -237,7 +242,7 @@ Future<void> _signOut() async {
           const SizedBox(height: AppSpacing.lg),
 
           // ACCOUNT
-          _sectionTitle('ACCOUNT'),
+          _sectionTitle(AppStrings.get('accountSection')),
           const SizedBox(height: AppSpacing.sm),
           OutlinedButton(
             onPressed: _signOut,
@@ -254,12 +259,12 @@ Future<void> _signOut() async {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            child: const Text('Sign out'),
+            child: Text(AppStrings.get('signOut')),
           ),
           const SizedBox(height: AppSpacing.md),
 
            Text(
-            'PetPocket v1.0.0 · This app does not provide medical advice.',
+            AppStrings.get('versionNote'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 11,

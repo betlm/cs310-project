@@ -8,6 +8,9 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/species_colors.dart';
 import '../../widgets/confirm_dialog.dart';
+import '../../l10n/app_strings.dart';
+import '../../utils/pet_format.dart';
+import '../../utils/sample_localization.dart';
 
 /// pet's profile in sheet from the bottom
 /// avatar, name, species and breed, age, weight, microchip, tag,
@@ -58,19 +61,16 @@ Future<void> showPetDetails(BuildContext context, Pet pet) async {
 /// The last pet cannot be deleted, because Home always needs one
 Future<void> confirmAndDeletePet(BuildContext context, Pet pet) async {
   if (samplePets.length == 1) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('You need at least one pet.')),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(AppStrings.get('needOnePet'))));
     return;
   }
-
   final ok = await showConfirmDialog(
     context: context,
-    title: 'Delete ${pet.name}?',
-    message: 'All reminders, health records, weights, supplies and '
-        'photos of ${pet.name} will be removed too.'
-        'This action cannot be undone.',
-    confirmText: 'Delete',
+    title: AppStrings.get('deletePetNameTitle').replaceAll('{name}', pet.name),
+    message: AppStrings.get('deletePetNameRecords')
+        .replaceAll('{name}', pet.name),
+    confirmText: AppStrings.get('delete'),
   );
 
   if (!ok || !context.mounted) return;
@@ -78,7 +78,11 @@ Future<void> confirmAndDeletePet(BuildContext context, Pet pet) async {
   deletePet(pet);
 
   ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('${pet.name} was deleted.')),
+    SnackBar(
+      content: Text(
+        AppStrings.get('petNameDeleted').replaceAll('{name}', pet.name),
+      ),
+    ),
   );
 }
 
@@ -96,32 +100,44 @@ class _PetDetailsContent extends StatelessWidget {
 
   /// "Cat · Tabby cat", or just "Cat" if there is no breed
   static String _speciesAndBreed(Pet pet) {
-    final species = speciesLabel(pet.species);
+    final species = localizedSpeciesLabel(pet.species);
     final breed = pet.breed?.trim() ?? '';
+
     if (breed.isEmpty) {
       return species;
     }
-    return '$species · $breed';
+
+    final localizedBreed = SampleLocalization.text(
+      id: pet.id,
+      field: 'breed',
+      value: breed,
+    );
+
+    return '$species · $localizedBreed';
   }
 
   /// "3 years", "1 year" or "Not set"
   static String _ageText(Pet pet) {
     final age = pet.ageInYears;
-    if (age == null) return 'Not set';
-    if (age == 1) return '1 year';
-    return '$age years';
+
+    if (age == null) return AppStrings.get('notSet');
+    if (age == 1) return AppStrings.get('oneYear');
+
+    return '$age ${AppStrings.get('years')}';
   }
 
   /// Shows "Not set" for empty optional values
   static String _orNotSet(String? value) {
     final text = value?.trim() ?? '';
-    if (text.isEmpty) return 'Not set';
+
+    if (text.isEmpty) return AppStrings.get('notSet');
+
     return text;
   }
 
   @override
   Widget build(BuildContext context) {
-    String weightText = 'Not set';
+    String weightText = AppStrings.get('notSet');
     if (pet.weightKg != null) {
       weightText = '${pet.weightKg} kg';
     }
@@ -138,7 +154,7 @@ class _PetDetailsContent extends StatelessWidget {
               children: [
                 Container(
                   padding: const EdgeInsets.all(3),
-                  decoration:  BoxDecoration(
+                  decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: AppColors.lightMint,
                   ),
@@ -156,7 +172,7 @@ class _PetDetailsContent extends StatelessWidget {
                       Text(
                         pet.name,
                         overflow: TextOverflow.ellipsis,
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontFamily: 'Manrope',
                           fontSize: 22,
                           fontWeight: FontWeight.w800,
@@ -167,7 +183,7 @@ class _PetDetailsContent extends StatelessWidget {
                       Text(
                         _speciesAndBreed(pet),
                         overflow: TextOverflow.ellipsis,
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
                           color: AppColors.secondaryText,
@@ -183,9 +199,19 @@ class _PetDetailsContent extends StatelessWidget {
             // 2 x 2 info boxes
             Row(
               children: [
-                Expanded(child: _InfoBox(label: 'Age', value: _ageText(pet))),
+                Expanded(
+                  child: _InfoBox(
+                    label: AppStrings.get('petDetailsAge'),
+                    value: _ageText(pet),
+                  ),
+                ),
                 const SizedBox(width: 10),
-                Expanded(child: _InfoBox(label: 'Weight', value: weightText)),
+                Expanded(
+                  child: _InfoBox(
+                    label: AppStrings.get('petDetailsWeight'),
+                    value: weightText,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -193,14 +219,14 @@ class _PetDetailsContent extends StatelessWidget {
               children: [
                 Expanded(
                   child: _InfoBox(
-                    label: 'Microchip',
+                    label: AppStrings.get('petDetailsMicrochip'),
                     value: _orNotSet(pet.microchipNumber),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: _InfoBox(
-                    label: 'Tag',
+                    label: AppStrings.get('petDetailsTag'),
                     value: _orNotSet(pet.tagInfo),
                   ),
                 ),
@@ -215,14 +241,11 @@ class _PetDetailsContent extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: onEdit,
                     icon: const Icon(Icons.edit_outlined, size: 18),
-                    label: const Text('Edit'),
+                    label: Text(AppStrings.get('edit')),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.darkGreen,
                       minimumSize: const Size(0, 46),
-                      side:  BorderSide(
-                        color: AppColors.mintBorder,
-                        width: 1.5,
-                      ),
+                      side: BorderSide(color: AppColors.mintBorder, width: 1.5),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -238,11 +261,11 @@ class _PetDetailsContent extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: onDelete,
                     icon: const Icon(Icons.delete_outline, size: 18),
-                    label: const Text('Delete'),
+                    label: Text(AppStrings.get('delete')),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: AppColors.danger,
                       minimumSize: const Size(0, 46),
-                      side:  BorderSide(
+                      side: BorderSide(
                         color: AppColors.dangerLight,
                         width: 1.5,
                       ),
@@ -285,7 +308,7 @@ class _InfoBox extends StatelessWidget {
         children: [
           Text(
             label,
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
               color: AppColors.secondaryText,
@@ -295,7 +318,7 @@ class _InfoBox extends StatelessWidget {
           Text(
             value,
             overflow: TextOverflow.ellipsis,
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w800,
               color: AppColors.darkGreen,

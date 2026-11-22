@@ -4,6 +4,7 @@ import '../data/app_state.dart';
 import '../routes/app_routes.dart';
 import '../screens/home/widgets/pet_chips_row.dart';
 import '../theme/app_colors.dart';
+import '../l10n/app_strings.dart';
 
 /// Opens a sheet from the bottom where the user can choose the active pet or tap "Add pet" to open the Create pet form
 /// Use it with await and refresh the screen afterwards
@@ -30,7 +31,7 @@ Future<void> showPetSwitcher(BuildContext context) async {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
                Text(
-                'Select a pet',
+                AppStrings.get('selectPet'),
                 style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 18,

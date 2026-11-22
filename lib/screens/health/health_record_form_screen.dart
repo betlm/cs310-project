@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -14,18 +13,16 @@ import '../../utils/date_format.dart';
 import '../../widgets/app_form_field.dart';
 import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
+import '../../l10n/app_strings.dart';
+import '../../utils/sample_localization.dart';
 
 class HealthRecordFormScreen extends StatefulWidget {
   final HealthRecord? record;
 
-  const HealthRecordFormScreen({
-    super.key,
-    this.record,
-  });
+  const HealthRecordFormScreen({super.key, this.record});
 
   @override
-  State<HealthRecordFormScreen> createState() =>
-      _HealthRecordFormScreenState();
+  State<HealthRecordFormScreen> createState() => _HealthRecordFormScreenState();
 }
 
 class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
@@ -51,8 +48,20 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
     if (record != null) {
       _selectedType = record.type;
       _selectedDate = record.date;
-      _titleController.text = record.title;
-      _notesController.text = record.notes ?? '';
+
+      _titleController.text = SampleLocalization.text(
+        id: record.id,
+        field: 'title',
+        value: record.title,
+      );
+
+      _notesController.text = record.notes == null
+          ? ''
+          : SampleLocalization.text(
+              id: record.id,
+              field: 'notes',
+              value: record.notes!,
+            );
     }
   }
 
@@ -65,13 +74,13 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
 
   String _typeLabel(HealthRecordType type) {
     return switch (type) {
-      HealthRecordType.vaccination => 'Vaccination',
-      HealthRecordType.vetVisit => 'Vet visit',
-      HealthRecordType.checkUp => 'Check-up',
-      HealthRecordType.medication => 'Medication',
-      HealthRecordType.parasiteTreatment => 'Parasite treatment',
-      HealthRecordType.feedingNote => 'Feeding note',
-      HealthRecordType.other => 'Other',
+      HealthRecordType.vaccination => AppStrings.get('vaccination'),
+      HealthRecordType.vetVisit => AppStrings.get('vetVisit'),
+      HealthRecordType.checkUp => AppStrings.get('checkUp'),
+      HealthRecordType.medication => AppStrings.get('medication'),
+      HealthRecordType.parasiteTreatment => AppStrings.get('parasiteTreatment'),
+      HealthRecordType.feedingNote => AppStrings.get('feedingNote'),
+      HealthRecordType.other => AppStrings.get('other'),
     };
   }
 
@@ -91,12 +100,10 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        fieldLabel('Record Type'),
+        fieldLabel(AppStrings.get('recordType')),
         const SizedBox(height: AppSpacing.sm),
         InkWell(
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           onTap: () {
             setState(() {
               _isTypeMenuOpen = !_isTypeMenuOpen;
@@ -104,18 +111,11 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
           },
           child: Container(
             height: 54,
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.md,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(
-                AppSpacing.radiusMedium,
-              ),
-              border: Border.all(
-                color: AppColors.primary,
-                width: 1.2,
-              ),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              border: Border.all(color: AppColors.primary, width: 1.2),
             ),
             child: Row(
               children: [
@@ -144,13 +144,9 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
             padding: const EdgeInsets.all(AppSpacing.sm),
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(
-                AppSpacing.radiusMedium,
-              ),
-              border: Border.all(
-                color: AppColors.fieldBorder,
-              ),
-              boxShadow:  [
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              border: Border.all(color: AppColors.fieldBorder),
+              boxShadow: [
                 BoxShadow(
                   color: AppColors.cardShadow,
                   blurRadius: 12,
@@ -163,9 +159,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                 final isSelected = _selectedType == type;
 
                 return InkWell(
-                  borderRadius: BorderRadius.circular(
-                    AppSpacing.radiusSmall,
-                  ),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
                   onTap: () {
                     setState(() {
                       _selectedType = type;
@@ -178,9 +172,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                       horizontal: AppSpacing.md,
                     ),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColors.lightMint
-                          : AppColors.white,
+                      color: isSelected ? AppColors.lightMint : AppColors.white,
                       borderRadius: BorderRadius.circular(
                         AppSpacing.radiusSmall,
                       ),
@@ -206,7 +198,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                           ),
                         ),
                         if (isSelected)
-                           Icon(
+                          Icon(
                             Icons.check,
                             size: 19,
                             color: AppColors.darkGreen,
@@ -242,22 +234,16 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        fieldLabel('Date'),
+        fieldLabel(AppStrings.get('date')),
         const SizedBox(height: AppSpacing.sm),
         InkWell(
           onTap: _pickDate,
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           child: InputDecorator(
-            decoration: fieldDecoration(
-              icon: Icons.calendar_today_outlined,
-            ),
+            decoration: fieldDecoration(icon: Icons.calendar_today_outlined),
             child: Text(
               formatDate(_selectedDate),
-              style: AppTextStyles.bodyLarge.copyWith(
-                fontSize: 14,
-              ),
+              style: AppTextStyles.bodyLarge.copyWith(fontSize: 14),
             ),
           ),
         ),
@@ -268,9 +254,8 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
   void _showMessage(String message) {
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _pickPhoto() async {
@@ -281,23 +266,21 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
     });
 
     try {
-      final photo = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-      );
+      final photo = await _imagePicker.pickImage(source: ImageSource.gallery);
 
       if (photo == null) return;
 
       final extension = photo.name.split('.').last.toLowerCase();
 
       if (!['jpg', 'jpeg', 'png'].contains(extension)) {
-        _showMessage('Please select a JPG or PNG image.');
+        _showMessage(AppStrings.get('invalidImageFormat'));
         return;
       }
 
       final imageSize = await photo.length();
 
       if (imageSize > _maxImageBytes) {
-        _showMessage('The image must be smaller than 10 MB.');
+        _showMessage(AppStrings.get('imageTooLarge'));
         return;
       }
 
@@ -307,7 +290,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
         _selectedPhoto = photo;
       });
     } catch (_) {
-      _showMessage('Could not select the photo. Please try again.');
+      _showMessage(AppStrings.get('photoSelectionFailed'));
     } finally {
       if (mounted) {
         setState(() {
@@ -325,14 +308,10 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
       ),
       child: Material(
         color: AppColors.lightMint.withValues(alpha: 0.4),
-        borderRadius: BorderRadius.circular(
-          AppSpacing.radiusMedium,
-        ),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
         child: InkWell(
           onTap: _isPickingPhoto ? null : _pickPhoto,
-          borderRadius: BorderRadius.circular(
-            AppSpacing.radiusMedium,
-          ),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           child: Padding(
             padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.md,
@@ -342,7 +321,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                       Icon(
+                      Icon(
                         Icons.image_outlined,
                         size: 28,
                         color: AppColors.darkGreen,
@@ -353,15 +332,15 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                         children: [
                           Text(
                             _isPickingPhoto
-                                ? 'Opening gallery...'
-                                : 'Add a photo',
+                                ? AppStrings.get('openingGallery')
+                                : AppStrings.get('addAPhoto'),
                             style: AppTextStyles.bodyLarge.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xs),
                           Text(
-                            'JPG or PNG · Up to 10 MB',
+                            AppStrings.get('photoLimits'),
                             style: AppTextStyles.caption.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
@@ -401,7 +380,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                             ),
                           ),
                           IconButton(
-                            tooltip: 'Remove photo',
+                            tooltip: AppStrings.get('removePhoto'),
                             onPressed: () {
                               setState(() {
                                 _selectedPhoto = null;
@@ -425,17 +404,48 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
   void _saveRecord() {
     if (!_formKey.currentState!.validate()) return;
 
-    final notes = _notesController.text.trim();
+    final enteredTitle = _titleController.text.trim();
+    final enteredNotes = _notesController.text.trim();
     final existingRecord = widget.record;
 
+    final originalDisplayedTitle = existingRecord == null
+        ? null
+        : SampleLocalization.text(
+            id: existingRecord.id,
+            field: 'title',
+            value: existingRecord.title,
+          );
+
+    final originalDisplayedNotes =
+        existingRecord == null || existingRecord.notes == null
+        ? null
+        : SampleLocalization.text(
+            id: existingRecord.id,
+            field: 'notes',
+            value: existingRecord.notes!,
+          );
+
+    final titleToSave =
+        existingRecord != null && enteredTitle == originalDisplayedTitle
+        ? existingRecord.title
+        : enteredTitle;
+
+    final notesToSave =
+        existingRecord != null && enteredNotes == originalDisplayedNotes
+        ? existingRecord.notes
+        : enteredNotes.isEmpty
+        ? null
+        : enteredNotes;
+
     final updatedRecord = HealthRecord(
-      id: existingRecord?.id ??
+      id:
+          existingRecord?.id ??
           DateTime.now().microsecondsSinceEpoch.toString(),
       petId: existingRecord?.petId ?? activePet.id,
       type: _selectedType,
-      title: _titleController.text.trim(),
+      title: titleToSave,
       date: _selectedDate,
-      notes: notes.isEmpty ? null : notes,
+      notes: notesToSave,
       attachmentUrl: existingRecord?.attachmentUrl,
     );
 
@@ -447,7 +457,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
       );
 
       if (index == -1) {
-        _showMessage('Record not found.');
+        _showMessage(AppStrings.get('recordNotFound'));
         return;
       }
 
@@ -465,11 +475,9 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
         backgroundColor: AppColors.white,
         centerTitle: true,
         elevation: 0,
-        iconTheme:  IconThemeData(
-          color: AppColors.darkGreen,
-        ),
+        iconTheme: IconThemeData(color: AppColors.darkGreen),
         title: Text(
-          'Create / edit record',
+          AppStrings.get('createEditRecord'),
           style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w800,
           ),
@@ -483,14 +491,14 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
             _recordTypeField(),
             const SizedBox(height: AppSpacing.lg),
             AppFormField(
-              label: 'Title',
-              hintText: 'e.g. Combination vaccine',
+              label: AppStrings.get('title'),
+              hintText: AppStrings.get('titleHint'),
               controller: _titleController,
               labelAbove: true,
               isRequired: true,
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a title';
+                  return AppStrings.get('enterTitle');
                 }
                 return null;
               },
@@ -499,8 +507,8 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
             _dateField(),
             const SizedBox(height: AppSpacing.lg),
             AppFormField(
-              label: 'Notes (Optional)',
-              hintText: 'Enter record details...',
+              label: AppStrings.get('notesOptional'),
+              hintText: AppStrings.get('notesHint'),
               controller: _notesController,
               labelAbove: true,
               maxLines: 3,
@@ -517,20 +525,16 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
           AppSpacing.lg,
           AppSpacing.md,
         ),
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.white,
-          border: Border(
-            top: BorderSide(
-              color: AppColors.navBorder,
-            ),
-          ),
+          border: Border(top: BorderSide(color: AppColors.navBorder)),
         ),
         child: SafeArea(
           top: false,
           child: PrimaryButton(
             text: widget.record == null
-                ? 'Create record'
-                : 'Save changes',
+                ? AppStrings.get('createRecord')
+                : AppStrings.get('saveChanges'),
             onPressed: _saveRecord,
           ),
         ),
@@ -543,10 +547,7 @@ class _DashedBorderPainter extends CustomPainter {
   final Color color;
   final double radius;
 
-  const _DashedBorderPainter({
-    required this.color,
-    required this.radius,
-  });
+  const _DashedBorderPainter({required this.color, required this.radius});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -567,15 +568,9 @@ class _DashedBorderPainter extends CustomPainter {
       double distance = 0;
 
       while (distance < metric.length) {
-        final end = (distance + 6).clamp(
-          0.0,
-          metric.length,
-        );
+        final end = (distance + 6).clamp(0.0, metric.length);
 
-        canvas.drawPath(
-          metric.extractPath(distance, end),
-          paint,
-        );
+        canvas.drawPath(metric.extractPath(distance, end), paint);
 
         distance += 11;
       }
@@ -583,10 +578,7 @@ class _DashedBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(
-    covariant _DashedBorderPainter oldDelegate,
-  ) {
-    return oldDelegate.color != color ||
-        oldDelegate.radius != radius;
+  bool shouldRepaint(covariant _DashedBorderPainter oldDelegate) {
+    return oldDelegate.color != color || oldDelegate.radius != radius;
   }
 }

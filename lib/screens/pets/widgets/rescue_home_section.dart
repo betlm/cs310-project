@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../theme/app_text_styles.dart';
+import '../../../l10n/app_strings.dart';
 
 class RescueHomeSection extends StatefulWidget {
   final VoidCallback onAdopt;
@@ -72,7 +73,7 @@ class _RescueHomeSectionState extends State<RescueHomeSection> {
 
                   Expanded(
                     child: Text(
-                      'Looking for a new friend?',
+                      AppStrings.get('lookingForFriend'),
                       style: AppTextStyles.headingSmall.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
@@ -112,8 +113,7 @@ class _RescueHomeSectionState extends State<RescueHomeSection> {
                     child: Column(
                       children: [
                         Text(
-                          'Adopt a pet or support shelter '
-                          'animals at Kurtaran Ev.',
+                          AppStrings.get('rescueSubtitle'),
                           textAlign: TextAlign.center,
                           style: AppTextStyles.bodyMedium.copyWith(
                             fontWeight: FontWeight.w600,
@@ -127,7 +127,7 @@ class _RescueHomeSectionState extends State<RescueHomeSection> {
                           children: [
                             Expanded(
                               child: _RescueActionButton(
-                                label: 'Adopt',
+                                label: AppStrings.get('adopt'),
                                 icon: Icons.pets_outlined,
                                 isPrimary: true,
                                 onPressed: widget.onAdopt,
@@ -138,7 +138,7 @@ class _RescueHomeSectionState extends State<RescueHomeSection> {
 
                             Expanded(
                               child: _RescueActionButton(
-                                label: 'Donate',
+                                label: AppStrings.get('donate'),
                                 icon: Icons.volunteer_activism_outlined,
                                 isPrimary: false,
                                 onPressed: widget.onDonate,
