@@ -54,6 +54,7 @@ The project was tested with:
 The app was tested in portrait mode on a small and a large Android emulator:
 
 - Small Phone (360 × 640 dp)
+- Pixel 9 (411 × 923 dp)
 - Pixel 6 Pro (412 × 892 dp)
 
 ### How to run on an Android emulator
@@ -96,5 +97,6 @@ flutter test
 - Ponçik's album photos are loaded from the internet with `Image.network`, so an
   internet connection is needed to see them. The other pets' photos are local
   assets.
-- Language (English / Turkish) and theme (light / dark) can be changed on the
-  Welcome screen, on Home, and in Preferences.
+- English / Turkish can be switched on the Welcome screen or in Preferences.
+  Light / Dark can be switched on the Welcome screen, on Home, or in
+  Preferences; the System option is available in Preferences.
