@@ -28,6 +28,7 @@ PetPocket is a record-keeping and reminder tool; it does not provide medical adv
 | Betül Merey | 33963 |
 
 **Step 1 Coordinator:** Betül Merey
+**Step 2 Coordinator:** Ayça Ceylin Oktay
 
 ## Tech Stack
 
@@ -47,6 +48,12 @@ The project was tested with:
 
 - Flutter 3.47.5 (stable channel)
 - Dart 3.13.4
+
+
+The app was tested in portrait mode on a small and a large Android emulator:
+
+- Small Phone (360 × 640 dp)
+- Pixel 6 Pro (412 × 892 dp)
 
 ### How to run on an Android emulator
 
