@@ -91,6 +91,10 @@ class _PetFormScreenState extends State<PetFormScreen> {
           );
 
     _selectedSex = pet.sex;
+    // Show the pet's saved photo in the photo circle
+    if (pet.photoPath != null) {
+      _selectedPhoto = XFile(pet.photoPath!);
+    }
     _microchipController.text = pet.microchipNumber ?? '';
     _tagController.text = pet.tagInfo ?? '';
 
@@ -208,6 +212,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
     final pet = Pet(
       id: _editingPet?.id ?? 'pet-${DateTime.now().microsecondsSinceEpoch}',
       avatarAsset: _editingPet?.avatarAsset,
+      photoPath: _selectedPhoto?.path,
       name: _nameController.text.trim(),
       species: _selectedSpecies,
       breed: breedToSave,
@@ -241,7 +246,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
       title: AppStrings.get('petSaved'),
       message: AppStrings.get('petSavedMessage').replaceAll('{name}', pet.name),
       confirmText: AppStrings.get('ok'),
-      cancelText: null,
+      showCancel: false,
       isDanger: false,
       icon: Icons.check_circle_outline,
     );

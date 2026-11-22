@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 
@@ -70,11 +71,47 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
     }
   }
 
+    /// Shows the attached photo full size in a dialog, without cropping
+  void _showAttachment(String path) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: AppColors.background,
+          insetPadding: const EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Flexible lets a tall image shrink to fit the screen
+                Flexible(
+                  child: Image.file(
+                    File(path),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: Text(AppStrings.get('close')),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _deleteRecord(HealthRecord record) async {
     final shouldDelete = await showConfirmDialog(
       context: context,
       title: AppStrings.get('deleteRecordTitle').replaceAll(
-        '{title}',
+        '{name}',
         SampleLocalization.text(
           id: record.id,
           field: 'title',
@@ -393,6 +430,29 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                                       fontWeight: FontWeight.w600,
                                       height: 1.3,
                                       color: AppColors.secondaryText,
+                                    ),
+                                  ),
+                                ],
+                                // Attached photo (e.g. vaccination card)
+                                if (record.attachmentUrl != null) ...[
+                                  const SizedBox(height: 8),
+                                  GestureDetector(
+                                    onTap: () =>
+                                        _showAttachment(record.attachmentUrl!),
+                                    child: Container(
+                                      height: 120,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: AppColors.cardBorder,
+                                        ),
+                                        image: DecorationImage(
+                                          image: FileImage(
+                                            File(record.attachmentUrl!),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ],

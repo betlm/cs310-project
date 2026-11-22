@@ -85,7 +85,7 @@ class _PetChip extends StatelessWidget {
               child: CircleAvatar(
                 radius: 26,
                 backgroundColor: speciesColor(pet.species),
-                backgroundImage: AssetImage(pet.avatarPath),
+                backgroundImage: pet.avatarImage,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),

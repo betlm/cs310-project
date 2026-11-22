@@ -32,7 +32,7 @@ class ActivePetBar extends StatelessWidget {
             CircleAvatar(
               radius: 20,
               backgroundColor: speciesColor(pet.species),
-              backgroundImage: AssetImage(pet.avatarPath),
+              backgroundImage: pet.avatarImage,
             ),
             const SizedBox(width: 12),
             Expanded(

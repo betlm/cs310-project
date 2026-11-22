@@ -104,7 +104,7 @@ class AppStrings {
       'tagOptional': 'Tag Information (Optional)',
       'tagHint': 'Tag ID or identifying details',
       'saveProfile': 'Save profile',
-      'petSavedMessage': 'was saved successfully.',
+      'petSavedMessage': '{name} was saved successfully.',
 
       // Pet form messages
       'enterName': 'Please enter a name',
@@ -574,7 +574,7 @@ class AppStrings {
       'tagOptional': 'Künye Bilgisi (İsteğe bağlı)',
       'tagHint': 'Künye numarası ya da ayırt edici bilgi',
       'saveProfile': 'Profili kaydet',
-      'petSavedMessage': 'başarıyla kaydedildi.',
+      'petSavedMessage': '{name} başarıyla kaydedildi.',
 
       // Pet form messages
       'enterName': 'Lütfen bir ad gir',

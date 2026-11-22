@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 /// The species options shown as cards in the Create / edit pet form.
 enum PetSpecies { cat, dog, bird, fish, rabbit, hamster }
 
@@ -19,6 +22,7 @@ class Pet {
   final String? microchipNumber;
   final String? tagInfo;
   final String? avatarAsset; // local image, 
+  final String? photoPath; // photo picked from the gallery in the pet form
 
   const Pet({
     required this.id,
@@ -32,6 +36,7 @@ class Pet {
     this.microchipNumber,
     this.tagInfo,
     this.avatarAsset,
+    this.photoPath,
   });
 
   /// Age in whole years, calculated from the birth date if it exists,
@@ -56,4 +61,13 @@ class Pet {
   /// the species (e.g. 'assets/images/default-cat.png').
   String get avatarPath =>
       avatarAsset ?? 'assets/images/default-${species.name}.png';
+
+  
+  /// Image to show in avatars: the picked photo if there is one otherwise the local avatar image.
+  ImageProvider get avatarImage {
+    if (photoPath != null) {
+      return FileImage(File(photoPath!));
+    }
+    return AssetImage(avatarPath);
+  }
 }

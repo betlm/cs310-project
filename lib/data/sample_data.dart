@@ -252,7 +252,8 @@ final List<SupplyItem> sampleSupplies = [
 ];
 
 // ---------------------------------------------------------------------------
-// Photos (network images)
+// Photos: Misket and Cleo from local assets (Image.asset),
+// Ponçik from the internet (Image.network)
 // ---------------------------------------------------------------------------
 
 final List<PetPhoto> samplePhotos = [
@@ -270,7 +271,8 @@ final List<PetPhoto> samplePhotos = [
     PetPhoto(
       id: 'poncik-photo-$i',
       petId: 'pet-2',
-      imageUrl: 'assets/images/poncik_$i.jpg',
+      imageUrl:
+          'https://raw.githubusercontent.com/lbetl/pictures/main/poncik_$i.jpg',
       addedAt: DateTime(2026, 10, i),
     ),
 

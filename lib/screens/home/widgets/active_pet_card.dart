@@ -50,7 +50,7 @@ class ActivePetCard extends StatelessWidget {
               child: CircleAvatar(
                 radius: 46,
                 backgroundColor: cardColor,
-                backgroundImage: AssetImage(pet.avatarPath),
+                backgroundImage: pet.avatarImage,
               ),
             ),
             const SizedBox(width: AppSpacing.sm + AppSpacing.xs), // 12
