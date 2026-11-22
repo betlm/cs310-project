@@ -10,6 +10,8 @@ import '../../widgets/active_pet_bar.dart';
 import '../../widgets/confirm_dialog.dart';
 import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
+import '../../l10n/app_strings.dart';
+import '../../utils/sample_localization.dart';
 
 class RemindersScreen extends StatefulWidget {
   const RemindersScreen({super.key});
@@ -35,6 +37,19 @@ class _RemindersScreenState extends State<RemindersScreen> {
     setState(() {});
   }
 
+  String categoryName(ReminderCategory category) {
+    switch (category) {
+      case ReminderCategory.medication:
+        return AppStrings.get('medication');
+      case ReminderCategory.appointment:
+        return AppStrings.get('appointment');
+      case ReminderCategory.feeding:
+        return AppStrings.get('feeding');
+      case ReminderCategory.other:
+        return AppStrings.get('other');
+    }
+  }
+
   IconData categoryIcon(ReminderCategory category) {
     switch (category) {
       case ReminderCategory.medication:
@@ -45,19 +60,6 @@ class _RemindersScreenState extends State<RemindersScreen> {
         return Icons.access_time;
       case ReminderCategory.other:
         return Icons.notifications_outlined;
-    }
-  }
-
-  String categoryName(ReminderCategory category) {
-    switch (category) {
-      case ReminderCategory.medication:
-        return 'Medication';
-      case ReminderCategory.appointment:
-        return 'Appointment';
-      case ReminderCategory.feeding:
-        return 'Feeding';
-      case ReminderCategory.other:
-        return 'Other';
     }
   }
 
@@ -89,11 +91,16 @@ class _RemindersScreenState extends State<RemindersScreen> {
   Future<void> confirmDeleteReminder(Reminder reminder) async {
     final shouldDelete = await showConfirmDialog(
       context: context,
-      title: 'Delete ${reminder.title}?',
-      message:
-          'This reminder will be permanently removed. '
-          'This action cannot be undone.',
-      confirmText: 'Delete',
+      title: AppStrings.get('deleteReminderTitle').replaceAll(
+        '{name}',
+        SampleLocalization.text(
+          id: reminder.id,
+          field: 'title',
+          value: reminder.title,
+        ),
+      ),
+      message: AppStrings.get('deleteReminderMessage'),
+      confirmText: AppStrings.get('delete'),
     );
 
     if (!mounted) return;
@@ -121,7 +128,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
             color: selected ? AppColors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: selected
-                ?  [
+                ? [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 5,
@@ -191,7 +198,11 @@ class _RemindersScreenState extends State<RemindersScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  reminder.title,
+                  SampleLocalization.text(
+                    id: reminder.id,
+                    field: 'title',
+                    value: reminder.title,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.bodyMedium.copyWith(
@@ -203,8 +214,8 @@ class _RemindersScreenState extends State<RemindersScreen> {
                 const SizedBox(height: 3),
                 Text(
                   reminder.repeat == RepeatType.daily
-                      ? 'Daily · ${formatTime(reminder)}'
-                      : '${formatTime(reminder)} · One-time',
+                      ? '${AppStrings.get('daily')} · ${formatTime(reminder)}'
+                      : '${formatTime(reminder)} · ${AppStrings.get('oneTime')}',
                   style: AppTextStyles.caption.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -263,7 +274,10 @@ class _RemindersScreenState extends State<RemindersScreen> {
   Widget buildReminderList(List<Reminder> reminders) {
     if (reminders.isEmpty) {
       return Center(
-        child: Text('No reminders found', style: AppTextStyles.bodyMedium),
+        child: Text(
+          AppStrings.get('noRemindersFound'),
+          style: AppTextStyles.bodyMedium,
+        ),
       );
     }
 
@@ -321,9 +335,9 @@ class _RemindersScreenState extends State<RemindersScreen> {
             if (showHeader)
               buildSectionTitle(
                 isDaily
-                    ? 'EVERY DAY'
+                    ? AppStrings.get('everyDay').toUpperCase()
                     : reminder.date == null
-                    ? 'NO DATE'
+                    ? AppStrings.get('noDate').toUpperCase()
                     : formatDate(reminder.date!),
               ),
             buildReminderCard(reminder),
@@ -350,9 +364,9 @@ class _RemindersScreenState extends State<RemindersScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape:  Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        shape: Border(bottom: BorderSide(color: AppColors.cardBorder)),
         title: Text(
-          'Reminders',
+          AppStrings.get('reminders'),
           style: AppTextStyles.headingSmall.copyWith(
             fontWeight: FontWeight.w800,
           ),
@@ -375,7 +389,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                   color: AppColors.lightMint,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: AppColors.primary, width: 1.5),
-                  boxShadow:  [
+                  boxShadow: [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 10,
@@ -392,7 +406,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                         color: AppColors.primary,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child:  Icon(
+                      child: Icon(
                         Icons.add,
                         color: AppColors.darkGreen,
                         size: 26,
@@ -404,7 +418,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Add reminder',
+                            AppStrings.get('addReminder'),
                             style: AppTextStyles.bodyMedium.copyWith(
                               fontFamily: 'Manrope',
                               fontWeight: FontWeight.w800,
@@ -413,7 +427,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            'Schedule care, medication, or visits',
+                            AppStrings.get('addReminderSubtitle'),
                             style: AppTextStyles.caption.copyWith(
                               fontSize: 11,
                               fontWeight: FontWeight.w600,
@@ -422,7 +436,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
                         ],
                       ),
                     ),
-                     Icon(Icons.chevron_right, color: AppColors.darkGreen),
+                    Icon(Icons.chevron_right, color: AppColors.darkGreen),
                   ],
                 ),
               ),
@@ -439,14 +453,14 @@ class _RemindersScreenState extends State<RemindersScreen> {
               child: Row(
                 children: [
                   buildReminderTab(
-                    title: 'Upcoming',
+                    title: AppStrings.get('upcoming'),
                     selected: showUpcoming,
                     onTap: () {
                       setState(() => showUpcoming = true);
                     },
                   ),
                   buildReminderTab(
-                    title: 'Past',
+                    title: AppStrings.get('past'),
                     selected: !showUpcoming,
                     onTap: () {
                       setState(() => showUpcoming = false);

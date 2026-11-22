@@ -4,6 +4,7 @@ import '../../../models/weight_entry.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../utils/date_format.dart';
+import '../../../l10n/app_strings.dart';
 
 /// Card at the bottom of Home showing the latest weight, its date
 /// and a small line chart of the weight history.
@@ -24,7 +25,7 @@ class LatestWeightCard extends StatelessWidget {
     Widget weightInfo;
     if (entries.isEmpty) {
       weightInfo =  Text(
-        'No entries yet',
+        AppStrings.get('noEntriesYet'),
         style: TextStyle(fontSize: 14, color: AppColors.darkGreen),
       );
     } else {
@@ -60,7 +61,7 @@ class LatestWeightCard extends StatelessWidget {
             ],
           ),
           Text(
-            'Updated ${formatDate(latest.date)}',
+            '${AppStrings.get('updated')} ${formatDate(latest.date)}',
             style:  TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
@@ -97,7 +98,7 @@ class LatestWeightCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                  Text(
-                  'LATEST WEIGHT',
+                  AppStrings.get('latestWeight').toUpperCase(),
                   style: TextStyle(
                     fontFamily: 'Manrope',
                     fontSize: 11,

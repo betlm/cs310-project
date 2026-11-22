@@ -3,19 +3,22 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../data/app_state.dart';
+import '../../data/sample_data.dart';
+import '../../l10n/app_strings.dart';
 import '../../models/pet.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/species_colors.dart';
-import '../../widgets/form_field_decoration.dart';
-import '../../widgets/confirm_dialog.dart';
-import '../../widgets/primary_button.dart';
 import '../../utils/date_format.dart';
-import '../../data/sample_data.dart';
+import '../../utils/pet_format.dart';
+import '../../utils/sample_localization.dart';
+import '../../widgets/confirm_dialog.dart';
+import '../../widgets/form_field_decoration.dart';
+import '../../widgets/primary_button.dart';
 
-/// Create edit pet form
-/// Opened empty to add a new pet, or with a pet as the route argument to edit that pet
+/// Create / edit pet form.
 class PetFormScreen extends StatefulWidget {
   const PetFormScreen({super.key});
 
@@ -25,27 +28,28 @@ class PetFormScreen extends StatefulWidget {
 
 class _PetFormScreenState extends State<PetFormScreen> {
   final _formKey = GlobalKey<FormState>();
-  /// The pet being edited or not
+
   Pet? _editingPet;
-  ///the fields are filled only once
   bool _formInitialized = false;
-  // Photo
-  final _imagePicker = ImagePicker(); //galeriyi acar
-  static const int _maxImageBytes = 10 * 1024 * 1024; // 10 MB
+
+  final _imagePicker = ImagePicker();
+  static const int _maxImageBytes = 10 * 1024 * 1024;
+
   XFile? _selectedPhoto;
   bool _isPickingPhoto = false;
 
-  // Name and species
   final _nameController = TextEditingController();
   PetSpecies _selectedSpecies = PetSpecies.cat;
 
-  // Breed and age
   final _breedController = TextEditingController();
   final _birthDateController = TextEditingController();
   final _ageController = TextEditingController();
-  bool _useBirthDate = true; // true: Date of Birth tab, false: Approximate Age
+
+  bool _useBirthDate = true;
   DateTime? _birthDate;
+
   PetSex _selectedSex = PetSex.unknown;
+
   final _weightController = TextEditingController();
   final _microchipController = TextEditingController();
   final _tagController = TextEditingController();
@@ -61,7 +65,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
     _tagController.dispose();
     super.dispose();
   }
-  /// Reads the pet sent with the route from edit buton
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -70,14 +74,22 @@ class _PetFormScreenState extends State<PetFormScreen> {
     _formInitialized = true;
 
     final arguments = ModalRoute.of(context)?.settings.arguments;
-    if (arguments is! Pet) return; // no pet: creating a new one
+    if (arguments is! Pet) return;
 
     final pet = arguments;
     _editingPet = pet;
 
     _nameController.text = pet.name;
     _selectedSpecies = pet.species;
-    _breedController.text = pet.breed ?? '';
+
+    _breedController.text = pet.breed == null
+        ? ''
+        : SampleLocalization.text(
+            id: pet.id,
+            field: 'breed',
+            value: pet.breed!,
+          );
+
     _selectedSex = pet.sex;
     _microchipController.text = pet.microchipNumber ?? '';
     _tagController.text = pet.tagInfo ?? '';
@@ -86,7 +98,6 @@ class _PetFormScreenState extends State<PetFormScreen> {
       _weightController.text = pet.weightKg.toString();
     }
 
-    // Open the tab that matches the saved age info
     if (pet.birthDate != null) {
       _useBirthDate = true;
       _birthDate = pet.birthDate;
@@ -97,15 +108,13 @@ class _PetFormScreenState extends State<PetFormScreen> {
     }
   }
 
-    /// Shows a short message at the bottom of the screen
   void _showMessage(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
-  /// open the gallery and keeps photo if it is a JPG or PNG smaller than 10 MB
   Future<void> _pickPhoto() async {
     if (_isPickingPhoto) return;
 
@@ -114,30 +123,31 @@ class _PetFormScreenState extends State<PetFormScreen> {
     });
 
     try {
-      final photo = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-      );
-      // The user closed the gallery without choosing a photo
+      final photo = await _imagePicker.pickImage(source: ImageSource.gallery);
+
       if (photo == null) return;
-      // Only JPG and PNG files are allowed
+
       final extension = photo.name.split('.').last.toLowerCase();
+
       if (extension != 'jpg' && extension != 'jpeg' && extension != 'png') {
-        _showMessage('Please select a JPG or PNG image.');
+        _showMessage(AppStrings.get('invalidImageFormat'));
         return;
       }
-      // The photo must be smaller than 10 MB
+
       final size = await photo.length();
+
       if (size > _maxImageBytes) {
-        _showMessage('The image must be smaller than 10 MB.');
+        _showMessage(AppStrings.get('imageTooLarge'));
         return;
       }
 
       if (!mounted) return;
+
       setState(() {
         _selectedPhoto = photo;
       });
     } catch (e) {
-      _showMessage('Could not select the photo. Please try again.');
+      _showMessage(AppStrings.get('photoSelectionFailed'));
     } finally {
       if (mounted) {
         setState(() {
@@ -147,29 +157,48 @@ class _PetFormScreenState extends State<PetFormScreen> {
     }
   }
 
-  /// Check form - adds the new pet to the list shows "Pet Saved" and closes the form
   Future<void> _saveProfile() async {
-    // Runs every validator shows the red messages if something is wrong
     if (!_formKey.currentState!.validate()) {
-      _showMessage('Please fix the highlighted fields.');
+      _showMessage(AppStrings.get('fixFields'));
       return;
     }
 
-    // optional one - if empty = null
     final breed = _breedController.text.trim();
+    final existingPet = _editingPet;
+
+    final originalDisplayedBreed =
+        existingPet == null || existingPet.breed == null
+        ? null
+        : SampleLocalization.text(
+            id: existingPet.id,
+            field: 'breed',
+            value: existingPet.breed!,
+          );
+
+    final String? breedToSave;
+
+    if (existingPet != null && breed == originalDisplayedBreed) {
+      breedToSave = existingPet.breed;
+    } else {
+      breedToSave = breed.isEmpty ? null : breed;
+    }
+
     final microchip = _microchipController.text.trim();
     final tag = _tagController.text.trim();
+
     final weightText = _weightController.text.trim().replaceAll(',', '.');
+
     final ageText = _ageController.text.trim();
 
     double? weight;
+
     if (weightText.isNotEmpty) {
       weight = double.parse(weightText);
     }
 
-    // age selected
     DateTime? birthDate;
     int? approximateAge;
+
     if (_useBirthDate) {
       birthDate = _birthDate;
     } else if (ageText.isNotEmpty) {
@@ -178,10 +207,10 @@ class _PetFormScreenState extends State<PetFormScreen> {
 
     final pet = Pet(
       id: _editingPet?.id ?? 'pet-${DateTime.now().microsecondsSinceEpoch}',
-      avatarAsset: _editingPet?.avatarAsset, ///Keep the same id when editing; create a new  for a new pet
+      avatarAsset: _editingPet?.avatarAsset,
       name: _nameController.text.trim(),
       species: _selectedSpecies,
-      breed: breed.isEmpty ? null : breed,
+      breed: breedToSave,
       birthDate: birthDate,
       approximateAgeYears: approximateAge,
       sex: _selectedSex,
@@ -190,30 +219,28 @@ class _PetFormScreenState extends State<PetFormScreen> {
       tagInfo: tag.isEmpty ? null : tag,
     );
 
-      if (_editingPet == null) {
-      // New pet- add it to the list
+    if (_editingPet == null) {
       samplePets.add(pet);
     } else {
-      // Edited pet- replace the old one in the list
       final index = samplePets.indexWhere((p) => p.id == pet.id);
+
       if (index == -1) {
-        _showMessage('This pet could not be found.');
+        _showMessage(AppStrings.get('petNotFound'));
         return;
       }
+
       samplePets[index] = pet;
 
-      // Home shows activePet, so update it 
       if (activePet.id == pet.id) {
         activePet = pet;
       }
     }
 
-    // Green "Pet Saved" dialog with one OK button
     await showConfirmDialog(
       context: context,
-      title: 'Pet Saved',
-      message: '${pet.name} was saved successfully.',
-      confirmText: 'OK',
+      title: AppStrings.get('petSaved'),
+      message: AppStrings.get('petSavedMessage').replaceAll('{name}', pet.name),
+      confirmText: AppStrings.get('ok'),
       cancelText: null,
       isDanger: false,
       icon: Icons.check_circle_outline,
@@ -222,11 +249,12 @@ class _PetFormScreenState extends State<PetFormScreen> {
     if (!mounted) return;
     Navigator.pop(context, true);
   }
+
   Widget _label(String text, {bool required = false}) {
     final children = <Widget>[
       Text(
         text,
-        style:  TextStyle(
+        style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w700,
           color: AppColors.darkGreen,
@@ -253,36 +281,33 @@ class _PetFormScreenState extends State<PetFormScreen> {
     );
   }
 
-
-  /// Round dashed photo picker at the top of the form.
-  /// Shows the chosen photo, or a camera icon if there is none.
   Widget _photoPicker() {
     Widget circle;
 
     if (_selectedPhoto == null) {
       circle = CustomPaint(
-        foregroundPainter: _DashedCirclePainter(
-          color: AppColors.dashedBorder,
-        ),
+        foregroundPainter: _DashedCirclePainter(color: AppColors.dashedBorder),
         child: Container(
           width: 96,
           height: 96,
-          decoration:  BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: AppColors.cardBorder,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-               Icon(
+              Icon(
                 Icons.photo_camera_outlined,
                 size: 22,
                 color: AppColors.secondaryText,
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                _isPickingPhoto ? 'Opening...' : 'Add photo',
-                style:  TextStyle(
+                _isPickingPhoto
+                    ? AppStrings.get('opening')
+                    : AppStrings.get('addPhoto'),
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                   color: AppColors.secondaryText,
@@ -300,7 +325,6 @@ class _PetFormScreenState extends State<PetFormScreen> {
             backgroundColor: AppColors.cardBorder,
             backgroundImage: FileImage(File(_selectedPhoto!.path)),
           ),
-          // red X button
           Positioned(
             top: 2,
             right: 2,
@@ -310,7 +334,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                   _selectedPhoto = null;
                 });
               },
-              child:  CircleAvatar(
+              child: CircleAvatar(
                 radius: 12,
                 backgroundColor: AppColors.white,
                 child: Icon(Icons.close, size: 14, color: AppColors.danger),
@@ -324,13 +348,10 @@ class _PetFormScreenState extends State<PetFormScreen> {
     return Center(
       child: Column(
         children: [
-          GestureDetector(
-            onTap: _pickPhoto,
-            child: circle,
-          ),
+          GestureDetector(onTap: _pickPhoto, child: circle),
           const SizedBox(height: AppSpacing.sm),
-           Text(
-            'Optional',
+          Text(
+            AppStrings.get('optional'),
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
@@ -342,8 +363,6 @@ class _PetFormScreenState extends State<PetFormScreen> {
     );
   }
 
-
-  /// One species card: avatar and name- border:green
   Widget _speciesCard(PetSpecies species) {
     final isSelected = species == _selectedSpecies;
 
@@ -369,8 +388,9 @@ class _PetFormScreenState extends State<PetFormScreen> {
             CircleAvatar(
               radius: 19,
               backgroundColor: speciesColor(species),
-              backgroundImage:
-                  AssetImage('assets/images/default-${species.name}.png'),
+              backgroundImage: AssetImage(
+                'assets/images/default-${species.name}.png',
+              ),
             ),
             const SizedBox(width: 6),
             Flexible(
@@ -378,8 +398,8 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 fit: BoxFit.scaleDown,
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  speciesLabel(species),
-                  style:  TextStyle(
+                  localizedSpeciesLabel(species),
+                  style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                     color: AppColors.darkGreen,
@@ -393,7 +413,6 @@ class _PetFormScreenState extends State<PetFormScreen> {
     );
   }
 
-  /// Three species cards side by side.
   Widget _speciesRow(PetSpecies a, PetSpecies b, PetSpecies c) {
     return Row(
       children: [
@@ -405,20 +424,17 @@ class _PetFormScreenState extends State<PetFormScreen> {
       ],
     );
   }
-  /// icon is shown on the left suffix like kg on the right
+
   InputDecoration _inputDecoration(
     String hint, {
     IconData? icon,
     String? suffix,
   }) {
     return fieldDecoration(hint: hint, icon: icon).copyWith(
-      hintStyle:  TextStyle(fontSize: 15, color: AppColors.hint),
-      contentPadding: const EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 14,
-      ),
+      hintStyle: TextStyle(fontSize: 15, color: AppColors.hint),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       suffixText: suffix,
-      suffixStyle:  TextStyle(
+      suffixStyle: TextStyle(
         fontSize: 13,
         fontWeight: FontWeight.w700,
         color: AppColors.secondaryText,
@@ -426,8 +442,11 @@ class _PetFormScreenState extends State<PetFormScreen> {
     );
   }
 
-  /// One side of the "Date of Birth / Approximate Age" switch
-  Widget _ageTab(String text, {required bool selected, required VoidCallback onTap}) {
+  Widget _ageTab(
+    String text, {
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -438,11 +457,11 @@ class _PetFormScreenState extends State<PetFormScreen> {
             color: selected ? AppColors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
             boxShadow: selected
-                ?  [
+                ? [
                     BoxShadow(
                       color: AppColors.cardShadow,
                       blurRadius: 6,
-                      offset: Offset(0, 2),
+                      offset: const Offset(0, 2),
                     ),
                   ]
                 : null,
@@ -460,13 +479,12 @@ class _PetFormScreenState extends State<PetFormScreen> {
     );
   }
 
-  /// Opens the date picker and shows the chosen date 
   Future<void> _pickBirthDate() async {
     final picked = await showDatePicker(
       context: context,
       initialDate: _birthDate ?? DateTime.now(),
       firstDate: DateTime(1990),
-      lastDate: DateTime.now(), // a pet cannot be born in the future
+      lastDate: DateTime.now(),
     );
 
     if (picked == null || !mounted) return;
@@ -476,7 +494,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
       _birthDateController.text = formatDate(picked);
     });
   }
-  /// male female unknown buttons
+
   Widget _sexButton(String text, PetSex sex) {
     final isSelected = sex == _selectedSex;
 
@@ -512,11 +530,12 @@ class _PetFormScreenState extends State<PetFormScreen> {
   }
 
   void _changeWeight(double change) {
-    
     final text = _weightController.text.trim().replaceAll(',', '.');
+
     final current = double.tryParse(text) ?? 0;
 
     var newWeight = current + change;
+
     if (newWeight < 0) {
       newWeight = 0;
     }
@@ -524,7 +543,6 @@ class _PetFormScreenState extends State<PetFormScreen> {
     _weightController.text = newWeight.toStringAsFixed(1);
   }
 
-  /// küçük arttır azalt butonu sağ kenar
   Widget _weightStepper() {
     return Padding(
       padding: const EdgeInsets.only(right: 14),
@@ -541,7 +559,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               children: [
                 GestureDetector(
                   onTap: () => _changeWeight(0.1),
-                  child:  Icon(
+                  child: Icon(
                     Icons.keyboard_arrow_up,
                     size: 16,
                     color: AppColors.darkGreen,
@@ -549,7 +567,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                 ),
                 GestureDetector(
                   onTap: () => _changeWeight(-0.1),
-                  child:  Icon(
+                  child: Icon(
                     Icons.keyboard_arrow_down,
                     size: 16,
                     color: AppColors.darkGreen,
@@ -559,7 +577,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
             ),
           ),
           const SizedBox(width: 10),
-           Text(
+          Text(
             'kg',
             style: TextStyle(
               fontSize: 13,
@@ -572,59 +590,72 @@ class _PetFormScreenState extends State<PetFormScreen> {
     );
   }
 
-  // validators part
-
   String? _validateName(String? value) {
     final name = value?.trim() ?? '';
+
     if (name.isEmpty) {
-      return 'Please enter a name';
+      return AppStrings.get('petEnterName');
     }
+
     if (name.length > 30) {
-      return 'Name must be at most 30 characters';
+      return AppStrings.get('petNameTooLong');
     }
+
     return null;
   }
 
   String? _validateWeight(String? value) {
     final text = value?.trim().replaceAll(',', '.') ?? '';
-    if (text.isEmpty) return null; // optional
+
+    if (text.isEmpty) return null;
 
     final weight = double.tryParse(text);
+
     if (weight == null) {
-      return 'Enter a number like 4.8';
+      return AppStrings.get('petInvalidWeight');
     }
+
     if (weight <= 0) {
-      return 'Weight must be greater than 0';
+      return AppStrings.get('petWeightPositive');
     }
+
     if (weight > 200) {
-      return 'Please enter a realistic weight';
+      return AppStrings.get('petRealisticWeight');
     }
+
     return null;
   }
 
   String? _validateAge(String? value) {
     final text = value?.trim() ?? '';
-    if (text.isEmpty) return null; // optional
+
+    if (text.isEmpty) return null;
 
     final age = int.tryParse(text);
+
     if (age == null || age < 0) {
-      return 'Enter a whole number like 3';
+      return AppStrings.get('petInvalidAge');
     }
+
     if (age > 40) {
-      return 'Please enter a realistic age';
+      return AppStrings.get('petRealisticAge');
     }
+
     return null;
   }
 
   String? _validateMicrochip(String? value) {
     final text = value?.trim() ?? '';
-    if (text.isEmpty) return null; // optional
+
+    if (text.isEmpty) return null;
 
     if (!RegExp(r'^[0-9]+$').hasMatch(text)) {
-      return 'Use digits only';
+      return AppStrings.get('petDigitsOnly');
     }
+
     return null;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -635,11 +666,9 @@ class _PetFormScreenState extends State<PetFormScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        shape:  Border(
-          bottom: BorderSide(color: AppColors.cardBorder),
-        ),
-        title:  Text(
-          'Create / edit pet',
+        shape: Border(bottom: BorderSide(color: AppColors.cardBorder)),
+        title: Text(
+          AppStrings.get('createEditPet'),
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 20,
@@ -652,7 +681,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(
-            AppSpacing.md + AppSpacing.xs, // 20
+            AppSpacing.md + AppSpacing.xs,
             AppSpacing.lg,
             AppSpacing.md + AppSpacing.xs,
             AppSpacing.lg,
@@ -662,35 +691,35 @@ class _PetFormScreenState extends State<PetFormScreen> {
             const SizedBox(height: AppSpacing.lg),
 
             // Name
-            _label('Name', required: true),
+            _label(AppStrings.get('petFormName'), required: true),
             TextFormField(
               controller: _nameController,
               textCapitalization: TextCapitalization.words,
-              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
               validator: _validateName,
-              decoration: _inputDecoration('e.g. Misket'),
+              decoration: _inputDecoration(AppStrings.get('petNameHint')),
             ),
             const SizedBox(height: AppSpacing.lg),
 
             // Species
-            _label('Species', required: true),
+            _label(AppStrings.get('petFormSpecies'), required: true),
             _speciesRow(PetSpecies.cat, PetSpecies.dog, PetSpecies.bird),
             const SizedBox(height: 8),
             _speciesRow(PetSpecies.fish, PetSpecies.rabbit, PetSpecies.hamster),
             const SizedBox(height: AppSpacing.lg),
 
             // Breed
-            _label('Breed (Optional)'),
+            _label(AppStrings.get('petFormBreed')),
             TextFormField(
               controller: _breedController,
               textCapitalization: TextCapitalization.words,
-              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
-              decoration: _inputDecoration('e.g. Tabby'),
+              style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              decoration: _inputDecoration(AppStrings.get('petBreedHint')),
             ),
             const SizedBox(height: AppSpacing.lg),
 
-            // Age: birth date or approximate age
-            _label('Age information · Optional'),
+            // Age information
+            _label(AppStrings.get('petFormAgeInformation')),
             Container(
               padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
@@ -700,7 +729,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               child: Row(
                 children: [
                   _ageTab(
-                    'Date of Birth',
+                    AppStrings.get('dateOfBirth'),
                     selected: _useBirthDate,
                     onTap: () {
                       setState(() {
@@ -709,7 +738,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
                     },
                   ),
                   _ageTab(
-                    'Approximate Age',
+                    AppStrings.get('approximateAge'),
                     selected: !_useBirthDate,
                     onTap: () {
                       setState(() {
@@ -722,84 +751,83 @@ class _PetFormScreenState extends State<PetFormScreen> {
             ),
             const SizedBox(height: AppSpacing.md),
 
-            // Only the field of the selected tab is shown.
             if (_useBirthDate) ...[
-              _label('Date of Birth (Optional)'),
+              _label(AppStrings.get('petFormBirthDate')),
               TextFormField(
                 controller: _birthDateController,
                 readOnly: true,
                 onTap: _pickBirthDate,
-                style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
+                style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
                 decoration: _inputDecoration(
-                  'DD/MM/YYYY',
+                  appLanguage == 'tr' ? 'GG.AA.YYYY' : 'MM/DD/YYYY',
                   icon: Icons.calendar_today_outlined,
                 ),
               ),
             ] else ...[
-              _label('Approximate Age (Optional)'),
+              _label(AppStrings.get('petFormApproximateAge')),
               TextFormField(
                 controller: _ageController,
                 keyboardType: TextInputType.number,
-                style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
+                style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
                 validator: _validateAge,
-                decoration: _inputDecoration('e.g. 3', suffix: 'years'),
+                decoration: _inputDecoration(
+                  AppStrings.get('petAgeHint'),
+                  suffix: AppStrings.get('years'),
+                ),
               ),
             ],
             const SizedBox(height: AppSpacing.lg),
 
             // Sex
-            _label('Sex · Optional'),
+            _label(AppStrings.get('petFormSex')),
             Row(
               children: [
-                _sexButton('Male', PetSex.male),
+                _sexButton(AppStrings.get('male'), PetSex.male),
                 const SizedBox(width: 8),
-                _sexButton('Female', PetSex.female),
+                _sexButton(AppStrings.get('female'), PetSex.female),
                 const SizedBox(width: 8),
-                _sexButton('Unknown', PetSex.unknown),
+                _sexButton(AppStrings.get('unknown'), PetSex.unknown),
               ],
             ),
             const SizedBox(height: AppSpacing.lg),
 
             // Weight
-            _label('Weight (Optional)'),
+            _label(AppStrings.get('petFormWeight')),
             TextFormField(
               controller: _weightController,
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
               validator: _validateWeight,
-              decoration: _inputDecoration('4.8').copyWith(
-                suffixIcon: _weightStepper(),
-              ),
+              decoration: _inputDecoration('4.8')
+                  .copyWith(suffixIcon: _weightStepper()),
             ),
             const SizedBox(height: AppSpacing.lg),
 
             // Microchip
-            _label('Microchip Number (Optional)'),
+            _label(AppStrings.get('petFormMicrochip')),
             TextFormField(
               controller: _microchipController,
               keyboardType: TextInputType.number,
-              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
               validator: _validateMicrochip,
-              decoration: _inputDecoration('Number'),
+              decoration: _inputDecoration(AppStrings.get('petMicrochipHint')),
             ),
             const SizedBox(height: AppSpacing.lg),
 
             // Tag
-            _label('Tag Information (Optional)'),
+            _label(AppStrings.get('petFormTag')),
             TextFormField(
               controller: _tagController,
-              style:  TextStyle(fontSize: 15, color: AppColors.darkGreen),
-              decoration: _inputDecoration('Tag ID or identifying details'),
+              style: TextStyle(fontSize: 15, color: AppColors.darkGreen),
+              decoration: _inputDecoration(AppStrings.get('petTagHint')),
             ),
           ],
         ),
       ),
-      // White strip at the bottom with the Save button
-      // It stays visible while the form scrolls
       bottomNavigationBar: Container(
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           color: AppColors.white,
           border: Border(top: BorderSide(color: AppColors.cardBorder)),
         ),
@@ -813,7 +841,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
               AppSpacing.md,
             ),
             child: PrimaryButton(
-              text: 'Save profile',
+              text: AppStrings.get('saveProfile'),
               onPressed: _saveProfile,
             ),
           ),
@@ -823,9 +851,7 @@ class _PetFormScreenState extends State<PetFormScreen> {
   }
 }
 
-
-///
-///dashline func
+/// Dashed circle around the photo picker.
 class _DashedCirclePainter extends CustomPainter {
   final Color color;
 

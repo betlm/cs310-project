@@ -14,6 +14,7 @@ import '../../widgets/active_pet_bar.dart';
 import '../home/widgets/pet_chips_row.dart';
 import 'photo_detail_screen.dart';
 import 'photo_selection.dart';
+import '../../l10n/app_strings.dart';
 
 class PhotosScreen extends StatefulWidget {
   const PhotosScreen({super.key});
@@ -63,12 +64,12 @@ class _PhotosScreenState extends State<PhotosScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Select a pet',
+                  AppStrings.get('selectPet'),
                   style: AppTextStyles.headingSmall,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Choose whose album to view',
+                  AppStrings.get('chooseAlbum'),
                   style: AppTextStyles.bodyMedium.copyWith(
                     color: AppColors.secondaryText,
                   ),
@@ -88,9 +89,9 @@ class _PhotosScreenState extends State<PhotosScreen> {
                     Navigator.pop(sheetContext);
 
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
+                      SnackBar(
                         content: Text(
-                          'You can add a new pet from the Pets tab.',
+                          AppStrings.get('addPetFromPetsTab'),
                         ),
                       ),
                     );
@@ -127,8 +128,8 @@ class _PhotosScreenState extends State<PhotosScreen> {
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Photo added successfully!'),
+        SnackBar(
+          content: Text(AppStrings.get('photoAdded')),
         ),
       );
     } catch (error) {
@@ -136,7 +137,9 @@ class _PhotosScreenState extends State<PhotosScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Could not add photo: $error'),
+          content: Text(
+            '${AppStrings.get('couldNotAddPhoto')}: $error',
+          ),
         ),
       );
     }
@@ -214,8 +217,8 @@ class _PhotosScreenState extends State<PhotosScreen> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Photo deleted.'),
+        SnackBar(
+          content: Text(AppStrings.get('photoDeleted')),
         ),
       );
     }
@@ -281,8 +284,9 @@ class _PhotosScreenState extends State<PhotosScreen> {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                '$count ${count == 1 ? 'photo' : 'photos'} deleted successfully!',
-                style:  TextStyle(
+                AppStrings.get('photosDeleted')
+                    .replaceAll('{count}', count.toString()),
+                style: TextStyle(
                   fontFamily: 'DM Sans',
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -306,8 +310,9 @@ class _PhotosScreenState extends State<PhotosScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "${activePet.name}'s album",
-                style:  TextStyle(
+                AppStrings.get('petAlbum')
+                    .replaceAll('{name}', activePet.name),
+                style: TextStyle(
                   fontFamily: 'Manrope',
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
@@ -316,8 +321,9 @@ class _PhotosScreenState extends State<PhotosScreen> {
               ),
               const SizedBox(height: 6),
               Text(
-                '${_photos.length} photos',
-                style:  TextStyle(
+                AppStrings.get('photoCount')
+                    .replaceAll('{count}', _photos.length.toString()),
+                style: TextStyle(
                   fontFamily: 'DM Sans',
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -332,7 +338,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
           TextButton(
             onPressed: _cancelSelection,
             child:  Text(
-              'Cancel',
+              AppStrings.get('cancel'),
               style: TextStyle(
                 fontFamily: 'DM Sans',
                 fontWeight: FontWeight.w700,
@@ -355,7 +361,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                 _startSelection();
               }
             },
-            itemBuilder: (context) =>  [
+            itemBuilder: (context) => [
               PopupMenuItem<String>(
                 value: 'select',
                 child: Row(
@@ -367,7 +373,8 @@ class _PhotosScreenState extends State<PhotosScreen> {
                     ),
                     SizedBox(width: 12),
                     Text(
-                      'Select Photos',
+                      AppStrings.get('selectPhotos'),
+                      
                       style: TextStyle(
                         fontFamily: 'DM Sans',
                         fontWeight: FontWeight.w700,
@@ -398,12 +405,12 @@ class _PhotosScreenState extends State<PhotosScreen> {
             ),
             const SizedBox(height: 14),
             Text(
-              'No photos yet',
+              AppStrings.get('noPhotosYet'),
               style: AppTextStyles.headingSmall,
             ),
             const SizedBox(height: 8),
             Text(
-              'Add your first photo using Camera or Gallery.',
+              AppStrings.get('noPhotosMessage'),
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.secondaryText,
@@ -488,7 +495,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
           ),
         ),
         title:  Text(
-          'Photos',
+          AppStrings.get('photos'),
           style: TextStyle(
             fontFamily: 'Manrope',
             fontSize: 20,
@@ -554,7 +561,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                 child: Row(
                   children: [
                     _bottomButton(
-                      label: 'Camera',
+                      label: AppStrings.get('camera'),
                       icon: Icons.camera_alt_outlined,
                       onPressed: () {
                         _addPhoto(ImageSource.camera);
@@ -562,7 +569,7 @@ class _PhotosScreenState extends State<PhotosScreen> {
                     ),
                     const SizedBox(width: 12),
                     _bottomButton(
-                      label: 'Gallery',
+                      label: AppStrings.get('gallery'),
                       icon: Icons.image_outlined,
                       onPressed: () {
                         _addPhoto(ImageSource.gallery);

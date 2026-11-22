@@ -1,17 +1,41 @@
 import '../models/pet.dart';
 import '../theme/species_colors.dart';
+import '../l10n/app_strings.dart';
+import 'sample_localization.dart';
 
-/// Builds a line with animal and its infos like "Cat · 3 years · 4.8 kg" for a pet
-/// Age and weight are skipped if they are unknown
+/// Returns the translated species name.
+String localizedSpeciesLabel(PetSpecies species) {
+  final speciesName = speciesLabel(species).toLowerCase();
+
+  switch (speciesName) {
+    case 'cat':
+      return AppStrings.get('cat');
+    case 'dog':
+      return AppStrings.get('dog');
+    case 'bird':
+      return AppStrings.get('bird');
+    case 'fish':
+      return AppStrings.get('fish');
+    case 'rabbit':
+      return AppStrings.get('rabbit');
+    case 'hamster':
+      return AppStrings.get('hamster');
+    default:
+      return speciesLabel(species);
+  }
+}
+
+/// Builds a line like "Cat · 3 years · 4.8 kg".
 String petSubtitle(Pet pet) {
-  var text = speciesLabel(pet.species);
+  var text = localizedSpeciesLabel(pet.species);
 
   final age = pet.ageInYears;
+
   if (age != null) {
     if (age == 1) {
-      text = '$text · 1 year';
+      text = '$text · ${AppStrings.get('oneYear')}';
     } else {
-      text = '$text · $age years';
+      text = '$text · $age ${AppStrings.get('years')}';
     }
   }
 
@@ -22,27 +46,29 @@ String petSubtitle(Pet pet) {
   return text;
 }
 
-
-/// Builds a line like "Tabby cat · 3 years" for the My pets list
-/// If the breed is empty, the species name is used like "rabbit"
-/// If the age is unknown, "Age not set" is shown
+/// Builds a line like "Tabby cat · 3 years" for the My Pets list.
 String petBreedAndAge(Pet pet) {
-  // Breed is optional so  back to the species name
   String kind;
+
   if (pet.breed == null || pet.breed!.trim().isEmpty) {
-    kind = speciesLabel(pet.species);
+    kind = localizedSpeciesLabel(pet.species);
   } else {
-    kind = pet.breed!;
+    kind = SampleLocalization.text(
+      id: pet.id,
+      field: 'breed',
+      value: pet.breed!,
+    );
   }
 
   final age = pet.ageInYears;
   String ageText;
+
   if (age == null) {
-    ageText = 'Age not set';
+    ageText = AppStrings.get('ageNotSet');
   } else if (age == 1) {
-    ageText = '1 year';
+    ageText = AppStrings.get('oneYear');
   } else {
-    ageText = '$age years';
+    ageText = '$age ${AppStrings.get('years')}';
   }
 
   return '$kind · $ageText';

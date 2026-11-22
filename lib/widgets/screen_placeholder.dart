@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_spacing.dart';
+import '../data/app_state.dart';
 
 /// Temporary content for screens that have not been built yet.
 ///
@@ -29,7 +30,9 @@ class ScreenPlaceholder extends StatelessWidget {
         Text(title, style: textTheme.titleLarge, textAlign: TextAlign.center),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          'This screen is not built yet.',
+          appLanguage == 'tr'
+              ? 'Bu ekran henüz hazırlanmadı.'
+              : 'This screen is not built yet.',
           style: textTheme.bodyMedium,
           textAlign: TextAlign.center,
         ),

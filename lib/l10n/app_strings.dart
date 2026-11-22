@@ -1,3 +1,5 @@
+import '../data/app_state.dart';
+
 class AppStrings {
   AppStrings._();
 
@@ -66,6 +68,7 @@ class AppStrings {
       'petSaved': 'Pet Saved',
       'noPetsYet': 'No pets yet',
       'noPetsMessage': 'Add your first pet to start tracking their care.',
+
       // My pets
       'myPetsTitle': 'My pets',
       'selectProfile': 'Select the profile whose details you want to view.',
@@ -74,8 +77,7 @@ class AppStrings {
       'addAnotherCompanion': 'Add another companion',
       'ageNotSet': 'Age not set',
       'needOnePet': 'You need at least one pet.',
-      'deletePetRecords':
-          'All reminders, health records, weights, supplies and photos of this pet will be removed too.',
+      'deletePetRecords': 'All reminders, health records, weights, supplies and photos of this pet will be removed too.',
       'petDeleted': 'was deleted.',
 
       // Pet form
@@ -120,6 +122,33 @@ class AppStrings {
       'imageTooLarge': 'The image must be smaller than 10 MB.',
       'photoError': 'Could not select the photo. Please try again.',
 
+      // Additional pet form translations
+      'petEnterName': 'Please enter a name',
+      'petNameTooLong': 'Name must be at most 30 characters',
+      'petInvalidWeight': 'Enter a number like 4.8',
+      'petWeightPositive': 'Weight must be greater than 0',
+      'petRealisticWeight': 'Please enter a realistic weight',
+      'petInvalidAge': 'Enter a whole number like 3',
+      'petRealisticAge': 'Please enter a realistic age',
+      'petDigitsOnly': 'Use digits only',
+      'petFormName': 'Name',
+      'petFormSpecies': 'Species',
+      'petFormBreed': 'Breed (Optional)',
+      'petFormAgeInformation': 'Age information · Optional',
+      'petFormBirthDate': 'Date of Birth (Optional)',
+      'petFormApproximateAge': 'Approximate Age (Optional)',
+      'petFormSex': 'Sex · Optional',
+      'petFormWeight': 'Weight (Optional)',
+      'petFormMicrochip': 'Microchip Number (Optional)',
+      'petFormTag': 'Tag Information (Optional)',
+      'petNameHint': 'e.g. Misket',
+      'petBreedHint': 'e.g. Tabby',
+      'petAgeHint': 'e.g. 3',
+      'petMicrochipHint': 'Number',
+      'petTagHint': 'Tag ID or identifying details',
+      'invalidImageFormat': 'Please select a JPG or PNG image.',
+      'photoSelectionFailed': 'Could not select the photo. Please try again.',
+
       // Pet details sheet
       'petDetailsAge': 'Age',
       'petDetailsWeight': 'Weight',
@@ -129,8 +158,7 @@ class AppStrings {
       'oneYear': '1 year',
       'edit': 'Edit',
       'deletePetNameTitle': 'Delete {name}?',
-      'deletePetNameRecords':
-      'All reminders, health records, weights, supplies and photos of {name} will be removed too. This action cannot be undone.',
+      'deletePetNameRecords': 'All reminders, health records, weights, supplies and photos of {name} will be removed too. This action cannot be undone.',
       'petNameDeleted': '{name} was deleted.',
 
       // Pet switcher and active pet bar
@@ -143,11 +171,9 @@ class AppStrings {
       'clearPurchased': 'Clear purchased',
       'clear': 'Clear',
       'clearPurchasedTitle': 'Clear purchased items?',
-      'clearPurchasedMessage':
-      'All items marked as purchased will be removed from the list. This action cannot be undone.',
+      'clearPurchasedMessage': 'All items marked as purchased will be removed from the list. This action cannot be undone.',
       'deleteItemTitle': 'Delete {name}?',
-      'deleteItemMessage':
-          'This item will be permanently removed from the supply list. This action cannot be undone.',
+      'deleteItemMessage': 'This item will be permanently removed from the supply list. This action cannot be undone.',
       'noSuppliesYet': 'No supplies yet',
       'noSuppliesMessage': 'Add food, litter or toys to your shopping list.',
       'purchased': 'PURCHASED',
@@ -186,8 +212,7 @@ class AppStrings {
       'cleaning': 'Cleaning',
       'cleaningSubtitle': 'Hygiene needs',
       'goToPetlebi': 'Go to Petlebi',
-      'petlebiNote':
-          'Opens petlebi.com in your browser. Prices and stock are shown on Petlebi.',
+      'petlebiNote': 'Opens petlebi.com in your browser. Prices and stock are shown on Petlebi.',
       'petlebiError': 'Could not open Petlebi.',
 
       // Preferences
@@ -234,7 +259,7 @@ class AppStrings {
       'allowNotifications': 'Allow local reminder notifications',
       'notificationsSubtitle': 'Alerts for medication, care, and visits.',
       'notificationsInfo':
-      'Notification delivery depends on your device settings.',
+          'Notification delivery depends on your device settings.',
       'done': 'Done',
 
       // Welcome and account
@@ -252,8 +277,8 @@ class AppStrings {
       'enterNewPassword': 'Please enter a password',
       'passwordMin8': 'Password must be at least 8 characters',
       'forgotPassword': 'Forgot password?',
-      'noAccount': "Don't have an account yet? ",
-      'haveAccount': 'Already have an account? ',
+      'noAccount': "Don't have an account yet?",
+      'haveAccount': 'Already have an account?',
       'joinPetPocket': 'Join PetPocket',
       'signUpSubtitle': 'Start your pet care journey today.',
       'enterYourNameHint': 'Enter your name',
@@ -287,8 +312,7 @@ class AppStrings {
       'noHealthRecords': 'No health records yet',
       'noHealthRecordsMessage': 'Add the first health record for {name}.',
       'deleteRecordTitle': 'Delete {name}?',
-      'deleteRecordMessage':
-          'This health record will be permanently removed. This action cannot be undone.',
+      'deleteRecordMessage': 'This health record will be permanently removed. This action cannot be undone.',
 
       // Health record form
       'createEditRecord': 'Create / edit record',
@@ -316,8 +340,7 @@ class AppStrings {
       'recentEntries': 'Recent entries',
       'noWeightEntries': 'No weight entries yet.',
       'deleteWeightTitle': 'Delete weight entry?',
-      'deleteWeightMessage':
-          'This weight entry will be permanently removed. This action cannot be undone.',
+      'deleteWeightMessage': 'This weight entry will be permanently removed. This action cannot be undone.',
       'addWeightEntryTitle': 'Add Weight Entry',
       'editWeightEntryTitle': 'Edit Weight Entry',
       'weightKg': 'Weight (kg)',
@@ -355,8 +378,7 @@ class AppStrings {
       'addReminder': 'Add reminder',
       'addReminderSubtitle': 'Schedule care, medication, or visits',
       'deleteReminderTitle': 'Delete {name}?',
-      'deleteReminderMessage':
-          'This reminder will be permanently removed. This action cannot be undone.',
+      'deleteReminderMessage': 'This reminder will be permanently removed. This action cannot be undone.',
 
       // Reminder form
       'addReminderTitle': 'Add Reminder',
@@ -369,8 +391,7 @@ class AppStrings {
       'time': 'Time',
       'selectDate': 'Select date',
       'selectTime': 'Select time',
-      'reminderInfo':
-          'One-time reminders require Date and Time. Daily reminders use Time only and repeat every day.',
+      'reminderInfo': 'One-time reminders require Date and Time. Daily reminders use Time only and repeat every day.',
       'sendNotification': 'Send notification',
       'sendNotificationSubtitle':
           'Get notified when it is time for this reminder',
@@ -399,21 +420,59 @@ class AppStrings {
       'close': 'Close',
       'deletePhoto': 'Delete photo',
       'deletePhotoTitle': 'Delete Photo?',
-      'deletePhotoMessage':
-          'This photo will be permanently removed from the album.\nThis action cannot be undone.',
+      'deletePhotoMessage': 'This photo will be permanently removed from the album.\nThis action cannot be undone.',
       'deletePhotosTitle': 'Delete Photos?',
-      'deletePhotosMessage':
-          '{count} selected photos will be permanently removed from the album.\nThis action cannot be undone.',
+      'deletePhotosMessage': '{count} selected photos will be permanently removed from the album.\nThis action cannot be undone.',
       'selectedCount': '{count} selected',
       'deleteSelected': 'Delete Selected ({count})',
 
       // Kurtaran Ev
       'lookingForFriend': 'Looking for a new friend?',
-      'rescueSubtitle': 'Adopt a pet or support shelter animals at Kurtaran Ev.',
+      'rescueSubtitle':
+          'Adopt a pet or support shelter animals at Kurtaran Ev.',
       'adopt': 'Adopt',
       'donate': 'Donate',
       'kurtaranEvError': 'Could not open Kurtaran Ev.',
+
+      // Sample pet breeds
+      'sampleBreedTabby': 'Tabby',
+      'sampleBreedGoldenRetriever': 'Golden retriever',
+      'sampleBreedBudgerigar': 'Budgerigar',
+
+      // Sample reminder titles
+      'sampleCombinationVaccine': 'Combination vaccine',
+      'sampleInternalParasiteMedicine': 'Internal parasite medicine',
+      'sampleEveningMeal': 'Evening meal',
+      'sampleMorningMedication': 'Morning medication',
+      'sampleVetCheckUp': 'Vet check-up',
+      'sampleMorningWalk': 'Morning walk',
+      'sampleRefillSeeds': 'Refill seeds',
+
+      // Sample health record titles
+      'sampleRoutineCheckUp': 'Routine check-up',
+      'sampleEyeDrops': 'Eye drops',
+      'sampleExternalParasiteTreatment': 'External parasite treatment',
+      'sampleAnnualVetVisit': 'Annual vet visit',
+
+      // Sample health record notes
+      'sampleGeneralExaminationNote':
+          'General examination completed. Everything is normal.',
+      'sampleAnnualBoosterNote': 'Annual booster dose administered.',
+      'sampleSevenDayMedicationNote': 'Seven-day medication course completed.',
+      'sampleMonthlyDropsNote': 'Monthly drops administered.',
+
+      // Sample supply names
+      'sampleDryFood': 'Dry food',
+      'sampleCatLitter': 'Cat litter',
+      'sampleGroomingBrush': 'Grooming brush',
+      'sampleTreats': 'Treats',
+      'sampleDogTreats': 'Dog treats',
+
+      // Sample supply notes and units
+      'sampleGrainFree': 'Grain-free',
+      'samplePack': 'pack',
     },
+
     'tr': {
       'appName': 'PetPocket',
       'welcome': 'PetPocket\'a Hoş Geldiniz',
@@ -477,7 +536,8 @@ class AppStrings {
       'deletePetMessage': 'Bu hayvan kalıcı olarak silinecek.',
       'petSaved': 'Hayvan Kaydedildi',
       'noPetsYet': 'Henüz hayvan yok',
-      'noPetsMessage': 'Bakımını takip etmeye başlamak için ilk hayvanını ekle.',
+      'noPetsMessage':
+          'Bakımını takip etmeye başlamak için ilk hayvanını ekle.',
 
       // My pets
       'myPetsTitle': 'Hayvanlarım',
@@ -487,8 +547,7 @@ class AppStrings {
       'addAnotherCompanion': 'Yeni bir dost ekle',
       'ageNotSet': 'Yaş girilmedi',
       'needOnePet': 'En az bir hayvanın olmalı.',
-      'deletePetRecords':
-          'Bu hayvanın tüm hatırlatıcıları, sağlık kayıtları, kiloları, malzemeleri ve fotoğrafları da silinecek.',
+      'deletePetRecords': 'Bu hayvanın tüm hatırlatıcıları, sağlık kayıtları, kiloları, malzemeleri ve fotoğrafları da silinecek.',
       'petDeleted': 'silindi.',
 
       // Pet form
@@ -533,6 +592,33 @@ class AppStrings {
       'imageTooLarge': 'Resim 10 MB\'tan küçük olmalı.',
       'photoError': 'Fotoğraf seçilemedi. Lütfen tekrar dene.',
 
+      // Ek hayvan formu çevirileri
+      'petEnterName': 'Lütfen bir isim girin',
+      'petNameTooLong': 'İsim en fazla 30 karakter olabilir',
+      'petInvalidWeight': '4.8 gibi bir sayı girin',
+      'petWeightPositive': 'Ağırlık 0’dan büyük olmalıdır',
+      'petRealisticWeight': 'Lütfen geçerli bir ağırlık girin',
+      'petInvalidAge': '3 gibi bir tam sayı girin',
+      'petRealisticAge': 'Lütfen geçerli bir yaş girin',
+      'petDigitsOnly': 'Yalnızca rakam kullanın',
+      'petFormName': 'İsim',
+      'petFormSpecies': 'Tür',
+      'petFormBreed': 'Cins (İsteğe bağlı)',
+      'petFormAgeInformation': 'Yaş bilgisi · İsteğe bağlı',
+      'petFormBirthDate': 'Doğum tarihi (İsteğe bağlı)',
+      'petFormApproximateAge': 'Yaklaşık yaş (İsteğe bağlı)',
+      'petFormSex': 'Cinsiyet · İsteğe bağlı',
+      'petFormWeight': 'Ağırlık (İsteğe bağlı)',
+      'petFormMicrochip': 'Mikroçip numarası (İsteğe bağlı)',
+      'petFormTag': 'Künye bilgisi (İsteğe bağlı)',
+      'petNameHint': 'Örn. Misket',
+      'petBreedHint': 'Örn. Tekir',
+      'petAgeHint': 'Örn. 3',
+      'petMicrochipHint': 'Numara',
+      'petTagHint': 'Künye numarası veya ayırt edici bilgiler',
+      'invalidImageFormat': 'Lütfen JPG veya PNG formatında bir görsel seçin.',
+      'photoSelectionFailed': 'Fotoğraf seçilemedi. Lütfen tekrar deneyin.',
+
       // Pet details sheet
       'petDetailsAge': 'Yaş',
       'petDetailsWeight': 'Kilo',
@@ -542,8 +628,7 @@ class AppStrings {
       'oneYear': '1 yaş',
       'edit': 'Düzenle',
       'deletePetNameTitle': '{name} silinsin mi?',
-      'deletePetNameRecords':
-      '{name} için tüm hatırlatıcılar, sağlık kayıtları, kilolar, malzemeler ve fotoğraflar da silinecek. Bu işlem geri alınamaz.',
+      'deletePetNameRecords': '{name} için tüm hatırlatıcılar, sağlık kayıtları, kilolar, malzemeler ve fotoğraflar da silinecek. Bu işlem geri alınamaz.',
       'petNameDeleted': '{name} silindi.',
 
       // Pet switcher and active pet bar
@@ -556,11 +641,9 @@ class AppStrings {
       'clearPurchased': 'Alınanları temizle',
       'clear': 'Temizle',
       'clearPurchasedTitle': 'Alınan ürünler temizlensin mi?',
-      'clearPurchasedMessage':
-      'Alındı olarak işaretlenen tüm ürünler listeden kaldırılacak. Bu işlem geri alınamaz.',
+      'clearPurchasedMessage': 'Alındı olarak işaretlenen tüm ürünler listeden kaldırılacak. Bu işlem geri alınamaz.',
       'deleteItemTitle': '{name} silinsin mi?',
-      'deleteItemMessage':
-          'Bu ürün malzeme listesinden kalıcı olarak silinecek. Bu işlem geri alınamaz.',
+      'deleteItemMessage': 'Bu ürün malzeme listesinden kalıcı olarak silinecek. Bu işlem geri alınamaz.',
       'noSuppliesYet': 'Henüz malzeme yok',
       'noSuppliesMessage': 'Alışveriş listene mama, kum veya oyuncak ekle.',
       'purchased': 'ALINANLAR',
@@ -599,8 +682,7 @@ class AppStrings {
       'cleaning': 'Temizlik',
       'cleaningSubtitle': 'Hijyen ihtiyaçları',
       'goToPetlebi': 'Petlebi\'ye git',
-      'petlebiNote':
-          'petlebi.com tarayıcında açılır. Fiyat ve stok bilgisi Petlebi\'de gösterilir.',
+      'petlebiNote': 'petlebi.com tarayıcında açılır. Fiyat ve stok bilgisi Petlebi\'de gösterilir.',
       'petlebiError': 'Petlebi açılamadı.',
 
       // Preferences
@@ -618,8 +700,7 @@ class AppStrings {
       'on': 'Açık',
       'off': 'Kapalı',
       'signOut': 'Çıkış yap',
-      'versionNote':
-          'PetPocket v1.0.0 · Bu uygulama tıbbi tavsiye vermez.',
+      'versionNote': 'PetPocket v1.0.0 · Bu uygulama tıbbi tavsiye vermez.',
 
       // User info sheet
       'userInformation': 'Kullanıcı Bilgileri',
@@ -646,15 +727,12 @@ class AppStrings {
       // Notifications sheet
       'allowNotifications': 'Yerel hatırlatıcı bildirimlerine izin ver',
       'notificationsSubtitle': 'İlaç, bakım ve ziyaret uyarıları.',
-      'notificationsInfo':
-          'Bildirimlerin gelmesi cihaz ayarlarına bağlıdır.',
+      'notificationsInfo': 'Bildirimlerin gelmesi cihaz ayarlarına bağlıdır.',
       'done': 'Tamam',
-
 
       // Welcome and account
       'welcomeHeadline': 'Tüm bakım bilgileri,\ntek cepte.',
-      'welcomeSubtitle':
-          'Evcil hayvanının sağlığını, hatırlatıcılarını ve malzemelerini kolayca takip et.',
+      'welcomeSubtitle': 'Evcil hayvanının sağlığını, hatırlatıcılarını ve malzemelerini kolayca takip et.',
       'signIn': 'Giriş yap',
       'createAccount': 'Hesap oluştur',
       'welcomeBack': 'Tekrar hoş geldin',
@@ -666,8 +744,8 @@ class AppStrings {
       'enterNewPassword': 'Lütfen bir şifre gir',
       'passwordMin8': 'Şifre en az 8 karakter olmalı',
       'forgotPassword': 'Şifreni mi unuttun?',
-      'noAccount': 'Henüz hesabın yok mu? ',
-      'haveAccount': 'Zaten hesabın var mı? ',
+      'noAccount': 'Henüz hesabın yok mu?',
+      'haveAccount': 'Zaten hesabın var mı?',
       'joinPetPocket': 'PetPocket\'a katıl',
       'signUpSubtitle': 'Evcil hayvan bakım yolculuğuna bugün başla.',
       'enterYourNameHint': 'Adını gir',
@@ -783,10 +861,10 @@ class AppStrings {
       'time': 'Saat',
       'selectDate': 'Tarih seç',
       'selectTime': 'Saat seç',
-      'reminderInfo':
-          'Tek seferlik hatırlatıcılar tarih ve saat ister. Günlük hatırlatıcılar sadece saat kullanır ve her gün tekrarlanır.',
+      'reminderInfo': 'Tek seferlik hatırlatıcılar tarih ve saat ister. Günlük hatırlatıcılar sadece saat kullanır ve her gün tekrarlanır.',
       'sendNotification': 'Bildirim gönder',
-      'sendNotificationSubtitle': 'Bu hatırlatıcının zamanı gelince bildirim al',
+      'sendNotificationSubtitle':
+          'Bu hatırlatıcının zamanı gelince bildirim al',
       'addShortNote': 'Kısa bir not ekle...',
       'enterReminderName': 'Lütfen bir hatırlatıcı adı gir',
       'selectDateError': 'Lütfen bir tarih seç',
@@ -797,7 +875,8 @@ class AppStrings {
       'petAlbum': '{name} albümü',
       'photoCount': '{count} fotoğraf',
       'chooseAlbum': 'Kimin albümünü görmek istediğini seç',
-      'addPetFromPetsTab': 'Yeni hayvanı Pets sekmesinden ekleyebilirsin.',
+      'addPetFromPetsTab':
+          'Yeni hayvanı Hayvanlarım sekmesinden ekleyebilirsin.',
       'selectPhotos': 'Fotoğrafları Seç',
       'noPhotosYet': 'Henüz fotoğraf yok',
       'noPhotosMessage': 'İlk fotoğrafını Kamera veya Galeri ile ekle.',
@@ -812,31 +891,62 @@ class AppStrings {
       'close': 'Kapat',
       'deletePhoto': 'Fotoğrafı sil',
       'deletePhotoTitle': 'Fotoğraf silinsin mi?',
-      'deletePhotoMessage':
-          'Bu fotoğraf albümden kalıcı olarak silinecek.\nBu işlem geri alınamaz.',
+      'deletePhotoMessage': 'Bu fotoğraf albümden kalıcı olarak silinecek.\nBu işlem geri alınamaz.',
       'deletePhotosTitle': 'Fotoğraflar silinsin mi?',
-      'deletePhotosMessage':
-          'Seçilen {count} fotoğraf albümden kalıcı olarak silinecek.\nBu işlem geri alınamaz.',
+      'deletePhotosMessage': 'Seçilen {count} fotoğraf albümden kalıcı olarak silinecek.\nBu işlem geri alınamaz.',
       'selectedCount': '{count} seçildi',
       'deleteSelected': 'Seçilenleri Sil ({count})',
 
       // Kurtaran Ev
       'lookingForFriend': 'Yeni bir dost mu arıyorsun?',
-      'rescueSubtitle':
-          'Kurtaran Ev\'den bir hayvan sahiplen ya da barınaktaki hayvanlara destek ol.',
+      'rescueSubtitle': 'Kurtaran Ev\'den bir hayvan sahiplen ya da barınaktaki hayvanlara destek ol.',
       'adopt': 'Sahiplen',
       'donate': 'Bağış yap',
       'kurtaranEvError': 'Kurtaran Ev açılamadı.',
 
+      // Örnek hayvan cinsleri
+      'sampleBreedTabby': 'Tekir',
+      'sampleBreedGoldenRetriever': 'Golden retriever',
+      'sampleBreedBudgerigar': 'Muhabbet kuşu',
+
+      // Örnek hatırlatıcı başlıkları
+      'sampleCombinationVaccine': 'Karma aşı',
+      'sampleInternalParasiteMedicine': 'İç parazit ilacı',
+      'sampleEveningMeal': 'Akşam yemeği',
+      'sampleMorningMedication': 'Sabah ilacı',
+      'sampleVetCheckUp': 'Veteriner kontrolü',
+      'sampleMorningWalk': 'Sabah yürüyüşü',
+      'sampleRefillSeeds': 'Yemleri yenile',
+
+      // Örnek sağlık kaydı başlıkları
+      'sampleRoutineCheckUp': 'Rutin kontrol',
+      'sampleEyeDrops': 'Göz damlası',
+      'sampleExternalParasiteTreatment': 'Dış parazit tedavisi',
+      'sampleAnnualVetVisit': 'Yıllık veteriner ziyareti',
+
+      // Örnek sağlık kaydı notları
+      'sampleGeneralExaminationNote':
+          'Genel muayene tamamlandı. Her şey normal.',
+      'sampleAnnualBoosterNote': 'Yıllık hatırlatma dozu uygulandı.',
+      'sampleSevenDayMedicationNote': 'Yedi günlük ilaç tedavisi tamamlandı.',
+      'sampleMonthlyDropsNote': 'Aylık damla uygulandı.',
+
+      // Örnek malzeme adları
+      'sampleDryFood': 'Kuru mama',
+      'sampleCatLitter': 'Kedi kumu',
+      'sampleGroomingBrush': 'Tüy bakım fırçası',
+      'sampleTreats': 'Ödül maması',
+      'sampleDogTreats': 'Köpek ödül maması',
+
+      // Örnek malzeme notları ve birimleri
+      'sampleGrainFree': 'Tahılsız',
+      'samplePack': 'paket',
     },
   };
 
-  static String get(
-    String key, {
-    String languageCode = 'en',
-  }) {
-    return _strings[languageCode]?[key] ??
-        _strings['en']?[key] ??
-        key;
+  static String get(String key, {String? languageCode}) {
+    final selectedLanguage = languageCode ?? appLanguage;
+
+    return _strings[selectedLanguage]?[key] ?? _strings['en']?[key] ?? key;
   }
 }

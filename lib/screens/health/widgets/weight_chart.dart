@@ -1,10 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 
 import '../../../models/weight_entry.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_text_styles.dart';
+import '../../../l10n/app_strings.dart';
 
 class WeightChart extends StatefulWidget {
   final List<WeightEntry> entries;
@@ -19,9 +21,24 @@ class _WeightChartState extends State<WeightChart> {
 
   @override
   Widget build(BuildContext context) {
-    final endDate = widget.entries.isEmpty
-        ? DateTime.now()
-        : widget.entries.last.date;
+    final monthLabels = [
+      AppStrings.get('jan'),
+      AppStrings.get('feb'),
+      AppStrings.get('mar'),
+      AppStrings.get('apr'),
+      AppStrings.get('may'),
+      AppStrings.get('jun'),
+      AppStrings.get('jul'),
+      AppStrings.get('aug'),
+      AppStrings.get('sep'),
+      AppStrings.get('oct'),
+      AppStrings.get('nov'),
+      AppStrings.get('dec'),
+    ];
+
+  final endDate = widget.entries.isEmpty
+      ? DateTime.now()
+      : widget.entries.last.date;
 
     final firstMonth = DateTime(endDate.year, endDate.month - 5, 1);
 
@@ -48,7 +65,7 @@ class _WeightChartState extends State<WeightChart> {
             children: [
               Expanded(
                 child: Text(
-                  'Weight change',
+                  AppStrings.get('weightChange'),
                   style: AppTextStyles.bodyLarge.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w800,
@@ -56,7 +73,7 @@ class _WeightChartState extends State<WeightChart> {
                 ),
               ),
               Text(
-                'Last 6 months',
+                AppStrings.get('last6Months'),
                 style: AppTextStyles.caption.copyWith(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -72,7 +89,7 @@ class _WeightChartState extends State<WeightChart> {
             child: chartEntries.isEmpty
                 ? Center(
                     child: Text(
-                      'No weight data yet',
+                      AppStrings.get('noWeightData'),
                       style: AppTextStyles.bodyMedium,
                     ),
                   )
@@ -120,6 +137,7 @@ class _WeightChartState extends State<WeightChart> {
                             entries: chartEntries,
                             firstMonth: firstMonth,
                             selectedEntryId: _selectedEntry?.id,
+                            monthLabels: monthLabels,
                           ),
                         ),
                       );
@@ -135,28 +153,16 @@ class _WeightChartPainter extends CustomPainter {
   final List<WeightEntry> entries;
   final DateTime firstMonth;
   final String? selectedEntryId;
+  final List<String> monthLabels;
 
   const _WeightChartPainter({
     required this.entries,
     required this.firstMonth,
     this.selectedEntryId,
+    required this.monthLabels,
   });
 
-  static const _months = [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec',
-  ];
-
+  
   @override
   void paint(Canvas canvas, Size size) {
     const left = 32.0;
@@ -214,7 +220,7 @@ class _WeightChartPainter extends CustomPainter {
       final month = DateTime(firstMonth.year, firstMonth.month + i);
 
       drawLabel(
-        _months[month.month - 1],
+        monthLabels[month.month - 1],
         monthX(i) - 11,
         size.height - 15,
         maxWidth: 28,
@@ -354,7 +360,8 @@ class _WeightChartPainter extends CustomPainter {
   bool shouldRepaint(covariant _WeightChartPainter oldDelegate) {
     if (oldDelegate.firstMonth != firstMonth ||
       oldDelegate.entries.length != entries.length ||
-      oldDelegate.selectedEntryId != selectedEntryId) {
+      oldDelegate.selectedEntryId != selectedEntryId ||
+      !listEquals(oldDelegate.monthLabels, monthLabels)) {
     return true;
   }
 

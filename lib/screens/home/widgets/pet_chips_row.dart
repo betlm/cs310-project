@@ -5,6 +5,7 @@ import '../../../models/pet.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../theme/species_colors.dart';
+import '../../../l10n/app_strings.dart';
 import 'dart:math' as math;
 
 
@@ -138,7 +139,10 @@ class _AddPetChip extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xs),
-          Text('Add pet', style: Theme.of(context).textTheme.bodySmall),
+          Text(
+            AppStrings.get('addPet'),
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         ],
       ),
     );

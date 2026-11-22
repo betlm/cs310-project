@@ -4,6 +4,7 @@ import '../../data/app_state.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../widgets/form_field_decoration.dart';
+import '../../l10n/app_strings.dart';
 
 /// "User Information" sheet from the bottom,
 /// change their name, e-mail and password
@@ -64,10 +65,10 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
   String? _validateName(String? value) {
     final name = value?.trim() ?? '';
     if (name.isEmpty) {
-      return 'Please enter your name';
+      return AppStrings.get('enterYourName');
     }
     if (name.length > 40) {
-      return 'Name must be at most 40 characters';
+      return AppStrings.get('nameTooLong');
     }
     return null;
   }
@@ -75,11 +76,11 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
   String? _validateEmail(String? value) {
     final email = value?.trim() ?? '';
     if (email.isEmpty) {
-      return 'Please enter your email';
+      return AppStrings.get('enterYourEmail');
     }
     // Same rule as the Sign in and Sign up screens.
     if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
-      return 'Please enter a valid email';
+      return AppStrings.get('validEmail');
     }
     return null;
   }
@@ -87,7 +88,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
   String? _validateCurrentPassword(String? value) {
     if (!_changingPassword) return null;
     if (value == null || value.isEmpty) {
-      return 'Enter your current password';
+      return AppStrings.get('enterCurrentPassword');
     }
     return null;
   }
@@ -95,7 +96,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
   String? _validateNewPassword(String? value) {
     if (!_changingPassword) return null;
     if (value == null || value.length < 8) {
-      return 'At least 8 characters';
+      return AppStrings.get('atLeast8');
     }
     return null;
   }
@@ -103,7 +104,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
   String? _validateConfirmPassword(String? value) {
     if (!_changingPassword) return null;
     if (value != _newPasswordController.text) {
-      return 'Passwords do not match';
+      return AppStrings.get('passwordsDontMatch');
     }
     return null;
   }
@@ -121,8 +122,8 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
       SnackBar(
         content: Text(
           passwordChanged
-              ? 'Profile and password updated.'
-              : 'Profile updated.',
+              ? AppStrings.get('profilePasswordUpdated')
+              : AppStrings.get('profileUpdated'),
         ),
       ),
     );
@@ -182,7 +183,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'ACCOUNT',
+                            AppStrings.get('accountSection').toUpperCase(),
                             style: TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.w800,
@@ -192,7 +193,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                           ),
                           SizedBox(height: 2),
                           Text(
-                            'User Information',
+                            AppStrings.get('userInformation'),
                             style: TextStyle(
                               fontFamily: 'Manrope',
                               fontSize: 22,
@@ -220,26 +221,26 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                 const SizedBox(height: AppSpacing.md),
 
                 // Name and e-mail
-                _label('Full Name'),
+                _label(AppStrings.get('fullName')),
                 TextFormField(
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
                   style: fieldText,
                   validator: _validateName,
                   decoration: _inputDecoration(
-                    'Your name',
+                    AppStrings.get('yourName'),
                     icon: Icons.person_outline,
                   ),
                 ),
                 const SizedBox(height: 14),
-                _label('Email'),
+                _label(AppStrings.get('email')),
                 TextFormField(
                   controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   style: fieldText,
                   validator: _validateEmail,
                   decoration: _inputDecoration(
-                    'you@example.com',
+                    AppStrings.get('emailHint'),
                     icon: Icons.mail_outline,
                   ),
                 ),
@@ -257,7 +258,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                     ),
                     SizedBox(width: 8),
                     Text(
-                      'Change Password',
+                      AppStrings.get('changePassword'),
                       style: TextStyle(
                         fontFamily: 'Manrope',
                         fontSize: 16,
@@ -269,7 +270,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                 ),
                 const SizedBox(height: 4),
                  Text(
-                  'Leave blank to keep the current password.',
+                  AppStrings.get('keepPasswordNote'),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
@@ -277,13 +278,15 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                   ),
                 ),
                 const SizedBox(height: 14),
-                _label('Current Password'),
+                _label(AppStrings.get('currentPassword')),
                 TextFormField(
                   controller: _currentPasswordController,
                   obscureText: true,
                   style: fieldText,
                   validator: _validateCurrentPassword,
-                  decoration: _inputDecoration('Enter current password'),
+                  decoration: _inputDecoration(
+                    AppStrings.get('currentPasswordHint'),
+                  ),
                 ),
                 const SizedBox(height: 14),
                 Row(
@@ -293,14 +296,15 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _label('New Password'),
+                          _label(AppStrings.get('newPassword')),
                           TextFormField(
                             controller: _newPasswordController,
                             obscureText: true,
                             style: fieldText,
                             validator: _validateNewPassword,
-                            decoration:
-                                _inputDecoration('At least 8 characters'),
+                              decoration: _inputDecoration(
+                                AppStrings.get('atLeast8'),
+                              ),
                           ),
                         ],
                       ),
@@ -310,13 +314,15 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _label('Confirm Password'),
+                          _label(AppStrings.get('confirmPassword')),
                           TextFormField(
                             controller: _confirmPasswordController,
                             obscureText: true,
                             style: fieldText,
                             validator: _validateConfirmPassword,
-                            decoration: _inputDecoration('Repeat password'),
+                            decoration: _inputDecoration(
+                              AppStrings.get('repeatPassword'),
+                            ),
                           ),
                         ],
                       ),
@@ -350,7 +356,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        child: const Text('Cancel'),
+                        child: Text(AppStrings.get('cancel')),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -373,7 +379,7 @@ class _UserInfoSheetState extends State<_UserInfoSheet> {
                             fontWeight: FontWeight.w800,
                           ),
                         ),
-                        child: const Text('Save Changes'),
+                        child: Text(AppStrings.get('saveChangesTitle')),
                       ),
                     ),
                   ],

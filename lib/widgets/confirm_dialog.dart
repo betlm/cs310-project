@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
+import '../l10n/app_strings.dart';
 
 /// Shows a dialog with an icon, a title, a message and one or two buttons
 /// returns true if the user pressed the confirm button or false otherwise
@@ -11,7 +12,7 @@ Future<bool> showConfirmDialog({
   required String title,
   required String message,
   required String confirmText,
-  String? cancelText = 'Cancel',
+  String? cancelText,
   bool isDanger = true,
   IconData icon = Icons.delete_outline,
 }) async {
@@ -22,7 +23,7 @@ Future<bool> showConfirmDialog({
         title: title,
         message: message,
         confirmText: confirmText,
-        cancelText: cancelText,
+        cancelText: cancelText ?? AppStrings.get('cancel'),
         isDanger: isDanger,
         icon: icon,
       );

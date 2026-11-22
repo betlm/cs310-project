@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routes/app_routes.dart';
+import '../../l10n/app_strings.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
@@ -133,7 +134,7 @@ class WelcomeScreen extends StatelessWidget {
 
                             // Main headline
                             Text(
-                              'All care details,\nin one pocket.',
+                              AppStrings.get('welcomeHeadline'),
                               textAlign: TextAlign.center,
                               style: AppTextStyles.headingLarge.copyWith(
                                 fontWeight: FontWeight.w800,
@@ -147,8 +148,7 @@ class WelcomeScreen extends StatelessWidget {
                             ConstrainedBox(
                               constraints: const BoxConstraints(maxWidth: 310),
                               child: Text(
-                                "Easily track your pet's health, "
-                                'reminders, and supplies.',
+                                AppStrings.get('welcomeSubtitle'),
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.bodyLarge.copyWith(
                                   color: AppColors.secondaryText,
@@ -164,7 +164,7 @@ class WelcomeScreen extends StatelessWidget {
 
                             // Shared primary button
                             PrimaryButton(
-                              text: 'Sign in',
+                              text: AppStrings.get('signIn'),
                               onPressed: () {
                                 Navigator.pushNamed(context, AppRoutes.signIn);
                               },
@@ -197,7 +197,7 @@ class WelcomeScreen extends StatelessWidget {
                                   ),
                                 ),
                                 child: Text(
-                                  'Create account',
+                                  AppStrings.get('createAccount'),
                                   style: AppTextStyles.button.copyWith(
                                     color: AppColors.darkGreen,
                                   ),

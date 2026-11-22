@@ -5,6 +5,7 @@ import '../../../models/pet.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
 import '../../../utils/petlebi_links.dart';
+import '../../../l10n/app_strings.dart';
 
 /// "Shop on Petlebi" card on the Supply list.
 class PetlebiCard extends StatefulWidget {
@@ -33,8 +34,10 @@ class _PetlebiCardState extends State<PetlebiCard> {
 
     if (!opened && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not open Petlebi.')),
-      );
+        SnackBar(
+          content: Text(AppStrings.get('petlebiError')),
+        ),
+);
     }
   }
 
@@ -66,7 +69,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                      Text(
-                      'SHOPPING',
+                      AppStrings.get('shopping').toUpperCase(),
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w800,
@@ -76,7 +79,8 @@ class _PetlebiCardState extends State<PetlebiCard> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Shop on Petlebi for ${widget.pet.name}',
+                      AppStrings.get('shopOnPetlebiFor')
+                          .replaceAll('{name}', widget.pet.name),
                       overflow: TextOverflow.ellipsis,
                       style:  TextStyle(
                         fontFamily: 'Manrope',
@@ -87,7 +91,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
                     ),
                     const SizedBox(height: 2),
                      Text(
-                      'Food, health, toy and care products in one place.',
+                      AppStrings.get('petlebiSubtitle'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -129,8 +133,8 @@ class _PetlebiCardState extends State<PetlebiCard> {
               child: _CategoryTile(
                 icon: Icons.restaurant_outlined,
                 iconBackground: AppColors.speciesDog,
-                title: 'Food',
-                subtitle: 'Dry and wet food',
+                title: AppStrings.get('food'),
+                subtitle: AppStrings.get('foodSubtitle'),
                 onTap: () => _open(links.food),
               ),
             ),
@@ -139,8 +143,8 @@ class _PetlebiCardState extends State<PetlebiCard> {
               child: _CategoryTile(
                 icon: Icons.favorite_border,
                 iconBackground: AppColors.dangerLight,
-                title: 'Health',
-                subtitle: 'Vitamins and care',
+                title: AppStrings.get('health'),
+                subtitle: AppStrings.get('healthSubtitle'),
                 onTap: () => _open(links.health),
               ),
             ),
@@ -155,8 +159,12 @@ class _PetlebiCardState extends State<PetlebiCard> {
               child: _CategoryTile(
                 icon: isFish ? Icons.water_outlined : Icons.toys_outlined,
                 iconBackground: AppColors.lightMint,
-                title: isFish ? 'Decor' : 'Toys',
-                subtitle: isFish ? 'Aquarium design' : 'Play and fun',
+                title: isFish
+                  ? AppStrings.get('decor')
+                  : AppStrings.get('toys'),
+              subtitle: isFish
+                  ? AppStrings.get('decorSubtitle')
+                  : AppStrings.get('toysSubtitle'),
                 onTap: () => _open(links.toys),
               ),
             ),
@@ -165,8 +173,8 @@ class _PetlebiCardState extends State<PetlebiCard> {
               child: _CategoryTile(
                 icon: Icons.cleaning_services_outlined,
                 iconBackground: AppColors.speciesHamster,
-                title: 'Cleaning',
-                subtitle: 'Hygiene needs',
+                title: AppStrings.get('cleaning'),
+                subtitle: AppStrings.get('cleaningSubtitle'),
                 onTap: () => _open(links.care),
               ),
             ),
@@ -178,7 +186,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
         ElevatedButton.icon(
           onPressed: () => _open(links.home),
           icon: const Icon(Icons.open_in_new, size: 16),
-          label: const Text('Go to Petlebi'),
+          label: Text(AppStrings.get('goToPetlebi')),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.darkGreen,
             foregroundColor: AppColors.white,
@@ -198,7 +206,7 @@ class _PetlebiCardState extends State<PetlebiCard> {
       children.add(const SizedBox(height: AppSpacing.sm));
       children.add(
          Text(
-          'Opens petlebi.com in your browser. Prices and stock are shown on Petlebi.',
+          AppStrings.get('petlebiNote'),
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 10,

@@ -6,6 +6,7 @@ import '../../../theme/app_spacing.dart';
 import '../../../theme/species_colors.dart';
 import '../../../utils/pet_format.dart';
 import '../../../widgets/square_icon_button.dart';
+import '../../../l10n/app_strings.dart';
 
 /// One pet in the My pets list: avatar, name, breed and age,
 /// an "Active profile" line for the active pet, and edit / delete buttons
@@ -73,7 +74,7 @@ class PetListCard extends StatelessWidget {
             Icon(Icons.check, size: 14, color: AppColors.darkGreen),
             SizedBox(width: AppSpacing.xs),
             Text(
-              'Active profile',
+              AppStrings.get('activeProfile'),
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w700,

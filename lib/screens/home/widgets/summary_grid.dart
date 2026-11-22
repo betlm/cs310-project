@@ -1,16 +1,15 @@
+
 import 'package:flutter/material.dart';
 
 import '../../../data/app_state.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_colors.dart';
 import '../../../theme/app_spacing.dart';
+import '../../../l10n/app_strings.dart';
 
-/// The 2x2 grid of summary cards on Home:
-/// Health, Supplies, Photos and Reminders for the active pet.
+/// The 2x2 grid of summary cards on Home.
 class SummaryGrid extends StatelessWidget {
   final String petId;
-
-  /// Opens a screen by its route name.
   final void Function(String routeName) onOpenScreen;
 
   const SummaryGrid({
@@ -35,8 +34,9 @@ class SummaryGrid extends StatelessWidget {
             Expanded(
               child: SummaryCard(
                 icon: Icons.favorite_border,
-                title: 'Health',
-                subtitle: _plural(healthCount, 'record', 'records'),
+                title: AppStrings.get('health'),
+                subtitle:
+                    '$healthCount ${AppStrings.get(healthCount == 1 ? 'record' : 'records')}',
                 iconColor: AppColors.peach,
                 backgroundColor: AppColors.healthCardBackground,
                 borderColor: AppColors.healthCardBorder,
@@ -47,8 +47,8 @@ class SummaryGrid extends StatelessWidget {
             Expanded(
               child: SummaryCard(
                 icon: Icons.shopping_bag_outlined,
-                title: 'Supplies',
-                subtitle: '$pendingSupplies pending',
+                title: AppStrings.get('supplies'),
+                subtitle: '$pendingSupplies ${AppStrings.get('pending')}',
                 iconColor: AppColors.primary,
                 backgroundColor: AppColors.lightMint,
                 borderColor: AppColors.mintBorder,
@@ -63,8 +63,9 @@ class SummaryGrid extends StatelessWidget {
             Expanded(
               child: SummaryCard(
                 icon: Icons.image_outlined,
-                title: 'Photos',
-                subtitle: _plural(photoCount, 'photo', 'photos'),
+                title: AppStrings.get('photos'),
+                subtitle:
+                    '$photoCount ${AppStrings.get(photoCount == 1 ? 'photo' : 'photosLower')}',
                 iconColor: AppColors.primary,
                 backgroundColor: AppColors.photosCardBackground,
                 borderColor: AppColors.photosCardBorder,
@@ -75,10 +76,9 @@ class SummaryGrid extends StatelessWidget {
             Expanded(
               child: SummaryCard(
                 icon: Icons.calendar_today_outlined,
-                title: 'Reminders',
-                subtitle: '$activeReminders active',
+                title: AppStrings.get('reminders'),
+                subtitle: '$activeReminders ${AppStrings.get('active')}',
                 iconColor: AppColors.primary,
-                // Cream, the same tone as the page background.
                 backgroundColor: AppColors.background,
                 borderColor: AppColors.creamBorder,
                 onTap: () => onOpenScreen(AppRoutes.reminders),
@@ -88,14 +88,6 @@ class SummaryGrid extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  /// "1 record" / "4 records".
-  static String _plural(int count, String one, String many) {
-    if (count == 1) {
-      return '$count $one';
-    }
-    return '$count $many';
   }
 }
 

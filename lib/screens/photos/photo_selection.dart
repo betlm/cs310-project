@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../models/pet_photo.dart';
 import '../../theme/app_colors.dart';
+import '../../l10n/app_strings.dart';
+
 
 class PhotoSelection extends StatefulWidget {
   final List<PetPhoto> photos;
@@ -58,7 +60,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                 ),
                 const SizedBox(height: 20),
                  Text(
-                  'Delete Photos?',
+                  AppStrings.get('deletePhotosTitle'),
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Manrope',
@@ -69,11 +71,10 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  '$count selected ${count == 1 ? 'photo' : 'photos'} '
-                  'will be permanently removed from the album.\n'
-                  'This action cannot be undone.',
+                  AppStrings.get('deletePhotosMessage')
+                      .replaceAll('{count}', count.toString()),
                   textAlign: TextAlign.center,
-                  style:  TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Manrope',
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
@@ -99,7 +100,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        child: const Text('Cancel'),
+                        child: Text(AppStrings.get('cancel')),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -116,7 +117,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        child: const Text('Delete'),
+                        child: Text(AppStrings.get('delete')),
                       ),
                     ),
                   ],
@@ -142,8 +143,9 @@ class _PhotoSelectionState extends State<PhotoSelection> {
           children: [
             Expanded(
               child: Text(
-                '${_selectedIds.length} selected',
-                style:  TextStyle(
+                AppStrings.get('selectedCount')
+                    .replaceAll('{count}', _selectedIds.length.toString()),
+                style: TextStyle(
                   fontFamily: 'DM Sans',
                   fontWeight: FontWeight.w700,
                   color: AppColors.darkGreen,
@@ -152,7 +154,7 @@ class _PhotoSelectionState extends State<PhotoSelection> {
             ),
             TextButton(
               onPressed: widget.onCancel,
-              child: const Text('Cancel'),
+              child: Text(AppStrings.get('cancel')),
             ),
           ],
         ),
@@ -239,7 +241,8 @@ class _PhotoSelectionState extends State<PhotoSelection> {
                 _selectedIds.isEmpty ? null : _confirmDelete,
             icon: const Icon(Icons.delete_outline),
             label: Text(
-              'Delete Selected (${_selectedIds.length})',
+              AppStrings.get('deleteSelected')
+                  .replaceAll('{count}', _selectedIds.length.toString()),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.danger,
