@@ -24,23 +24,34 @@ class HomeHeader extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                 AppStrings.get('appName'),
-                style: textTheme.headlineLarge?.copyWith(
-                  fontSize: 30,
-                  height: 1.1,
+              // FittedBox: shrinks the title on small screens instead of
+              // breaking "PetPocket" into two lines.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppStrings.get('appName'),
+                  style: textTheme.headlineLarge?.copyWith(
+                    fontSize: 30,
+                    height: 1.1,
+                  ),
                 ),
               ),
-              Text(
-                AppStrings.get('appSubtitle'),
-                style: textTheme.bodySmall?.copyWith(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w600,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppStrings.get('appSubtitle'),
+                  style: textTheme.bodySmall?.copyWith(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],
           ),
         ),
+        const SizedBox(width: AppSpacing.sm),
         _ThemeToggle(onChanged: onAppearanceChanged),
       ],
     );
@@ -63,7 +74,7 @@ class _ThemeToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = isDarkMode();
     return Container(
-      padding: const EdgeInsets.all(3),
+      padding: const EdgeInsets.all(2),
       decoration: BoxDecoration(
         color: AppColors.lightMint,
         border: Border.all(color: AppColors.mintBorder),
@@ -98,7 +109,7 @@ class _ThemeToggle extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
         decoration: BoxDecoration(
           color: selected ? AppColors.background : Colors.transparent,
           borderRadius: BorderRadius.circular(9),
