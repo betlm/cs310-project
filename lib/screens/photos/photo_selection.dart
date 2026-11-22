@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../models/pet_photo.dart';
 import '../../theme/app_colors.dart';
 import '../../l10n/app_strings.dart';
+import '../../widgets/confirm_dialog.dart';
 
 
 class PhotoSelection extends StatefulWidget {
@@ -27,109 +28,20 @@ class PhotoSelection extends StatefulWidget {
 class _PhotoSelectionState extends State<PhotoSelection> {
   final Set<String> _selectedIds = {};
 
-  Future<void> _confirmDelete() async {
+    Future<void> _confirmDelete() async {
     if (_selectedIds.isEmpty) return;
 
     final count = _selectedIds.length;
 
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showConfirmDialog(
       context: context,
-      builder: (dialogContext) {
-        return Dialog(
-          backgroundColor: AppColors.background,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 84,
-                  height: 84,
-                  decoration: BoxDecoration(
-                    color: AppColors.dangerLight,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.delete_outline,
-                    color: AppColors.danger,
-                    size: 36,
-                  ),
-                ),
-                const SizedBox(height: 20),
-                 Text(
-                  AppStrings.get('deletePhotosTitle'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 26,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.darkGreen,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  AppStrings.get('deletePhotosMessage')
-                      .replaceAll('{count}', count.toString()),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.secondaryText,
-                    height: 1.5,
-                  ),
-                ),
-                const SizedBox(height: 28),
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () =>
-                            Navigator.pop(dialogContext, false),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.darkGreen,
-                          backgroundColor: AppColors.white,
-                          side:  BorderSide(
-                            color: AppColors.fieldBorder,
-                          ),
-                          minimumSize: const Size(0, 56),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        child: Text(AppStrings.get('cancel')),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () =>
-                            Navigator.pop(dialogContext, true),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.danger,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          minimumSize: const Size(0, 56),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                        child: Text(AppStrings.get('delete')),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      title: AppStrings.get('deletePhotosTitle'),
+      message: AppStrings.get('deletePhotosMessage')
+          .replaceAll('{count}', count.toString()),
+      confirmText: AppStrings.get('delete'),
     );
 
-    if (!mounted || confirmed != true) return;
+    if (!mounted || !confirmed) return;
 
     widget.onDelete(Set<String>.from(_selectedIds));
   }

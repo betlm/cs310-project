@@ -161,7 +161,7 @@ class _PetDetailsContent extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 32,
                     backgroundColor: speciesColor(pet.species),
-                    backgroundImage: AssetImage(pet.avatarPath),
+                    backgroundImage: pet.avatarImage,
                   ),
                 ),
                 const SizedBox(width: 14),

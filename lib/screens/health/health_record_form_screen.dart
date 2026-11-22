@@ -63,6 +63,11 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
               field: 'notes',
               value: record.notes!,
             );
+
+      // Show the saved attachment in the photo box
+      if (record.attachmentUrl != null) {
+        _selectedPhoto = XFile(record.attachmentUrl!);
+      }
     }
   }
 
@@ -301,7 +306,12 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
         color: AppColors.lightMint.withValues(alpha: 0.4),
         borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
         child: InkWell(
-          onTap: _isPickingPhoto ? null : _pickPhoto,
+          // No photo yet: open the gallery. Photo selected: show it big.
+          onTap: _isPickingPhoto
+              ? null
+              : _selectedPhoto == null
+                  ? _pickPhoto
+                  : _showPhoto,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -392,6 +402,43 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
     );
   }
 
+    /// Shows the selected photo full size in a dialog, without cropping.
+  void _showPhoto() {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          backgroundColor: AppColors.background,
+          insetPadding: const EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Flexible lets a tall image shrink to fit the screen.
+                Flexible(
+                  child: Image.file(
+                    File(_selectedPhoto!.path),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(dialogContext),
+                    child: Text(AppStrings.get('close')),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
   void _saveRecord() {
     if (!_formKey.currentState!.validate()) return;
 
@@ -437,7 +484,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
       title: titleToSave,
       date: _selectedDate,
       notes: notesToSave,
-      attachmentUrl: existingRecord?.attachmentUrl,
+      attachmentUrl: _selectedPhoto?.path,
     );
 
     if (existingRecord == null) {

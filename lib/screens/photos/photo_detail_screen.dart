@@ -7,6 +7,7 @@ import '../../models/pet_photo.dart';
 import '../../theme/app_colors.dart';
 import '../../theme/app_text_styles.dart';
 import '../../l10n/app_strings.dart';
+import '../../widgets/confirm_dialog.dart';
 
 class PhotoDetailScreen extends StatelessWidget {
   final PetPhoto photo;
@@ -60,142 +61,23 @@ class PhotoDetailScreen extends StatelessWidget {
       ),
     );
   }
-
-  // Delete confirmation dialog
+  // Delete confirmation dialog (same style as the other delete dialogs)
   Future<void> _showDeleteConfirmation(BuildContext context) async {
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showConfirmDialog(
       context: context,
-      builder: (dialogContext) {
-        return Dialog(
-          backgroundColor: AppColors.background,
-          insetPadding: const EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 24,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 28),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Delete icon
-                Container(
-                  width: 84,
-                  height: 84,
-                  decoration: BoxDecoration(
-                    color: AppColors.dangerLight,
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.delete_outline,
-                    color: AppColors.danger,
-                    size: 36,
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Title
-                 Text(
-                  AppStrings.get('deletePhotoTitle'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 28,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.darkGreen,
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Warning message
-                 Text(
-                  AppStrings.get('deletePhotoMessage'),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.secondaryText,
-                    height: 1.5,
-                  ),
-                ),
-
-                const SizedBox(height: 28),
-
-                // Action buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.pop(dialogContext, false);
-                        },
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppColors.darkGreen,
-                          backgroundColor: AppColors.white,
-                          side:  BorderSide(
-                            color: AppColors.fieldBorder,
-                          ),
-                          minimumSize: const Size(0, 60),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: Text(
-                          AppStrings.get('cancel'),
-                          style: TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pop(dialogContext, true);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.danger,
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          minimumSize: const Size(0, 60),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        child: Text(
-                          AppStrings.get('delete'),
-                          style: TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
+      title: AppStrings.get('deletePhotoTitle'),
+      message: AppStrings.get('deletePhotoMessage'),
+      confirmText: AppStrings.get('delete'),
     );
 
     // Only delete when the user confirms
-    if (confirmed == true) {
+    if (confirmed) {
       onDelete();
     }
   }
+
+  
+    
 
   @override
   Widget build(BuildContext context) {

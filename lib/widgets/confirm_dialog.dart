@@ -5,8 +5,7 @@ import '../theme/app_text_styles.dart';
 import '../l10n/app_strings.dart';
 
 /// Shows a dialog with an icon, a title, a message and one or two buttons
-/// returns true if the user pressed the confirm button or false otherwise
-
+/// Set showCancel to false for success messages that only need an OK button
 Future<bool> showConfirmDialog({
   required BuildContext context,
   required String title,
@@ -15,6 +14,7 @@ Future<bool> showConfirmDialog({
   String? cancelText,
   bool isDanger = true,
   IconData icon = Icons.delete_outline,
+  bool showCancel = true,
 }) async {
   final result = await showDialog<bool>(
     context: context,
@@ -23,7 +23,8 @@ Future<bool> showConfirmDialog({
         title: title,
         message: message,
         confirmText: confirmText,
-        cancelText: cancelText ?? AppStrings.get('cancel'),
+        // No Cancel button for success messages (showCancel: false)
+        cancelText: showCancel ? (cancelText ?? AppStrings.get('cancel')) : null,
         isDanger: isDanger,
         icon: icon,
       );

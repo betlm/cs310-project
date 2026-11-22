@@ -110,7 +110,7 @@ class PetListCard extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 28,
                   backgroundColor: speciesColor(pet.species),
-                  backgroundImage: AssetImage(pet.avatarPath),
+                  backgroundImage: pet.avatarImage,
                 ),
               ),
               const SizedBox(width: 14),
