@@ -56,6 +56,7 @@ The app was tested in portrait mode on a small and a large Android emulator:
 - Small Phone (360 × 640 dp)
 - Pixel 9 (411 × 923 dp)
 - Pixel 6 Pro (412 × 892 dp)
+- Pixel 7 (412 × 915 dp)
 
 ### How to run on an Android emulator
 
