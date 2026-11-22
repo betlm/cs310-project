@@ -15,6 +15,7 @@ import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
 import '../../l10n/app_strings.dart';
 import '../../utils/sample_localization.dart';
+import '../../theme/health_record_colors.dart';
 
 class HealthRecordFormScreen extends StatefulWidget {
   final HealthRecord? record;
@@ -84,17 +85,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
     };
   }
 
-  Color _typeColor(HealthRecordType type) {
-    return switch (type) {
-      HealthRecordType.vaccination => AppColors.primary,
-      HealthRecordType.vetVisit => AppColors.speciesHamster,
-      HealthRecordType.checkUp => AppColors.peach,
-      HealthRecordType.medication => AppColors.darkGreen,
-      HealthRecordType.parasiteTreatment => AppColors.speciesRabbit,
-      HealthRecordType.feedingNote => AppColors.speciesBird,
-      HealthRecordType.other => AppColors.speciesBird,
-    };
-  }
+
 
   Widget _recordTypeField() {
     return Column(
@@ -183,7 +174,7 @@ class _HealthRecordFormScreenState extends State<HealthRecordFormScreen> {
                           width: 11,
                           height: 11,
                           decoration: BoxDecoration(
-                            color: _typeColor(type),
+                            color: healthRecordColor(type),
                             shape: BoxShape.circle,
                           ),
                         ),

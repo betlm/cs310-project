@@ -12,8 +12,10 @@ import '../../widgets/active_pet_bar.dart';
 import '../../widgets/pet_switcher_sheet.dart';
 import '../../widgets/square_icon_button.dart';
 import '../../widgets/confirm_dialog.dart';
+import '../../utils/date_format.dart';
 import '../../l10n/app_strings.dart';
 import '../../utils/sample_localization.dart';
+import '../../theme/health_record_colors.dart';
 
 class HealthHistoryScreen extends StatefulWidget {
   const HealthHistoryScreen({super.key});
@@ -47,23 +49,6 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
     };
   }
 
-  String _formatDate(DateTime date) {
-    final day = date.day.toString().padLeft(2, '0');
-    final month = date.month.toString().padLeft(2, '0');
-    return '$day/$month/${date.year}';
-  }
-
-  Color _recordColor(HealthRecordType type) {
-    return switch (type) {
-      HealthRecordType.vaccination => AppColors.primary,
-      HealthRecordType.vetVisit => AppColors.speciesHamster,
-      HealthRecordType.checkUp => AppColors.peach,
-      HealthRecordType.medication => AppColors.darkGreen,
-      HealthRecordType.parasiteTreatment => AppColors.speciesRabbit,
-      HealthRecordType.feedingNote => AppColors.speciesBird,
-      HealthRecordType.other => AppColors.speciesBird,
-    };
-  }
 
   IconData _recordIcon(HealthRecordType type) {
     return switch (type) {
@@ -249,7 +234,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
   }
 
   Widget _recordTimelineItem(HealthRecord record) {
-    final color = _recordColor(record.type);
+    final color = healthRecordColor(record.type);
     final icon = _recordIcon(record.type);
 
     return IntrinsicHeight(
@@ -302,7 +287,7 @@ class _HealthHistoryScreenState extends State<HealthHistoryScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _formatDate(record.date),
+                    formatDate(record.date),
                     style: AppTextStyles.caption.copyWith(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,

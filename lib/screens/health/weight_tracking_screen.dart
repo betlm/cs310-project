@@ -22,11 +22,7 @@ class WeightTrackingScreen extends StatefulWidget {
 }
 
 class _WeightTrackingScreenState extends State<WeightTrackingScreen> {
-  List<WeightEntry> get _entries {
-    final entries = weightEntriesFor(activePet.id).toList();
-    entries.sort((a, b) => a.date.compareTo(b.date));
-    return entries;
-  }
+  List<WeightEntry> get _entries => weightEntriesFor(activePet.id);
 
   String _weight(double value) => value.toStringAsFixed(1);
 

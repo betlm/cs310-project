@@ -6,9 +6,17 @@ import '../../theme/app_colors.dart';
 import '../../theme/app_spacing.dart';
 import '../../theme/app_text_styles.dart';
 import '../../widgets/primary_button.dart';
+import '../../data/app_state.dart';
+import 'welcome_preferences.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +29,10 @@ class WelcomeScreen extends StatelessWidget {
 
           return SingleChildScrollView(
             child: CustomPaint(
-              painter: _WelcomeBackgroundPainter(),
+              painter: _WelcomeBackgroundPainter(
+                topColor: isDarkMode() ? AppColors.appBar : AppColors.lightMint,
+                bottomColor: AppColors.background,
+              ),
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: screenHeight),
                 child: SafeArea(
@@ -34,9 +45,27 @@ class WelcomeScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            // Top spacing
+                            const SizedBox(height: AppSpacing.sm),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: WelcomePreferences(
+                                language: appLanguage,
+                                isDark: isDarkMode(),
+                                onLanguageChanged: (language) {
+                                  setState(() {
+                                    appLanguage = language;
+                                  });
+                                },
+                                onThemeChanged: (isDark) {
+                                  setState(() {
+                                    appAppearance = isDark ? 'dark' : 'light';
+                                  });
+                                  refreshApp?.call();
+                                },
+                              ),
+                            ),
                             SizedBox(
-                              height: isCompact ? AppSpacing.md : AppSpacing.lg,
+                              height: isCompact ? AppSpacing.sm : AppSpacing.lg,
                             ),
 
                             // Pet illustration and decorative rings
@@ -222,13 +251,17 @@ class WelcomeScreen extends StatelessWidget {
 }
 
 class _WelcomeBackgroundPainter extends CustomPainter {
+  const _WelcomeBackgroundPainter({
+    required this.topColor,
+    required this.bottomColor,
+  });
+
+  final Color topColor;
+  final Color bottomColor;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final mintPaint = Paint()..color = AppColors.lightMint;
-
-    final creamPaint = Paint()..color = AppColors.background;
-
-    canvas.drawRect(Offset.zero & size, mintPaint);
+    canvas.drawRect(Offset.zero & size, Paint()..color = topColor);
 
     final path = Path()
       ..moveTo(size.width, size.height * 0.42)
@@ -237,11 +270,12 @@ class _WelcomeBackgroundPainter extends CustomPainter {
       ..lineTo(0, size.height * 0.65)
       ..close();
 
-    canvas.drawPath(path, creamPaint);
+    canvas.drawPath(path, Paint()..color = bottomColor);
   }
 
   @override
   bool shouldRepaint(covariant _WelcomeBackgroundPainter oldDelegate) {
-    return false;
+    return oldDelegate.topColor != topColor ||
+        oldDelegate.bottomColor != bottomColor;
   }
 }

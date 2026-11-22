@@ -132,13 +132,13 @@ class _PhotosScreenState extends State<PhotosScreen> {
           content: Text(AppStrings.get('photoAdded')),
         ),
       );
-    } catch (error) {
+    } catch (_) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '${AppStrings.get('couldNotAddPhoto')}: $error',
+            AppStrings.get('couldNotAddPhoto'),
           ),
         ),
       );

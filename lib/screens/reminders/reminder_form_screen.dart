@@ -9,6 +9,8 @@ import '../../widgets/form_field_decoration.dart';
 import '../../widgets/primary_button.dart';
 import '../../l10n/app_strings.dart';
 import '../../utils/sample_localization.dart';
+import '../../utils/date_format.dart';
+import '../../theme/reminder_category_colors.dart';
 
 class ReminderFormScreen extends StatefulWidget {
   const ReminderFormScreen({super.key});
@@ -78,32 +80,6 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
     nameController.dispose();
     noteController.dispose();
     super.dispose();
-  }
-
-  String categoryLabel(ReminderCategory category) {
-    switch (category) {
-      case ReminderCategory.medication:
-        return AppStrings.get('medication');
-      case ReminderCategory.appointment:
-        return AppStrings.get('appointment');
-      case ReminderCategory.feeding:
-        return AppStrings.get('feeding');
-      case ReminderCategory.other:
-        return AppStrings.get('other');
-    }
-  }
-
-  Color categoryColor(ReminderCategory category) {
-    switch (category) {
-      case ReminderCategory.medication:
-        return AppColors.primary;
-      case ReminderCategory.appointment:
-        return AppColors.peach;
-      case ReminderCategory.feeding:
-        return AppColors.speciesBird;
-      case ReminderCategory.other:
-        return AppColors.speciesHamster;
-    }
   }
 
   Widget sectionLabel(String title, {bool required = false}) {
@@ -312,12 +288,12 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
                         width: 12,
                         height: 12,
                         decoration: BoxDecoration(
-                          color: categoryColor(category),
+                          color: reminderCategoryColor(category),
                           shape: BoxShape.circle,
                         ),
                       ),
                       const SizedBox(width: 12),
-                      Text(categoryLabel(category)),
+                      Text(AppStrings.get(category.name))
                     ],
                   ),
                 );
@@ -376,7 +352,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
                 decoration: formDecoration(
                   hint: selectedDate == null
                       ? AppStrings.get('selectDate')
-                      : '${selectedDate!.day.toString().padLeft(2, '0')}/${selectedDate!.month.toString().padLeft(2, '0')}/${selectedDate!.year}',
+                      : formatDate(selectedDate!),
                   icon: Icons.calendar_today_outlined,
                 ),
                 onTap: () async {
@@ -406,7 +382,7 @@ class _ReminderFormScreenState extends State<ReminderFormScreen> {
               decoration: formDecoration(
                 hint: selectedTime == null
                     ? AppStrings.get('selectTime')
-                    : selectedTime!.format(context),
+                    : formatTime(selectedTime!.hour, selectedTime!.minute),
                 icon: Icons.access_time_outlined,
               ),
               onTap: () async {
